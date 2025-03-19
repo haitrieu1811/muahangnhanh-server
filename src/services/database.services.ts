@@ -1,7 +1,8 @@
 import { Db, MongoClient } from 'mongodb'
 
-const uri =
-  'mongodb+srv://haitrieu1811:qfyOcU0YdpT2ewyV@muahangnhanh-cluster.g5ae1.mongodb.net/?retryWrites=true&w=majority&appName=muahangnhanh-cluster'
+import { ENV_CONFIG } from '~/constants/config'
+
+const uri = `mongodb+srv://${ENV_CONFIG.DB_USERNAME}:${ENV_CONFIG.DB_PASSWORD}@muahangnhanh-cluster.g5ae1.mongodb.net/?retryWrites=true&w=majority&appName=muahangnhanh-cluster`
 
 class DatabaseService {
   private client: MongoClient

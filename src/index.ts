@@ -1,11 +1,12 @@
 import express from 'express'
 
+import { ENV_CONFIG } from '~/constants/config'
 import databaseService from '~/services/database.services'
 
 databaseService.connect()
 
 const app = express()
-const port = 4000
+const port = ENV_CONFIG.PORT || 4000
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
