@@ -1,5 +1,9 @@
 import express from 'express'
 
+import databaseService from '~/services/database.services'
+
+databaseService.connect()
+
 const app = express()
 const port = 4000
 
