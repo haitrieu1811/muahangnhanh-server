@@ -6,6 +6,7 @@ import User from '~/models/databases/User'
 import { RegisterReqBody, TokenPayload } from '~/models/requests/users.requests'
 import databaseService from '~/services/database.services'
 import { hashPassword } from '~/utils/crypto'
+import { sendVerifyEmail } from '~/utils/email'
 import { signToken, verifyToken } from '~/utils/jwt'
 
 class UsersService {
@@ -98,7 +99,8 @@ class UsersService {
         userRole: body.role,
         userStatus: UserStatus.Active,
         userVerifyStatus: UserVerifyStatus.Unverified
-      })
+      }),
+      sendVerifyEmail(body.email, verifyEmailToken)
     ])
     const user = await databaseService.users.findOne(userId, {
       projection: {
