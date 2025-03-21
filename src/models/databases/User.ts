@@ -47,17 +47,17 @@ export default class User {
     updatedAt
   }: UserConstructor) {
     const date = new Date()
-    this._id = _id || new ObjectId()
+    this._id = _id ?? new ObjectId()
     this.email = email
     this.password = password
-    this.fullName = fullName || `Temp${generateRandomString(8)}`
-    this.avatar = avatar || null
-    this.verifyStatus = verifyStatus || UserVerifyStatus.Unverified
-    this.status = status || UserStatus.Active
-    this.role = role || UserRole.Customer
-    this.verifyEmailToken = verifyEmailToken || ''
-    this.forgotPasswordToken = forgotPasswordToken || ''
-    this.createdAt = createdAt || date
-    this.updatedAt = updatedAt || date
+    this.fullName = fullName ?? `Temp${generateRandomString(8)}`
+    this.avatar = avatar ?? null
+    this.verifyStatus = verifyStatus ?? UserVerifyStatus.Unverified
+    this.status = status ?? UserStatus.Active
+    this.role = role ?? UserRole.Customer
+    this.verifyEmailToken = verifyEmailToken ?? ''
+    this.forgotPasswordToken = forgotPasswordToken ?? ''
+    this.createdAt = createdAt ?? date
+    this.updatedAt = updatedAt ?? date
   }
 }

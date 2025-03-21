@@ -116,6 +116,34 @@ class UsersService {
       user
     }
   }
+
+  // Xác minh email
+  async verifyEmail(userId: ObjectId) {
+    const user = await databaseService.users.findOneAndUpdate(
+      {
+        _id: userId
+      },
+      {
+        $set: {
+          verifyStatus: UserVerifyStatus.Verified,
+          verifyEmailToken: ''
+        },
+        $currentDate: {
+          updatedAt: true
+        }
+      },
+      {
+        returnDocument: 'after',
+        projection: {
+          email: 1,
+          fullName: 1,
+          createdAt: 1,
+          updatedAt: 1
+        }
+      }
+    )
+    return { user }
+  }
 }
 
 const usersService = new UsersService()

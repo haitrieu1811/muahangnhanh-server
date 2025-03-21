@@ -12,3 +12,7 @@ export type RegisterReqBody = {
   password: string
   role: UserRole
 }
+
+export type VerifyEmailTokenReqBody = {
+  verifyEmailToken: string
+}
