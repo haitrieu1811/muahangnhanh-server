@@ -4,7 +4,7 @@ import { ObjectId } from 'mongodb'
 
 import { USERS_MESSAGES } from '~/constants/message'
 import User from '~/models/databases/User'
-import { RegisterReqBody, TokenPayload } from '~/models/requests/users.requests'
+import { RefreshTokenReqBody, RegisterReqBody, TokenPayload } from '~/models/requests/users.requests'
 import usersService from '~/services/users.services'
 
 // Đăng ký
@@ -32,5 +32,13 @@ export const loginController = async (req: Request, res: Response) => {
   res.json({
     message: USERS_MESSAGES.LOGIN_SUCCESS,
     data: result
+  })
+}
+
+// Đăng xuất
+export const logoutController = async (req: Request<ParamsDictionary, any, RefreshTokenReqBody>, res: Response) => {
+  await usersService.logout(req.body.refreshToken)
+  res.json({
+    message: USERS_MESSAGES.LOGOUT_SUCCESS
   })
 }

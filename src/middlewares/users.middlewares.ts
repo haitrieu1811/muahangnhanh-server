@@ -171,3 +171,48 @@ export const loginValidator = validate(
     ['body']
   )
 )
+
+export const refreshTokenValidator = validate(
+  checkSchema(
+    {
+      refreshToken: {
+        trim: true,
+        custom: {
+          options: async (value: string, { req }) => {
+            if (!value) {
+              throw new ErrorWithStatus({
+                message: USERS_MESSAGES.REFRESH_TOKEN_IS_REQUIRED,
+                status: HTTP_STATUS.UNAUTHORIZED
+              })
+            }
+            try {
+              const [refreshToken, decodedRefreshToken] = await Promise.all([
+                databaseService.refreshTokens.findOne({ token: value }),
+                verifyToken({
+                  token: value,
+                  secretOrPublicKey: ENV_CONFIG.JWT_SECRET_REFRESH_TOKEN
+                })
+              ])
+              if (!refreshToken) {
+                throw new ErrorWithStatus({
+                  message: USERS_MESSAGES.REFRESH_TOKEN_DOES_NOT_EXIST,
+                  status: HTTP_STATUS.UNAUTHORIZED
+                })
+              }
+              ;(req as Request).decodedRefreshToken = decodedRefreshToken
+            } catch (error) {
+              if (error instanceof JsonWebTokenError) {
+                throw new ErrorWithStatus({
+                  status: HTTP_STATUS.UNAUTHORIZED,
+                  message: capitalize(error.message)
+                })
+              }
+              throw error
+            }
+          }
+        }
+      }
+    },
+    ['body']
+  )
+)

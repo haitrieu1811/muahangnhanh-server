@@ -15,5 +15,8 @@ export const USERS_MESSAGES = {
   VERIFY_EMAIL_TOKEN_IS_REQUIRED: 'Verify email token là băc buộc.',
   VERIFY_EMAIL_TOKEN_NOT_EXIST: 'Verify email token không tồn tại.',
   INVALID_EMAIL_OR_PASSWORD: 'Email hoặc mật khẩu không chính xác.',
-  LOGIN_SUCCESS: 'Đăng nhập thành công.'
+  LOGIN_SUCCESS: 'Đăng nhập thành công.',
+  LOGOUT_SUCCESS: 'Đăng xuất thành công.',
+  REFRESH_TOKEN_IS_REQUIRED: 'Refresh token là bắc buộc.',
+  REFRESH_TOKEN_DOES_NOT_EXIST: 'Refresh token không tồn tại.'
 } as const

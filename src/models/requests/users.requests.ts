@@ -16,3 +16,7 @@ export type RegisterReqBody = {
 export type VerifyEmailTokenReqBody = {
   verifyEmailToken: string
 }
+
+export type RefreshTokenReqBody = {
+  refreshToken: string
+}
