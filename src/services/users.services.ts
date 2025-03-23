@@ -104,14 +104,25 @@ class UsersService {
       }),
       sendVerifyEmail(body.email, verifyEmailToken)
     ])
-    const user = await databaseService.users.findOne(userId, {
-      projection: {
-        email: 1,
-        fullName: 1,
-        createdAt: 1,
-        updatedAt: 1
-      }
-    })
+    const decodedRefreshToken = await this.decodedRefreshToken(refreshToken)
+    const [user] = await Promise.all([
+      databaseService.users.findOne(userId, {
+        projection: {
+          email: 1,
+          fullName: 1,
+          createdAt: 1,
+          updatedAt: 1
+        }
+      }),
+      databaseService.refreshTokens.insertOne(
+        new RefreshToken({
+          token: refreshToken,
+          iat: decodedRefreshToken.iat,
+          exp: decodedRefreshToken.exp,
+          userId
+        })
+      )
+    ])
     return {
       accessToken,
       refreshToken,
