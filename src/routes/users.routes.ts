@@ -6,6 +6,7 @@ import {
   logoutController,
   refreshTokenController,
   registerController,
+  updateMeController,
   verifyEmailController
 } from '~/controllers/users.controllers'
 import {
@@ -13,6 +14,7 @@ import {
   loginValidator,
   refreshTokenValidator,
   registerValidator,
+  updateMeValidator,
   verifyEmailTokenValidator
 } from '~/middlewares/users.middlewares'
 
@@ -35,5 +37,8 @@ usersRouter.post('/refresh-token', refreshTokenValidator, refreshTokenController
 
 // Lấy profile tài khoản đăng nhập
 usersRouter.get('/me', accessTokenValidator, getMeController)
+
+// Cập nhật tài khoản đăng nhập
+usersRouter.put('/me', accessTokenValidator, updateMeValidator, updateMeController)
 
 export default usersRouter

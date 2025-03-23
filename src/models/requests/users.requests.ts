@@ -20,3 +20,8 @@ export type VerifyEmailTokenReqBody = {
 export type RefreshTokenReqBody = {
   refreshToken: string
 }
+
+export type UpdateMeReqBody = {
+  fullName: string
+  avatar?: string
+}

@@ -4,7 +4,7 @@ import { ObjectId } from 'mongodb'
 
 import { USERS_MESSAGES } from '~/constants/message'
 import User from '~/models/databases/User'
-import { RefreshTokenReqBody, RegisterReqBody, TokenPayload } from '~/models/requests/users.requests'
+import { RefreshTokenReqBody, RegisterReqBody, TokenPayload, UpdateMeReqBody } from '~/models/requests/users.requests'
 import usersService from '~/services/users.services'
 
 // Đăng ký
@@ -64,6 +64,16 @@ export const getMeController = async (req: Request, res: Response) => {
   const result = await usersService.getMe(new ObjectId(userId))
   res.json({
     message: USERS_MESSAGES.GET_PROFILE_ME_SUCCESS,
+    data: result
+  })
+}
+
+// Cập nhật thông tin tài khoản tài khoản đăng nhập
+export const updateMeController = async (req: Request<ParamsDictionary, any, UpdateMeReqBody>, res: Response) => {
+  const { userId } = req.decodedAuthorization as TokenPayload
+  const result = await usersService.updateMe(new ObjectId(userId), req.body)
+  res.json({
+    message: USERS_MESSAGES.UPDATE_ME_SUCCESS,
     data: result
   })
 }

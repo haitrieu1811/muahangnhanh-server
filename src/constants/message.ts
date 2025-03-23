@@ -21,5 +21,9 @@ export const USERS_MESSAGES = {
   REFRESH_TOKEN_DOES_NOT_EXIST: 'Refresh token không tồn tại.',
   REFRESH_TOKEN_SUCCESS: 'Refresh token thành công.',
   ACCESS_TOKEN_IS_REQUIRED: 'Access token là bắt buộc.',
-  GET_PROFILE_ME_SUCCESS: 'Lấy hồ sơ của tôi thành công.'
+  GET_PROFILE_ME_SUCCESS: 'Lấy hồ sơ của tôi thành công.',
+  UPDATE_ME_SUCCESS: 'Cập nhật tài khoản của tôi thành công.',
+  FULLNAME_IS_REQUIRED: 'Họ tên là bắt buộc',
+  FULLNAME_LENGTH_IS_INVALID: 'Họ tên phải có độ dài từ 1 đến 50 ký tự.',
+  AVATAR_ID_IS_INVALID: 'Avatar ID không hợp lệ.'
 } as const

@@ -254,3 +254,31 @@ export const accessTokenValidator = validate(
     ['headers']
   )
 )
+
+export const updateMeValidator = validate(
+  checkSchema(
+    {
+      fullName: {
+        trim: true,
+        notEmpty: {
+          errorMessage: USERS_MESSAGES.FULLNAME_IS_REQUIRED
+        },
+        isLength: {
+          options: {
+            min: 1,
+            max: 50
+          },
+          errorMessage: USERS_MESSAGES.FULLNAME_LENGTH_IS_INVALID
+        }
+      },
+      avatar: {
+        trim: true,
+        optional: true,
+        isMongoId: {
+          errorMessage: USERS_MESSAGES.AVATAR_ID_IS_INVALID
+        }
+      }
+    },
+    ['body']
+  )
+)
