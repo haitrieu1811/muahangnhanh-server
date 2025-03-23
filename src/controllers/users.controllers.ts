@@ -4,7 +4,13 @@ import { ObjectId } from 'mongodb'
 
 import { USERS_MESSAGES } from '~/constants/message'
 import User from '~/models/databases/User'
-import { RefreshTokenReqBody, RegisterReqBody, TokenPayload, UpdateMeReqBody } from '~/models/requests/users.requests'
+import {
+  ChangePasswordReqBody,
+  RefreshTokenReqBody,
+  RegisterReqBody,
+  TokenPayload,
+  UpdateMeReqBody
+} from '~/models/requests/users.requests'
 import usersService from '~/services/users.services'
 
 // Đăng ký
@@ -74,6 +80,19 @@ export const updateMeController = async (req: Request<ParamsDictionary, any, Upd
   const result = await usersService.updateMe(new ObjectId(userId), req.body)
   res.json({
     message: USERS_MESSAGES.UPDATE_ME_SUCCESS,
+    data: result
+  })
+}
+
+// Đổi mật khẩu
+export const changePasswordController = async (
+  req: Request<ParamsDictionary, any, ChangePasswordReqBody>,
+  res: Response
+) => {
+  const { userId } = req.decodedAuthorization as TokenPayload
+  const result = await usersService.changePassword(new ObjectId(userId), req.body.password)
+  res.json({
+    message: USERS_MESSAGES.CHANGE_PASSWORD_SUCCESS,
     data: result
   })
 }

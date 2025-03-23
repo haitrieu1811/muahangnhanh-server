@@ -25,5 +25,8 @@ export const USERS_MESSAGES = {
   UPDATE_ME_SUCCESS: 'Cập nhật tài khoản của tôi thành công.',
   FULLNAME_IS_REQUIRED: 'Họ tên là bắt buộc',
   FULLNAME_LENGTH_IS_INVALID: 'Họ tên phải có độ dài từ 1 đến 50 ký tự.',
-  AVATAR_ID_IS_INVALID: 'Avatar ID không hợp lệ.'
+  AVATAR_ID_IS_INVALID: 'Avatar ID không hợp lệ.',
+  CHANGE_PASSWORD_SUCCESS: 'Đổi mật khẩu thành công.',
+  OLD_PASSWORD_IS_REQUIRED: 'Mật khẩu cũ là bắt buộc.',
+  OLD_PASSWORD_IS_INVALID: 'Mật khẩu cũ không chính xác.'
 } as const

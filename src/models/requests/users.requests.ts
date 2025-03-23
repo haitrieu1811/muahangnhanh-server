@@ -25,3 +25,7 @@ export type UpdateMeReqBody = {
   fullName: string
   avatar?: string
 }
+
+export type ChangePasswordReqBody = {
+  password: string
+}

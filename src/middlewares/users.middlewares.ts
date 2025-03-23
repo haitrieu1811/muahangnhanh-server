@@ -3,13 +3,15 @@ import { ParamsDictionary } from 'express-serve-static-core'
 import { checkSchema, ParamSchema } from 'express-validator'
 import { JsonWebTokenError } from 'jsonwebtoken'
 import capitalize from 'lodash/capitalize'
+import { ObjectId, WithId } from 'mongodb'
 
 import { ENV_CONFIG } from '~/constants/config'
 import { UserRole } from '~/constants/enum'
 import HTTP_STATUS from '~/constants/httpStatus'
 import { USERS_MESSAGES } from '~/constants/message'
+import User from '~/models/databases/User'
 import { ErrorWithStatus } from '~/models/Error'
-import { VerifyEmailTokenReqBody } from '~/models/requests/users.requests'
+import { TokenPayload, VerifyEmailTokenReqBody } from '~/models/requests/users.requests'
 import databaseService from '~/services/database.services'
 import { hashPassword } from '~/utils/crypto'
 import { numberEnumToArray } from '~/utils/helpers'
@@ -32,6 +34,37 @@ const passwordSchema: ParamSchema = {
   trim: true,
   notEmpty: {
     errorMessage: USERS_MESSAGES.PASSWORD_IS_REQUIRED
+  },
+  isLength: {
+    options: {
+      min: 8,
+      max: 32
+    },
+    errorMessage: USERS_MESSAGES.PASSWORD_LENGTH_INVALID
+  },
+  isStrongPassword: {
+    options: {
+      minLowercase: 1,
+      minUppercase: 1,
+      minNumbers: 1,
+      minSymbols: 1
+    },
+    errorMessage: USERS_MESSAGES.PASSWORD_IS_NOT_STRONG_ENOUGH
+  }
+}
+
+const confirmPasswordSchema: ParamSchema = {
+  trim: true,
+  notEmpty: {
+    errorMessage: USERS_MESSAGES.CONFIRM_PASSWORD_IS_REQUIRED
+  },
+  custom: {
+    options: (value: string, { req }) => {
+      if (value !== req.body.password) {
+        throw new Error(USERS_MESSAGES.CONFIRM_PASSWORD_IS_NOT_MATCH)
+      }
+      return true
+    }
   }
 }
 
@@ -51,39 +84,8 @@ export const registerValidator = validate(
           }
         }
       },
-      password: {
-        ...passwordSchema,
-        isLength: {
-          options: {
-            min: 8,
-            max: 32
-          },
-          errorMessage: USERS_MESSAGES.PASSWORD_LENGTH_INVALID
-        },
-        isStrongPassword: {
-          options: {
-            minLowercase: 1,
-            minUppercase: 1,
-            minNumbers: 1,
-            minSymbols: 1
-          },
-          errorMessage: USERS_MESSAGES.PASSWORD_IS_NOT_STRONG_ENOUGH
-        }
-      },
-      confirmPassword: {
-        trim: true,
-        notEmpty: {
-          errorMessage: USERS_MESSAGES.CONFIRM_PASSWORD_IS_REQUIRED
-        },
-        custom: {
-          options: (value: string, { req }) => {
-            if (value !== req.body.password) {
-              throw new Error(USERS_MESSAGES.CONFIRM_PASSWORD_IS_NOT_MATCH)
-            }
-            return true
-          }
-        }
-      },
+      password: passwordSchema,
+      confirmPassword: confirmPasswordSchema,
       role: {
         notEmpty: {
           errorMessage: USERS_MESSAGES.ROLE_IS_REQUIRED
@@ -278,6 +280,35 @@ export const updateMeValidator = validate(
           errorMessage: USERS_MESSAGES.AVATAR_ID_IS_INVALID
         }
       }
+    },
+    ['body']
+  )
+)
+
+export const changePasswordValidator = validate(
+  checkSchema(
+    {
+      oldPassword: {
+        trim: true,
+        notEmpty: {
+          errorMessage: USERS_MESSAGES.OLD_PASSWORD_IS_REQUIRED
+        },
+        custom: {
+          options: async (value: string, { req }) => {
+            const { userId } = (req as Request).decodedAuthorization as TokenPayload
+            const user = (await databaseService.users.findOne({
+              _id: new ObjectId(userId)
+            })) as WithId<User>
+            const isValid = hashPassword(value) === user.password
+            if (!isValid) {
+              throw new Error(USERS_MESSAGES.OLD_PASSWORD_IS_INVALID)
+            }
+            return true
+          }
+        }
+      },
+      password: passwordSchema,
+      confirmPassword: confirmPasswordSchema
     },
     ['body']
   )
