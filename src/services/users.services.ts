@@ -1,7 +1,9 @@
+import pick from 'lodash/pick'
 import { ObjectId } from 'mongodb'
 
 import { ENV_CONFIG } from '~/constants/config'
 import { TokenType, UserStatus, UserVerifyStatus } from '~/constants/enum'
+import { RefreshToken } from '~/models/databases/RefreshToken'
 import User from '~/models/databases/User'
 import { RegisterReqBody, TokenPayload } from '~/models/requests/users.requests'
 import databaseService from '~/services/database.services'
@@ -143,6 +145,33 @@ class UsersService {
       }
     )
     return { user }
+  }
+
+  // Đăng nhập
+  async login(user: User) {
+    const { _id, role, status, verifyStatus } = user
+    const [accessToken, refreshToken] = await this.signAccessAndRefreshToken({
+      userId: _id.toString(),
+      userRole: role,
+      userStatus: status,
+      userVerifyStatus: verifyStatus
+    })
+    const decodedRefreshToken = await this.decodedRefreshToken(refreshToken)
+    // Lưu phiên đăng nhập vào database
+    await databaseService.refreshTokens.insertOne(
+      new RefreshToken({
+        token: refreshToken,
+        iat: decodedRefreshToken.iat,
+        exp: decodedRefreshToken.exp,
+        userId: _id
+      })
+    )
+    const configuredUser = pick(user, ['_id', 'email', 'fullName', 'createdAt', 'updatedAt'])
+    return {
+      accessToken,
+      refreshToken,
+      user: configuredUser
+    }
   }
 }
 

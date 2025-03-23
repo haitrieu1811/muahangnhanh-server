@@ -13,5 +13,7 @@ export const USERS_MESSAGES = {
   ROLE_IS_INVALID: 'Vai trò người dùng không hợp lệ,',
   VERIFY_EMAIL_SUCCESS: 'Xác minh email thành công.',
   VERIFY_EMAIL_TOKEN_IS_REQUIRED: 'Verify email token là băc buộc.',
-  VERIFY_EMAIL_TOKEN_NOT_EXIST: 'Verify email token không tồn tại.'
+  VERIFY_EMAIL_TOKEN_NOT_EXIST: 'Verify email token không tồn tại.',
+  INVALID_EMAIL_OR_PASSWORD: 'Email hoặc mật khẩu không chính xác.',
+  LOGIN_SUCCESS: 'Đăng nhập thành công.'
 } as const

@@ -1,7 +1,7 @@
 import { Router } from 'express'
 
-import { registerController, verifyEmailController } from '~/controllers/users.controllers'
-import { registerValidator, verifyEmailTokenValidator } from '~/middlewares/users.middlewares'
+import { loginController, registerController, verifyEmailController } from '~/controllers/users.controllers'
+import { loginValidator, registerValidator, verifyEmailTokenValidator } from '~/middlewares/users.middlewares'
 
 const usersRouter = Router()
 
@@ -10,5 +10,8 @@ usersRouter.post('/register', registerValidator, registerController)
 
 // Xác minh email
 usersRouter.post('/verify-email', verifyEmailTokenValidator, verifyEmailController)
+
+// Đăng nhập
+usersRouter.post('/login', loginValidator, loginController)
 
 export default usersRouter

@@ -1,6 +1,7 @@
 import { Collection, Db, MongoClient } from 'mongodb'
 
 import { ENV_CONFIG } from '~/constants/config'
+import { RefreshToken } from '~/models/databases/RefreshToken'
 import User from '~/models/databases/User'
 
 const uri = `mongodb+srv://${ENV_CONFIG.DB_USERNAME}:${ENV_CONFIG.DB_PASSWORD}@muahangnhanh-cluster.g5ae1.mongodb.net/?retryWrites=true&w=majority&appName=muahangnhanh-cluster`
@@ -26,6 +27,10 @@ class DatabaseService {
 
   get users(): Collection<User> {
     return this.db.collection(ENV_CONFIG.DB_USERS_COLLECTION)
+  }
+
+  get refreshTokens(): Collection<RefreshToken> {
+    return this.db.collection(ENV_CONFIG.DB_REFRESH_TOKENS_COLLECTION)
   }
 }
 

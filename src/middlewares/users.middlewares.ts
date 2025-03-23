@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
-import { checkSchema } from 'express-validator'
+import { checkSchema, ParamSchema } from 'express-validator'
 import { JsonWebTokenError } from 'jsonwebtoken'
 import capitalize from 'lodash/capitalize'
 
@@ -11,24 +11,36 @@ import { USERS_MESSAGES } from '~/constants/message'
 import { ErrorWithStatus } from '~/models/Error'
 import { VerifyEmailTokenReqBody } from '~/models/requests/users.requests'
 import databaseService from '~/services/database.services'
+import { hashPassword } from '~/utils/crypto'
 import { numberEnumToArray } from '~/utils/helpers'
 import { verifyToken } from '~/utils/jwt'
 import { validate } from '~/utils/validation'
 
 const userRoles = numberEnumToArray(UserRole)
 
+const emailSchema: ParamSchema = {
+  trim: true,
+  notEmpty: {
+    errorMessage: USERS_MESSAGES.EMAIL_IS_REQUIRED
+  },
+  isEmail: {
+    errorMessage: USERS_MESSAGES.EMAIL_IS_INVALID
+  }
+}
+
+const passwordSchema: ParamSchema = {
+  trim: true,
+  notEmpty: {
+    errorMessage: USERS_MESSAGES.PASSWORD_IS_REQUIRED
+  }
+}
+
 // Đăng ký tài khoản
 export const registerValidator = validate(
   checkSchema(
     {
       email: {
-        trim: true,
-        notEmpty: {
-          errorMessage: USERS_MESSAGES.EMAIL_IS_REQUIRED
-        },
-        isEmail: {
-          errorMessage: USERS_MESSAGES.EMAIL_IS_INVALID
-        },
+        ...emailSchema,
         custom: {
           options: async (value: string) => {
             const user = await databaseService.users.findOne({ email: value })
@@ -40,10 +52,7 @@ export const registerValidator = validate(
         }
       },
       password: {
-        trim: true,
-        notEmpty: {
-          errorMessage: USERS_MESSAGES.PASSWORD_IS_REQUIRED
-        },
+        ...passwordSchema,
         isLength: {
           options: {
             min: 8,
@@ -136,3 +145,29 @@ export const verifyEmailTokenValidator = async (
     next(error)
   }
 }
+
+// Đăng nhập
+export const loginValidator = validate(
+  checkSchema(
+    {
+      email: emailSchema,
+      password: {
+        ...passwordSchema,
+        custom: {
+          options: async (value: string, { req }) => {
+            const user = await databaseService.users.findOne({
+              email: req.body.email,
+              password: hashPassword(value)
+            })
+            if (!user) {
+              throw new Error(USERS_MESSAGES.INVALID_EMAIL_OR_PASSWORD)
+            }
+            ;(req as Request).user = user
+            return true
+          }
+        }
+      }
+    },
+    ['body']
+  )
+)
