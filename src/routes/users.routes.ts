@@ -1,6 +1,7 @@
 import { Router } from 'express'
 
 import {
+  getMeController,
   loginController,
   logoutController,
   refreshTokenController,
@@ -8,6 +9,7 @@ import {
   verifyEmailController
 } from '~/controllers/users.controllers'
 import {
+  accessTokenValidator,
   loginValidator,
   refreshTokenValidator,
   registerValidator,
@@ -30,5 +32,8 @@ usersRouter.post('/logout', refreshTokenValidator, logoutController)
 
 // Refresh token
 usersRouter.post('/refresh-token', refreshTokenValidator, refreshTokenController)
+
+// Lấy profile tài khoản đăng nhập
+usersRouter.get('/me', accessTokenValidator, getMeController)
 
 export default usersRouter

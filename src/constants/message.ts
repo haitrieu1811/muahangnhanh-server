@@ -19,5 +19,7 @@ export const USERS_MESSAGES = {
   LOGOUT_SUCCESS: 'Đăng xuất thành công.',
   REFRESH_TOKEN_IS_REQUIRED: 'Refresh token là bắc buộc.',
   REFRESH_TOKEN_DOES_NOT_EXIST: 'Refresh token không tồn tại.',
-  REFRESH_TOKEN_SUCCESS: 'Refresh token thành công.'
+  REFRESH_TOKEN_SUCCESS: 'Refresh token thành công.',
+  ACCESS_TOKEN_IS_REQUIRED: 'Access token là bắt buộc.',
+  GET_PROFILE_ME_SUCCESS: 'Lấy hồ sơ của tôi thành công.'
 } as const

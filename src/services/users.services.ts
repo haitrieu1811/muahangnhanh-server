@@ -230,6 +230,25 @@ class UsersService {
       refreshToken: newRefreshToken
     }
   }
+
+  async getMe(userId: ObjectId) {
+    const user = await databaseService.users.findOne(
+      {
+        _id: userId
+      },
+      {
+        projection: {
+          email: 1,
+          fullName: 1,
+          createdAt: 1,
+          updatedAt: 1
+        }
+      }
+    )
+    return {
+      user
+    }
+  }
 }
 
 const usersService = new UsersService()

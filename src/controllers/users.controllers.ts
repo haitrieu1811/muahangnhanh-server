@@ -57,3 +57,13 @@ export const refreshTokenController = async (
     data: result
   })
 }
+
+// Lấy tài khoản tài khoản đăng nhập
+export const getMeController = async (req: Request, res: Response) => {
+  const { userId } = req.decodedAuthorization as TokenPayload
+  const result = await usersService.getMe(new ObjectId(userId))
+  res.json({
+    message: USERS_MESSAGES.GET_PROFILE_ME_SUCCESS,
+    data: result
+  })
+}
