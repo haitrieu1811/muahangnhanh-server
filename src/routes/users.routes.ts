@@ -3,6 +3,7 @@ import { Router } from 'express'
 import {
   loginController,
   logoutController,
+  refreshTokenController,
   registerController,
   verifyEmailController
 } from '~/controllers/users.controllers'
@@ -26,5 +27,8 @@ usersRouter.post('/login', loginValidator, loginController)
 
 // Đăng xuất
 usersRouter.post('/logout', refreshTokenValidator, logoutController)
+
+// Refresh token
+usersRouter.post('/refresh-token', refreshTokenValidator, refreshTokenController)
 
 export default usersRouter

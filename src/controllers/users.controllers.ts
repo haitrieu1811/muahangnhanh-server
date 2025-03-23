@@ -42,3 +42,18 @@ export const logoutController = async (req: Request<ParamsDictionary, any, Refre
     message: USERS_MESSAGES.LOGOUT_SUCCESS
   })
 }
+
+// Refresh token
+export const refreshTokenController = async (
+  req: Request<ParamsDictionary, any, RefreshTokenReqBody>,
+  res: Response
+) => {
+  const result = await usersService.refreshToken({
+    refreshToken: req.body.refreshToken,
+    decodedRefreshToken: req.decodedRefreshToken as TokenPayload & { exp: number }
+  })
+  res.json({
+    message: USERS_MESSAGES.REFRESH_TOKEN_SUCCESS,
+    data: result
+  })
+}
