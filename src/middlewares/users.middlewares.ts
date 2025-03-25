@@ -334,3 +334,58 @@ export const forgotPasswordValidator = validate(
     ['body']
   )
 )
+
+export const resetPasswordValidator = validate(
+  checkSchema(
+    {
+      password: passwordSchema,
+      confirmPassword: confirmPasswordSchema
+    },
+    ['body']
+  )
+)
+
+export const forgotPasswordTokenValidator = validate(
+  checkSchema(
+    {
+      forgotPasswordToken: {
+        trim: true,
+        custom: {
+          options: async (value: string, { req }) => {
+            if (!value) {
+              throw new ErrorWithStatus({
+                message: USERS_MESSAGES.RESET_PASSWORD_TOKEN_IS_REQUIRED,
+                status: HTTP_STATUS.UNAUTHORIZED
+              })
+            }
+            try {
+              const [forgotPasswordToken, decodedForgotPasswordToken] = await Promise.all([
+                databaseService.users.findOne({ forgotPasswordToken: value }),
+                verifyToken({
+                  token: value,
+                  secretOrPublicKey: ENV_CONFIG.JWT_SECRET_FORGOT_PASSWORD_TOKEN
+                })
+              ])
+              if (!forgotPasswordToken) {
+                throw new ErrorWithStatus({
+                  message: USERS_MESSAGES.FORGOT_PASSWORD_TOKEN_DOES_NOT_EXIST,
+                  status: HTTP_STATUS.UNAUTHORIZED
+                })
+              }
+              ;(req as Request).decodedForgotPasswordToken = decodedForgotPasswordToken
+            } catch (error) {
+              if (error instanceof JsonWebTokenError) {
+                throw new ErrorWithStatus({
+                  status: HTTP_STATUS.UNAUTHORIZED,
+                  message: capitalize(error.message)
+                })
+              }
+              throw error
+            }
+          }
+        }
+      }
+    },
+    ['body']
+  )
+)

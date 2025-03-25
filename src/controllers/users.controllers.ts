@@ -104,3 +104,16 @@ export const forgotPasswordController = async (req: Request, res: Response) => {
     message: USERS_MESSAGES.RESET_PASSWORD_REQUEST_SUCCESS
   })
 }
+
+// Đặt lại mật khẩu
+export const resetPasswordController = async (
+  req: Request<ParamsDictionary, any, ChangePasswordReqBody>,
+  res: Response
+) => {
+  const { userId } = req.decodedForgotPasswordToken as TokenPayload
+  const result = await usersService.resetPassword(new ObjectId(userId), req.body.password)
+  res.json({
+    message: USERS_MESSAGES.RESET_PASSWORD_SUCCESS,
+    data: result
+  })
+}

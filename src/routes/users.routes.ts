@@ -8,16 +8,19 @@ import {
   logoutController,
   refreshTokenController,
   registerController,
+  resetPasswordController,
   updateMeController,
   verifyEmailController
 } from '~/controllers/users.controllers'
 import {
   accessTokenValidator,
   changePasswordValidator,
+  forgotPasswordTokenValidator,
   forgotPasswordValidator,
   loginValidator,
   refreshTokenValidator,
   registerValidator,
+  resetPasswordValidator,
   updateMeValidator,
   verifyEmailTokenValidator
 } from '~/middlewares/users.middlewares'
@@ -50,5 +53,8 @@ usersRouter.post('/change-password', accessTokenValidator, changePasswordValidat
 
 // Quên mật khẩu
 usersRouter.post('/forgot-password', forgotPasswordValidator, forgotPasswordController)
+
+// Đặt lại mật khẩu
+usersRouter.post('/reset-password', forgotPasswordTokenValidator, resetPasswordValidator, resetPasswordController)
 
 export default usersRouter

@@ -1,7 +1,7 @@
-import pick from 'lodash/pick'
-import { ObjectId } from 'mongodb'
-import omitBy from 'lodash/omitBy'
 import isUndefined from 'lodash/isUndefined'
+import omitBy from 'lodash/omitBy'
+import pick from 'lodash/pick'
+import { ObjectId, WithId } from 'mongodb'
 
 import { ENV_CONFIG } from '~/constants/config'
 import { TokenType, UserStatus, UserVerifyStatus } from '~/constants/enum'
@@ -323,7 +323,7 @@ class UsersService {
       }
     )
     return {
-      user: updatedUser
+      user: updatedUser as WithId<User>
     }
   }
 
@@ -353,6 +353,25 @@ class UsersService {
       )
     ])
     return true
+  }
+
+  async resetPassword(userId: ObjectId, newPassword: string) {
+    const [{ user }] = await Promise.all([
+      this.changePassword(userId, newPassword),
+      databaseService.users.updateOne(
+        {
+          _id: userId
+        },
+        {
+          $set: {
+            forgotPasswordToken: ''
+          }
+        }
+      )
+    ])
+    return {
+      user
+    }
   }
 }
 

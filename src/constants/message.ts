@@ -30,5 +30,8 @@ export const USERS_MESSAGES = {
   OLD_PASSWORD_IS_REQUIRED: 'Mật khẩu cũ là bắt buộc.',
   OLD_PASSWORD_IS_INVALID: 'Mật khẩu cũ không chính xác.',
   RESET_PASSWORD_REQUEST_SUCCESS: 'Yêu cầu đặt lại mật khẩu thành công, vui lòng kiểm tra hòm thư email bạn vừa nhập.',
-  EMAIL_DOES_NOT_EXIST: 'Email không tồn tại trên hệ thống.'
+  EMAIL_DOES_NOT_EXIST: 'Email không tồn tại trên hệ thống.',
+  RESET_PASSWORD_SUCCESS: 'Đặt lại mật khẩu thành công.',
+  RESET_PASSWORD_TOKEN_IS_REQUIRED: 'Forgot password token là bắt buộc.',
+  FORGOT_PASSWORD_TOKEN_DOES_NOT_EXIST: 'Forgot password token không tồn tại.'
 } as const
