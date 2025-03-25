@@ -63,7 +63,7 @@ const sendMail = async (toAddress: string, subject: string, body: string) => {
   return sesClient.send(sendEmailCommand)
 }
 
-const verifyEmailTemplate = fs.readFileSync(path.resolve('src/templates/verify-email.html'), 'utf-8')
+const verifyEmailTemplate = fs.readFileSync(path.resolve('src/templates/email.html'), 'utf-8')
 
 export const sendVerifyEmail = async (toAddress: string, verifyEmailToken: string) => {
   return sendMail(
@@ -76,5 +76,21 @@ export const sendVerifyEmail = async (toAddress: string, verifyEmailToken: strin
         'Nếu bạn là người tạo tài khoản thông qua email này thì vui lòng xác minh email này để sử dụng dịch vụ của chúng tôi, nếu không vui lòng bỏ qua mail này.'
       )
       .replace('{{href}}', `${ENV_CONFIG.CLIENT_HOST}/verify-email?token=${verifyEmailToken}`)
+      .replace('{{buttonName}}', 'Xác minh email')
+  )
+}
+
+export const sendForgotPasswordEmail = async (toAddress: string, forgotPasswordToken: string) => {
+  return sendMail(
+    toAddress,
+    'Yêu cầu đặt lại mật khẩu',
+    verifyEmailTemplate
+      .replace('{{tittle}}', 'Yêu cầu đặt lại mật khẩu.')
+      .replace(
+        '{{content}}',
+        'Nếu bạn là người yêu cầu đặt lại mật khẩu thì vui lòng nhấn nút bên dưới để khôi phục lại mật khẩu, nếu không vui lòng bỏ qua mail này.'
+      )
+      .replace('{{href}}', `${ENV_CONFIG.CLIENT_HOST}/reset-password?token=${forgotPasswordToken}`)
+      .replace('{{buttonName}}', 'Đặt lại mật khẩu')
   )
 }

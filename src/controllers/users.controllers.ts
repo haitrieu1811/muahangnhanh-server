@@ -96,3 +96,11 @@ export const changePasswordController = async (
     data: result
   })
 }
+
+// Quên mật khẩu
+export const forgotPasswordController = async (req: Request, res: Response) => {
+  await usersService.forgotPassword(req.user as User)
+  res.json({
+    message: USERS_MESSAGES.RESET_PASSWORD_REQUEST_SUCCESS
+  })
+}

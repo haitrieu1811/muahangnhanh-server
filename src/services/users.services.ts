@@ -10,7 +10,7 @@ import User from '~/models/databases/User'
 import { RegisterReqBody, TokenPayload, UpdateMeReqBody } from '~/models/requests/users.requests'
 import databaseService from '~/services/database.services'
 import { hashPassword } from '~/utils/crypto'
-import { sendVerifyEmail } from '~/utils/email'
+import { sendForgotPasswordEmail, sendVerifyEmail } from '~/utils/email'
 import { signToken, verifyToken } from '~/utils/jwt'
 
 class UsersService {
@@ -67,6 +67,20 @@ class UsersService {
       privateKey: ENV_CONFIG.JWT_SECRET_VERIFY_EMAIL_TOKEN,
       options: {
         expiresIn: ENV_CONFIG.VERIFY_EMAIL_TOKEN_EXPIRES_IN as any
+      }
+    })
+  }
+
+  // Tạo token đặt lại mật khẩu
+  async signForgotPasswordToken(payload: TokenPayload) {
+    return signToken({
+      payload: {
+        ...payload,
+        tokenType: TokenType.ForgotPasswordToken
+      },
+      privateKey: ENV_CONFIG.JWT_SECRET_FORGOT_PASSWORD_TOKEN,
+      options: {
+        expiresIn: ENV_CONFIG.FORGOT_PASSWORD_TOKEN_EXPIRES_IN as any
       }
     })
   }
@@ -311,6 +325,34 @@ class UsersService {
     return {
       user: updatedUser
     }
+  }
+
+  async forgotPassword({ _id, status, verifyStatus, role, email }: User) {
+    // Tạo forgotPasswordToken
+    const forgotPasswordToken = await this.signForgotPasswordToken({
+      userId: _id.toString(),
+      userRole: role,
+      userStatus: status,
+      userVerifyStatus: verifyStatus
+    })
+    // Gửi mail và cập nhật giá trị forgotPasswordToken trong DB
+    await Promise.all([
+      sendForgotPasswordEmail(email, forgotPasswordToken),
+      databaseService.users.updateOne(
+        {
+          _id
+        },
+        {
+          $set: {
+            forgotPasswordToken
+          },
+          $currentDate: {
+            updatedAt: true
+          }
+        }
+      )
+    ])
+    return true
   }
 }
 

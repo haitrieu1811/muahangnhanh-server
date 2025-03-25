@@ -313,3 +313,24 @@ export const changePasswordValidator = validate(
     ['body']
   )
 )
+
+export const forgotPasswordValidator = validate(
+  checkSchema(
+    {
+      email: {
+        ...emailSchema,
+        custom: {
+          options: async (value: string, { req }) => {
+            const user = await databaseService.users.findOne({ email: value })
+            if (!user) {
+              throw new Error(USERS_MESSAGES.EMAIL_DOES_NOT_EXIST)
+            }
+            ;(req as Request).user = user
+            return true
+          }
+        }
+      }
+    },
+    ['body']
+  )
+)

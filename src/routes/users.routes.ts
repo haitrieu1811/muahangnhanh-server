@@ -2,6 +2,7 @@ import { Router } from 'express'
 
 import {
   changePasswordController,
+  forgotPasswordController,
   getMeController,
   loginController,
   logoutController,
@@ -13,6 +14,7 @@ import {
 import {
   accessTokenValidator,
   changePasswordValidator,
+  forgotPasswordValidator,
   loginValidator,
   refreshTokenValidator,
   registerValidator,
@@ -45,5 +47,8 @@ usersRouter.put('/me', accessTokenValidator, updateMeValidator, updateMeControll
 
 // Đổi mật khẩu
 usersRouter.post('/change-password', accessTokenValidator, changePasswordValidator, changePasswordController)
+
+// Quên mật khẩu
+usersRouter.post('/forgot-password', forgotPasswordValidator, forgotPasswordController)
 
 export default usersRouter

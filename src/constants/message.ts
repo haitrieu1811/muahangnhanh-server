@@ -28,5 +28,7 @@ export const USERS_MESSAGES = {
   AVATAR_ID_IS_INVALID: 'Avatar ID không hợp lệ.',
   CHANGE_PASSWORD_SUCCESS: 'Đổi mật khẩu thành công.',
   OLD_PASSWORD_IS_REQUIRED: 'Mật khẩu cũ là bắt buộc.',
-  OLD_PASSWORD_IS_INVALID: 'Mật khẩu cũ không chính xác.'
+  OLD_PASSWORD_IS_INVALID: 'Mật khẩu cũ không chính xác.',
+  RESET_PASSWORD_REQUEST_SUCCESS: 'Yêu cầu đặt lại mật khẩu thành công, vui lòng kiểm tra hòm thư email bạn vừa nhập.',
+  EMAIL_DOES_NOT_EXIST: 'Email không tồn tại trên hệ thống.'
 } as const
