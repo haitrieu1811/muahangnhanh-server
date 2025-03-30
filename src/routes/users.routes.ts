@@ -3,6 +3,7 @@ import { Router } from 'express'
 import {
   changePasswordController,
   forgotPasswordController,
+  getAllUsersController,
   getMeController,
   loginController,
   logoutController,
@@ -17,6 +18,9 @@ import {
   changePasswordValidator,
   forgotPasswordTokenValidator,
   forgotPasswordValidator,
+  isActiveUserValidator,
+  isAdminValidator,
+  isVerifiedUserValidator,
   loginValidator,
   refreshTokenValidator,
   registerValidator,
@@ -24,6 +28,7 @@ import {
   updateMeValidator,
   verifyEmailTokenValidator
 } from '~/middlewares/users.middlewares'
+import { paginationValidator } from '~/middlewares/utils.middlewares'
 
 const usersRouter = Router()
 
@@ -56,5 +61,16 @@ usersRouter.post('/forgot-password', forgotPasswordValidator, forgotPasswordCont
 
 // Đặt lại mật khẩu
 usersRouter.post('/reset-password', forgotPasswordTokenValidator, resetPasswordValidator, resetPasswordController)
+
+// Lấy danh sách tất cả người dùng có trên hệ thống
+usersRouter.get(
+  '/all',
+  accessTokenValidator,
+  isActiveUserValidator,
+  isVerifiedUserValidator,
+  isAdminValidator,
+  paginationValidator,
+  getAllUsersController
+)
 
 export default usersRouter

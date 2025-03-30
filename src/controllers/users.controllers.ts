@@ -11,6 +11,7 @@ import {
   TokenPayload,
   UpdateMeReqBody
 } from '~/models/requests/users.requests'
+import { PaginationReqQuery } from '~/models/requests/utils.requests'
 import usersService from '~/services/users.services'
 
 // Đăng ký
@@ -114,6 +115,18 @@ export const resetPasswordController = async (
   const result = await usersService.resetPassword(new ObjectId(userId), req.body.password)
   res.json({
     message: USERS_MESSAGES.RESET_PASSWORD_SUCCESS,
+    data: result
+  })
+}
+
+// Lấy danh sách tất cả người dùng có trên hệ thống
+export const getAllUsersController = async (
+  req: Request<ParamsDictionary, any, any, PaginationReqQuery>,
+  res: Response
+) => {
+  const result = await usersService.getAllUsers(req.query)
+  res.json({
+    message: USERS_MESSAGES.GET_ALL_USERS_SUCCESS,
     data: result
   })
 }

@@ -1,3 +1,13 @@
+export const UTILS_MESSAGES = {
+  PAGE_MUST_BE_AN_INTEGER: 'Page phải là một số nguyên.',
+  PAGE_MUST_BE_GREATER_THAN_ZERO: 'Page phải lớn hơn 0.',
+  LIMIT_MUST_BE_AN_INTEGER: 'Limit phải là một số nguyên.',
+  LIMIT_MUST_BE_GREATER_THAN_OR_EQUAL_ZERO: 'Limit phải là một số lớn hơn hoặc bằng 0.',
+  PERMISSION_DENIED: 'Quyền truy cập API bị từ chối.',
+  UNVERIFIED_USER: 'Người dùng chưa được xác minh,',
+  INACTIVE_USER: 'Người dùng không hoạt động.'
+} as const
+
 export const USERS_MESSAGES = {
   REGISTER_SUCCESS: 'Đăng ký tài khoản thành công.',
   EMAIL_IS_REQUIRED: 'Email là bắc buộc.',
@@ -33,5 +43,6 @@ export const USERS_MESSAGES = {
   EMAIL_DOES_NOT_EXIST: 'Email không tồn tại trên hệ thống.',
   RESET_PASSWORD_SUCCESS: 'Đặt lại mật khẩu thành công.',
   RESET_PASSWORD_TOKEN_IS_REQUIRED: 'Forgot password token là bắt buộc.',
-  FORGOT_PASSWORD_TOKEN_DOES_NOT_EXIST: 'Forgot password token không tồn tại.'
+  FORGOT_PASSWORD_TOKEN_DOES_NOT_EXIST: 'Forgot password token không tồn tại.',
+  GET_ALL_USERS_SUCCESS: 'Lấy danh sách tất cả người dùng thành công.'
 } as const

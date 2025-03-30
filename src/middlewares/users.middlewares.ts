@@ -6,9 +6,9 @@ import capitalize from 'lodash/capitalize'
 import { ObjectId, WithId } from 'mongodb'
 
 import { ENV_CONFIG } from '~/constants/config'
-import { UserRole } from '~/constants/enum'
+import { UserRole, UserStatus, UserVerifyStatus } from '~/constants/enum'
 import HTTP_STATUS from '~/constants/httpStatus'
-import { USERS_MESSAGES } from '~/constants/message'
+import { USERS_MESSAGES, UTILS_MESSAGES } from '~/constants/message'
 import User from '~/models/databases/User'
 import { ErrorWithStatus } from '~/models/Error'
 import { TokenPayload, VerifyEmailTokenReqBody } from '~/models/requests/users.requests'
@@ -389,3 +389,42 @@ export const forgotPasswordTokenValidator = validate(
     ['body']
   )
 )
+
+export const isVerifiedUserValidator = (req: Request, res: Response, next: NextFunction) => {
+  const { userVerifyStatus } = req.decodedAuthorization as TokenPayload
+  if (userVerifyStatus !== UserVerifyStatus.Verified) {
+    next(
+      new ErrorWithStatus({
+        message: UTILS_MESSAGES.UNVERIFIED_USER,
+        status: HTTP_STATUS.FORBIDDEN
+      })
+    )
+  }
+  next()
+}
+
+export const isActiveUserValidator = (req: Request, res: Response, next: NextFunction) => {
+  const { userStatus } = req.decodedAuthorization as TokenPayload
+  if (userStatus !== UserStatus.Active) {
+    next(
+      new ErrorWithStatus({
+        message: UTILS_MESSAGES.INACTIVE_USER,
+        status: HTTP_STATUS.FORBIDDEN
+      })
+    )
+  }
+  next()
+}
+
+export const isAdminValidator = (req: Request, res: Response, next: NextFunction) => {
+  const { userRole } = req.decodedAuthorization as TokenPayload
+  if (userRole !== UserRole.Admin) {
+    next(
+      new ErrorWithStatus({
+        message: UTILS_MESSAGES.PERMISSION_DENIED,
+        status: HTTP_STATUS.FORBIDDEN
+      })
+    )
+  }
+  next()
+}

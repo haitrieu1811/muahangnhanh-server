@@ -8,6 +8,7 @@ import { TokenType, UserStatus, UserVerifyStatus } from '~/constants/enum'
 import { RefreshToken } from '~/models/databases/RefreshToken'
 import User from '~/models/databases/User'
 import { RegisterReqBody, TokenPayload, UpdateMeReqBody } from '~/models/requests/users.requests'
+import { PaginationReqQuery } from '~/models/requests/utils.requests'
 import databaseService from '~/services/database.services'
 import { hashPassword } from '~/utils/crypto'
 import { sendForgotPasswordEmail, sendVerifyEmail } from '~/utils/email'
@@ -371,6 +372,37 @@ class UsersService {
     ])
     return {
       user
+    }
+  }
+
+  async getAllUsers({ page, limit }: PaginationReqQuery) {
+    const _page = Number(page) || 1
+    const _limit = Number(limit) || 10
+    const totalUsers = await databaseService.users.countDocuments({})
+    const skip = (_page - 1) * _limit
+    const allUsers = await databaseService.users
+      .find(
+        {},
+        {
+          skip,
+          limit: _limit,
+          projection: {
+            email: 1,
+            fullName: 1,
+            createdAt: 1,
+            updatedAt: 1
+          }
+        }
+      )
+      .toArray()
+    return {
+      users: allUsers,
+      pagination: {
+        page: _page,
+        limit: _limit,
+        totalRows: totalUsers,
+        totalPages: Math.ceil(totalUsers / _limit)
+      }
     }
   }
 }
