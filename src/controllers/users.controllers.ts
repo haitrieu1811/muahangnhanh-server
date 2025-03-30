@@ -141,3 +141,11 @@ export const updateUserController = async (req: Request<UserIdReqParams, any, Up
     data: result
   })
 }
+
+// Xóa người dùng trên hệ thống
+export const deleteUserController = async (req: Request<UserIdReqParams>, res: Response) => {
+  await usersService.deleteUser(new ObjectId(req.params.userId))
+  res.json({
+    message: USERS_MESSAGES.DELETE_USER_SUCCESS
+  })
+}

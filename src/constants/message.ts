@@ -49,5 +49,6 @@ export const USERS_MESSAGES = {
   UNVERIFIED_USER: 'Người dùng chưa được xác minh,',
   INACTIVE_USER: 'Người dùng không hoạt động.',
   UPDATE_USER_SUCCESS: 'Cập nhật người dùng thành công.',
-  STATUS_IS_INVALID: 'Trạng thái người dùng không hợp lệ.'
+  STATUS_IS_INVALID: 'Trạng thái người dùng không hợp lệ.',
+  DELETE_USER_SUCCESS: 'Xóa người dùng thành công.'
 } as const

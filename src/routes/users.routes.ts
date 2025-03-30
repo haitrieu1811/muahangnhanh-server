@@ -2,6 +2,7 @@ import { Router } from 'express'
 
 import {
   changePasswordController,
+  deleteUserController,
   forgotPasswordController,
   getAllUsersController,
   getMeController,
@@ -86,6 +87,17 @@ usersRouter.patch(
   userIdValidator,
   updateUserValidator,
   updateUserController
+)
+
+// Xóa người dùng trên hệ thống
+usersRouter.delete(
+  '/:userId',
+  accessTokenValidator,
+  isActiveUserValidator,
+  isVerifiedUserValidator,
+  isAdminValidator,
+  userIdValidator,
+  deleteUserController
 )
 
 export default usersRouter
