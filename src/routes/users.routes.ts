@@ -11,6 +11,7 @@ import {
   registerController,
   resetPasswordController,
   updateMeController,
+  updateUserController,
   verifyEmailController
 } from '~/controllers/users.controllers'
 import {
@@ -26,6 +27,8 @@ import {
   registerValidator,
   resetPasswordValidator,
   updateMeValidator,
+  updateUserValidator,
+  userIdValidator,
   verifyEmailTokenValidator
 } from '~/middlewares/users.middlewares'
 import { paginationValidator } from '~/middlewares/utils.middlewares'
@@ -71,6 +74,18 @@ usersRouter.get(
   isAdminValidator,
   paginationValidator,
   getAllUsersController
+)
+
+// Cập nhật người dùng trên hệ thống
+usersRouter.patch(
+  '/:userId',
+  accessTokenValidator,
+  isActiveUserValidator,
+  isVerifiedUserValidator,
+  isAdminValidator,
+  userIdValidator,
+  updateUserValidator,
+  updateUserController
 )
 
 export default usersRouter

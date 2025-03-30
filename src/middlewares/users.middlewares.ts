@@ -19,6 +19,7 @@ import { verifyToken } from '~/utils/jwt'
 import { validate } from '~/utils/validation'
 
 const userRoles = numberEnumToArray(UserRole)
+const userStatuses = numberEnumToArray(UserStatus)
 
 const emailSchema: ParamSchema = {
   trim: true,
@@ -395,7 +396,7 @@ export const isVerifiedUserValidator = (req: Request, res: Response, next: NextF
   if (userVerifyStatus !== UserVerifyStatus.Verified) {
     next(
       new ErrorWithStatus({
-        message: UTILS_MESSAGES.UNVERIFIED_USER,
+        message: USERS_MESSAGES.UNVERIFIED_USER,
         status: HTTP_STATUS.FORBIDDEN
       })
     )
@@ -408,7 +409,7 @@ export const isActiveUserValidator = (req: Request, res: Response, next: NextFun
   if (userStatus !== UserStatus.Active) {
     next(
       new ErrorWithStatus({
-        message: UTILS_MESSAGES.INACTIVE_USER,
+        message: USERS_MESSAGES.INACTIVE_USER,
         status: HTTP_STATUS.FORBIDDEN
       })
     )
@@ -428,3 +429,55 @@ export const isAdminValidator = (req: Request, res: Response, next: NextFunction
   }
   next()
 }
+
+export const userIdValidator = validate(
+  checkSchema(
+    {
+      userId: {
+        trim: true,
+        custom: {
+          options: async (value: string) => {
+            if (!value) {
+              throw new ErrorWithStatus({
+                message: USERS_MESSAGES.USER_ID_IS_REQUIRED,
+                status: HTTP_STATUS.BAD_REQUEST
+              })
+            }
+            if (!ObjectId.isValid(value)) {
+              throw new ErrorWithStatus({
+                message: USERS_MESSAGES.USER_ID_IS_INVALID,
+                status: HTTP_STATUS.BAD_REQUEST
+              })
+            }
+            const user = await databaseService.users.findOne({
+              _id: new ObjectId(value)
+            })
+            if (!user) {
+              throw new ErrorWithStatus({
+                message: USERS_MESSAGES.USER_NOT_FOUND,
+                status: HTTP_STATUS.NOT_FOUND
+              })
+            }
+            return true
+          }
+        }
+      }
+    },
+    ['params']
+  )
+)
+
+export const updateUserValidator = validate(
+  checkSchema(
+    {
+      status: {
+        optional: true,
+        isIn: {
+          options: [userStatuses],
+          errorMessage: USERS_MESSAGES.STATUS_IS_INVALID
+        }
+      }
+    },
+    ['body']
+  )
+)

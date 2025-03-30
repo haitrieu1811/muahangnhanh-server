@@ -7,7 +7,7 @@ import { ENV_CONFIG } from '~/constants/config'
 import { TokenType, UserStatus, UserVerifyStatus } from '~/constants/enum'
 import { RefreshToken } from '~/models/databases/RefreshToken'
 import User from '~/models/databases/User'
-import { RegisterReqBody, TokenPayload, UpdateMeReqBody } from '~/models/requests/users.requests'
+import { RegisterReqBody, TokenPayload, UpdateMeReqBody, UpdateUserReqBody } from '~/models/requests/users.requests'
 import { PaginationReqQuery } from '~/models/requests/utils.requests'
 import databaseService from '~/services/database.services'
 import { hashPassword } from '~/utils/crypto'
@@ -403,6 +403,38 @@ class UsersService {
         totalRows: totalUsers,
         totalPages: Math.ceil(totalUsers / _limit)
       }
+    }
+  }
+
+  async updateUser(userId: ObjectId, body: UpdateUserReqBody) {
+    const configuredBody = omitBy(
+      {
+        status: body.status ? body.status : undefined
+      },
+      isUndefined
+    )
+    const updatedUser = await databaseService.users.findOneAndUpdate(
+      {
+        _id: userId
+      },
+      {
+        $set: configuredBody,
+        $currentDate: {
+          updatedAt: true
+        }
+      },
+      {
+        returnDocument: 'after',
+        projection: {
+          email: 1,
+          fullName: 1,
+          createdAt: 1,
+          updatedAt: 1
+        }
+      }
+    )
+    return {
+      user: updatedUser
     }
   }
 }

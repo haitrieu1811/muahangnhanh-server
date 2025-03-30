@@ -1,3 +1,5 @@
+import { ParamsDictionary } from 'express-serve-static-core'
+
 import { UserRole, UserStatus, UserVerifyStatus } from '~/constants/enum'
 
 export type TokenPayload = {
@@ -28,4 +30,12 @@ export type UpdateMeReqBody = {
 
 export type ChangePasswordReqBody = {
   password: string
+}
+
+export type UpdateUserReqBody = {
+  status?: UserStatus
+}
+
+export type UserIdReqParams = ParamsDictionary & {
+  userId: string
 }

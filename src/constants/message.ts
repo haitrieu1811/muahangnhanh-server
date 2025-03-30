@@ -3,9 +3,7 @@ export const UTILS_MESSAGES = {
   PAGE_MUST_BE_GREATER_THAN_ZERO: 'Page phải lớn hơn 0.',
   LIMIT_MUST_BE_AN_INTEGER: 'Limit phải là một số nguyên.',
   LIMIT_MUST_BE_GREATER_THAN_OR_EQUAL_ZERO: 'Limit phải là một số lớn hơn hoặc bằng 0.',
-  PERMISSION_DENIED: 'Quyền truy cập API bị từ chối.',
-  UNVERIFIED_USER: 'Người dùng chưa được xác minh,',
-  INACTIVE_USER: 'Người dùng không hoạt động.'
+  PERMISSION_DENIED: 'Quyền truy cập API bị từ chối.'
 } as const
 
 export const USERS_MESSAGES = {
@@ -44,5 +42,12 @@ export const USERS_MESSAGES = {
   RESET_PASSWORD_SUCCESS: 'Đặt lại mật khẩu thành công.',
   RESET_PASSWORD_TOKEN_IS_REQUIRED: 'Forgot password token là bắt buộc.',
   FORGOT_PASSWORD_TOKEN_DOES_NOT_EXIST: 'Forgot password token không tồn tại.',
-  GET_ALL_USERS_SUCCESS: 'Lấy danh sách tất cả người dùng thành công.'
+  GET_ALL_USERS_SUCCESS: 'Lấy danh sách tất cả người dùng thành công.',
+  USER_ID_IS_REQUIRED: 'ID người dùng là bắt buộc.',
+  USER_ID_IS_INVALID: 'ID người dùng không hợp lệ,',
+  USER_NOT_FOUND: 'Không tìm thấy người dùng.',
+  UNVERIFIED_USER: 'Người dùng chưa được xác minh,',
+  INACTIVE_USER: 'Người dùng không hoạt động.',
+  UPDATE_USER_SUCCESS: 'Cập nhật người dùng thành công.',
+  STATUS_IS_INVALID: 'Trạng thái người dùng không hợp lệ.'
 } as const

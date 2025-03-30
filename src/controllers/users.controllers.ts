@@ -9,7 +9,9 @@ import {
   RefreshTokenReqBody,
   RegisterReqBody,
   TokenPayload,
-  UpdateMeReqBody
+  UpdateMeReqBody,
+  UpdateUserReqBody,
+  UserIdReqParams
 } from '~/models/requests/users.requests'
 import { PaginationReqQuery } from '~/models/requests/utils.requests'
 import usersService from '~/services/users.services'
@@ -127,6 +129,15 @@ export const getAllUsersController = async (
   const result = await usersService.getAllUsers(req.query)
   res.json({
     message: USERS_MESSAGES.GET_ALL_USERS_SUCCESS,
+    data: result
+  })
+}
+
+// Cập nhật người dùng trên hệ thống
+export const updateUserController = async (req: Request<UserIdReqParams, any, UpdateUserReqBody>, res: Response) => {
+  const result = await usersService.updateUser(new ObjectId(req.params.userId), req.body)
+  res.json({
+    message: USERS_MESSAGES.UPDATE_USER_SUCCESS,
     data: result
   })
 }
