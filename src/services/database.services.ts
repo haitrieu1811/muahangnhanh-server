@@ -1,6 +1,7 @@
 import { Collection, Db, MongoClient } from 'mongodb'
 
 import { ENV_CONFIG } from '~/constants/config'
+import Media from '~/models/databases/Media'
 import { RefreshToken } from '~/models/databases/RefreshToken'
 import User from '~/models/databases/User'
 
@@ -31,6 +32,10 @@ class DatabaseService {
 
   get refreshTokens(): Collection<RefreshToken> {
     return this.db.collection(ENV_CONFIG.DB_REFRESH_TOKENS_COLLECTION)
+  }
+
+  get medias(): Collection<Media> {
+    return this.db.collection(ENV_CONFIG.DB_MEDIAS_COLLECTION)
   }
 }
 

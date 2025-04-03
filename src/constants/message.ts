@@ -52,3 +52,9 @@ export const USERS_MESSAGES = {
   STATUS_IS_INVALID: 'Trạng thái người dùng không hợp lệ.',
   DELETE_USER_SUCCESS: 'Xóa người dùng thành công.'
 } as const
+
+export const MEDIAS_MESSAGES = {
+  IMAGE_FILE_TYPE_INVALID: 'Loại file ảnh không hợp lệ.',
+  IMAGE_FIELD_IS_REQUIRED: 'Trường image là bắt buộc.',
+  UPLOAD_IMAGE_SUCCEED: 'Tải ảnh lên thành công.'
+} as const

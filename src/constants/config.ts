@@ -34,6 +34,7 @@ export const ENV_CONFIG = {
   DB_NAME: process.env.DB_NAME as string,
   DB_USERS_COLLECTION: process.env.DB_USERS_COLLECTION as string,
   DB_REFRESH_TOKENS_COLLECTION: process.env.DB_REFRESH_TOKENS_COLLECTION as string,
+  DB_MEDIAS_COLLECTION: process.env.DB_MEDIAS_COLLECTION as string,
 
   JWT_SECRET_ACCESS_TOKEN: process.env.JWT_SECRET_ACCESS_TOKEN as string,
   ACCESS_TOKEN_EXPIRES_IN: process.env.ACCESS_TOKEN_EXPIRES_IN as string,
