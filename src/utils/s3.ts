@@ -5,6 +5,7 @@ import fs from 'fs'
 
 import { ENV_CONFIG } from '~/constants/config'
 import HTTP_STATUS from '~/constants/httpStatus'
+import { MEDIAS_MESSAGES } from '~/constants/message'
 
 const s3 = new S3({
   region: ENV_CONFIG.AWS_REGION,
@@ -50,7 +51,7 @@ export const sendFileFromS3 = async (res: Response, filepath: string) => {
     ;(data.Body as any).pipe(res)
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
-    res.status(HTTP_STATUS.NOT_FOUND).send('Not found')
+    res.status(HTTP_STATUS.NOT_FOUND).send(MEDIAS_MESSAGES.FILE_NOT_FOUND)
   }
 }
 
