@@ -2,6 +2,7 @@ import { Collection, Db, MongoClient } from 'mongodb'
 
 import { ENV_CONFIG } from '~/constants/config'
 import Media from '~/models/databases/Media'
+import ProductCategory from '~/models/databases/ProductCategory'
 import { RefreshToken } from '~/models/databases/RefreshToken'
 import User from '~/models/databases/User'
 
@@ -36,6 +37,10 @@ class DatabaseService {
 
   get medias(): Collection<Media> {
     return this.db.collection(ENV_CONFIG.DB_MEDIAS_COLLECTION)
+  }
+
+  get productCategories(): Collection<ProductCategory> {
+    return this.db.collection(ENV_CONFIG.DB_PRODUCT_CATEGORIES_COLLECTION)
   }
 }
 

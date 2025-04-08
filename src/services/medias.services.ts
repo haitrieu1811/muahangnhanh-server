@@ -30,22 +30,20 @@ class MediasService {
           contentType: mime.getType(newPath) as string
         })
         try {
-          await Promise.all([
-            fsPromise.unlink(image.filepath),
-            fsPromise.unlink(newPath),
-            // Lưu ảnh vào DB
-            databaseService.medias.insertOne(
-              new Media({
-                name: newFullName,
-                type: MediaType.Image,
-                userId
-              })
-            )
-          ])
+          await Promise.all([fsPromise.unlink(image.filepath), fsPromise.unlink(newPath)])
         } catch (error) {
           console.log(error)
         }
+        // Lưu thông tin ảnh vào DB
+        const { insertedId } = await databaseService.medias.insertOne(
+          new Media({
+            name: newFullName,
+            type: MediaType.Image,
+            userId
+          })
+        )
         return {
+          _id: insertedId,
           name: newFullName,
           type: MediaType.Image
         }

@@ -3,7 +3,9 @@ export const UTILS_MESSAGES = {
   PAGE_MUST_BE_GREATER_THAN_ZERO: 'Page phải lớn hơn 0.',
   LIMIT_MUST_BE_AN_INTEGER: 'Limit phải là một số nguyên.',
   LIMIT_MUST_BE_GREATER_THAN_OR_EQUAL_ZERO: 'Limit phải là một số lớn hơn hoặc bằng 0.',
-  PERMISSION_DENIED: 'Quyền truy cập API bị từ chối.'
+  PERMISSION_DENIED: 'Quyền truy cập API bị từ chối.',
+  FILE_ID_IS_REQUIRED: 'ID file là bắt buộc',
+  FILE_ID_IS_INVALID: 'ID file không hợp lệ.'
 } as const
 
 export const USERS_MESSAGES = {
@@ -58,4 +60,9 @@ export const MEDIAS_MESSAGES = {
   IMAGE_FIELD_IS_REQUIRED: 'Trường image là bắt buộc.',
   UPLOAD_IMAGE_SUCCEED: 'Tải ảnh lên thành công.',
   FILE_NOT_FOUND: 'Không tìm thấy file.'
+} as const
+
+export const PRODUCTS_MESSAGES = {
+  CREATE_PRODUCT_CATEGORY_SUCCESS: 'Tạo danh mục sản phẩm thành công.',
+  PRODUCT_CATEGORY_NAME_IS_REQUIRED: 'Tên danh mục sản phẩm là bắt buộc.'
 } as const
