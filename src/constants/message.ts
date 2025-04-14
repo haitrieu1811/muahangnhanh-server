@@ -64,5 +64,9 @@ export const MEDIAS_MESSAGES = {
 
 export const PRODUCTS_MESSAGES = {
   CREATE_PRODUCT_CATEGORY_SUCCESS: 'Tạo danh mục sản phẩm thành công.',
-  PRODUCT_CATEGORY_NAME_IS_REQUIRED: 'Tên danh mục sản phẩm là bắt buộc.'
+  PRODUCT_CATEGORY_NAME_IS_REQUIRED: 'Tên danh mục sản phẩm là bắt buộc.',
+  UPDATE_PRODUCT_CATEGORY_SUCCESS: 'Cập nhật danh mục sản phẩm thành công.',
+  PRODUCT_CATEGORY_ID_IS_REQUIRED: 'ID danh mục sản phẩm là bắt buộc.',
+  PRODUCT_CATEGORY_ID_IS_INVALID: 'ID danh mục sản phẩm không hợp lệ.',
+  PRODUCT_CATEGORY_NOT_EXIST: 'Danh mục sản phẩm không tồn tại.'
 } as const

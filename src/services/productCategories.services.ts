@@ -22,6 +22,29 @@ class ProductCategoriesService {
       productCategory
     }
   }
+
+  async update(body: CreateProductCategoryReqBody, productCategoryId: ObjectId) {
+    const updatedProductCategory = await databaseService.productCategories.findOneAndUpdate(
+      {
+        _id: productCategoryId
+      },
+      {
+        $set: {
+          ...body,
+          thumbnail: new ObjectId(body.thumbnail)
+        },
+        $currentDate: {
+          updatedAt: true
+        }
+      },
+      {
+        returnDocument: 'after'
+      }
+    )
+    return {
+      productCategory: updatedProductCategory
+    }
+  }
 }
 
 const productCategoriesService = new ProductCategoriesService()
