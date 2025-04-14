@@ -2,6 +2,7 @@ import { Router } from 'express'
 
 import {
   createProductCategoryController,
+  deleteProductCategoryController,
   updateProductCategoryController
 } from '~/controllers/productCategories.controllers'
 import { createProductCategoryValidator, productCategoryIdValidator } from '~/middlewares/productCategories.middlewares'
@@ -34,6 +35,16 @@ productCategoriesRouter.put(
   productCategoryIdValidator,
   createProductCategoryValidator,
   updateProductCategoryController
+)
+
+productCategoriesRouter.delete(
+  '/:productCategoryId',
+  accessTokenValidator,
+  isVerifiedUserValidator,
+  isActiveUserValidator,
+  isAdminValidator,
+  productCategoryIdValidator,
+  deleteProductCategoryController
 )
 
 export default productCategoriesRouter

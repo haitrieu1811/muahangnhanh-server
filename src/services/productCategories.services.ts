@@ -45,6 +45,13 @@ class ProductCategoriesService {
       productCategory: updatedProductCategory
     }
   }
+
+  async delete(productCategoryId: ObjectId) {
+    await databaseService.productCategories.deleteOne({
+      _id: productCategoryId
+    })
+    return true
+  }
 }
 
 const productCategoriesService = new ProductCategoriesService()

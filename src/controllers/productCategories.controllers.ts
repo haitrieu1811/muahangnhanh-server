@@ -32,3 +32,12 @@ export const updateProductCategoryController = async (
     data: result
   })
 }
+
+// Cập nhật danh mục sản phẩm
+export const deleteProductCategoryController = async (req: Request<ProductCategoryIdReqParams>, res: Response) => {
+  const { productCategoryId } = req.params
+  await productCategoriesService.delete(new ObjectId(productCategoryId))
+  res.json({
+    message: PRODUCTS_MESSAGES.DELETE_PRODUCT_CATEGORY_SUCCESS
+  })
+}
