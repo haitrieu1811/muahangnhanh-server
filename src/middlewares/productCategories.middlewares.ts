@@ -1,7 +1,7 @@
 import { checkSchema } from 'express-validator'
 import { ObjectId } from 'mongodb'
-import HTTP_STATUS from '~/constants/httpStatus'
 
+import HTTP_STATUS from '~/constants/httpStatus'
 import { PRODUCTS_MESSAGES, UTILS_MESSAGES } from '~/constants/message'
 import { ErrorWithStatus } from '~/models/Error'
 import databaseService from '~/services/database.services'

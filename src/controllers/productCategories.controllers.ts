@@ -5,6 +5,7 @@ import { ObjectId } from 'mongodb'
 import { PRODUCTS_MESSAGES } from '~/constants/message'
 import { CreateProductCategoryReqBody, ProductCategoryIdReqParams } from '~/models/requests/productCategories.requests'
 import { TokenPayload } from '~/models/requests/users.requests'
+import { PaginationReqQuery } from '~/models/requests/utils.requests'
 import productCategoriesService from '~/services/productCategories.services'
 
 // Tạo danh mục sản phẩm
@@ -39,5 +40,17 @@ export const deleteProductCategoryController = async (req: Request<ProductCatego
   await productCategoriesService.delete(new ObjectId(productCategoryId))
   res.json({
     message: PRODUCTS_MESSAGES.DELETE_PRODUCT_CATEGORY_SUCCESS
+  })
+}
+
+// Lấy danh sách danh mục sản phẩm
+export const getProductCategoriesController = async (
+  req: Request<ParamsDictionary, any, any, PaginationReqQuery>,
+  res: Response
+) => {
+  const result = await productCategoriesService.read(req.query)
+  res.json({
+    message: PRODUCTS_MESSAGES.GET_PRODUCT_CATEGORIES_SUCCESS,
+    data: result
   })
 }

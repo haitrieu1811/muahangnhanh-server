@@ -2,7 +2,9 @@ import { ObjectId } from 'mongodb'
 
 import ProductCategory from '~/models/databases/ProductCategory'
 import { CreateProductCategoryReqBody } from '~/models/requests/productCategories.requests'
+import { PaginationReqQuery } from '~/models/requests/utils.requests'
 import databaseService from '~/services/database.services'
+import { configurePagination } from '~/utils/helpers'
 
 class ProductCategoriesService {
   async create(body: CreateProductCategoryReqBody, userId: ObjectId) {
@@ -51,6 +53,31 @@ class ProductCategoriesService {
       _id: productCategoryId
     })
     return true
+  }
+
+  async read(query: PaginationReqQuery) {
+    const { page, limit, skip } = configurePagination(query)
+    const [productCategories, totalProductCategories] = await Promise.all([
+      databaseService.productCategories
+        .find(
+          {},
+          {
+            skip,
+            limit
+          }
+        )
+        .toArray(),
+      databaseService.productCategories.countDocuments({})
+    ])
+    return {
+      productCategories,
+      pagination: {
+        page,
+        limit,
+        totalRows: totalProductCategories,
+        totalPages: Math.ceil(totalProductCategories / limit)
+      }
+    }
   }
 }
 

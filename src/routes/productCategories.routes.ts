@@ -3,6 +3,7 @@ import { Router } from 'express'
 import {
   createProductCategoryController,
   deleteProductCategoryController,
+  getProductCategoriesController,
   updateProductCategoryController
 } from '~/controllers/productCategories.controllers'
 import { createProductCategoryValidator, productCategoryIdValidator } from '~/middlewares/productCategories.middlewares'
@@ -13,6 +14,7 @@ import {
   isAdminValidator,
   isVerifiedUserValidator
 } from '~/middlewares/users.middlewares'
+import { paginationValidator } from '~/middlewares/utils.middlewares'
 
 const productCategoriesRouter = Router()
 
@@ -46,5 +48,7 @@ productCategoriesRouter.delete(
   productCategoryIdValidator,
   deleteProductCategoryController
 )
+
+productCategoriesRouter.get('/', paginationValidator, getProductCategoriesController)
 
 export default productCategoriesRouter
