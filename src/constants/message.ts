@@ -70,5 +70,13 @@ export const PRODUCTS_MESSAGES = {
   PRODUCT_CATEGORY_ID_IS_INVALID: 'ID danh mục sản phẩm không hợp lệ.',
   PRODUCT_CATEGORY_NOT_EXIST: 'Danh mục sản phẩm không tồn tại.',
   DELETE_PRODUCT_CATEGORY_SUCCESS: 'Xóa danh mục sản phẩm thành công.',
-  GET_PRODUCT_CATEGORIES_SUCCESS: 'Lấy danh sách danh mục sản phẩm thành công.'
+  GET_PRODUCT_CATEGORIES_SUCCESS: 'Lấy danh sách danh mục sản phẩm thành công.',
+  CREATE_BRAND_SUCCESS: 'Tạo nhãn hiệu sản phẩm thành công.',
+  UPDATE_BRAND_SUCCESS: 'Cập nhật nhãn hiệu sản phẩm thành công.',
+  DELETE_BRAND_SUCCESS: 'Xóa nhãn hiệu sản phẩm thành công.',
+  GET_BRANDS_SUCCESS: 'Lấy danh sách nhãn hiệu sản phẩm thành công.',
+  BRAND_ID_IS_REQUIRED: 'ID nhãn hiệu sản phẩm là bắt buộc.',
+  BRAND_ID_IS_INVALID: 'ID nhãn hiệu sản phẩm không hợp lệ.',
+  BRAND_NOT_EXIST: 'Nhãn hiệu sản phẩm không tồn tại.',
+  BRAND_NAME_IS_REQUIRED: 'Tên nhãn hiệu sản phẩm là bắt buộc.'
 } as const

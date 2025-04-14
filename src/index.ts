@@ -2,6 +2,7 @@ import express from 'express'
 
 import { ENV_CONFIG } from '~/constants/config'
 import { defaultErrorHandler } from '~/middlewares/error.middlewares'
+import brandsRouter from '~/routes/brands.routes'
 import mediasRouter from '~/routes/medias.routes'
 import productCategoriesRouter from '~/routes/productCategories.routes'
 import staticRouter from '~/routes/static.routes'
@@ -21,6 +22,7 @@ app.use('/users', usersRouter)
 app.use('/medias', mediasRouter)
 app.use('/static', staticRouter)
 app.use('/product-categories', productCategoriesRouter)
+app.use('/brands', brandsRouter)
 app.use(defaultErrorHandler as any)
 
 app.listen(port, () => {
