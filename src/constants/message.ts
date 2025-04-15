@@ -16,7 +16,7 @@ export const USERS_MESSAGES = {
   PASSWORD_IS_REQUIRED: 'Mật khẩu là bắt buộc.',
   PASSWORD_LENGTH_INVALID: 'Mật khẩu phải dài từ 8 đến 32 ký tự.',
   PASSWORD_IS_NOT_STRONG_ENOUGH:
-    'Mật khẩu phải có ít nhất 1 ký tự viết thường, 1 ký tự viết hoa, 1 chữ số và một ký tự đặc biệt.',
+    'Mật khẩu phải có ít nhất 1 ký tự viết thường, 1 ký tự viết hoa, 1 chữ số và 1 ký tự đặc biệt.',
   CONFIRM_PASSWORD_IS_REQUIRED: 'Nhập lại mật khẩu là bắc buộc.',
   CONFIRM_PASSWORD_IS_NOT_MATCH: 'Nhập lại mật khẩu không chính xác.',
   ROLE_IS_REQUIRED: 'Vai trò người dùng là bắt buộc.',
