@@ -370,7 +370,25 @@ class UsersService {
         }
       )
     ])
+    const [accessToken, refreshToken] = await this.signAccessAndRefreshToken({
+      userId: user._id.toString(),
+      userRole: user.role,
+      userStatus: user.status,
+      userVerifyStatus: user.verifyStatus
+    })
+    const { exp, iat } = await this.decodedRefreshToken(refreshToken)
+    // Đăng nhập lại sau khi đổi mật khẩu thành công
+    await databaseService.refreshTokens.insertOne(
+      new RefreshToken({
+        token: refreshToken,
+        exp,
+        iat,
+        userId
+      })
+    )
     return {
+      accessToken,
+      refreshToken,
       user
     }
   }
@@ -389,6 +407,7 @@ class UsersService {
           projection: {
             email: 1,
             fullName: 1,
+            role: 1,
             createdAt: 1,
             updatedAt: 1
           }
@@ -396,7 +415,10 @@ class UsersService {
       )
       .toArray()
     return {
-      users: allUsers,
+      users: allUsers.map((user) => ({
+        ...user,
+        role: user.role.toString()
+      })),
       pagination: {
         page: _page,
         limit: _limit,
