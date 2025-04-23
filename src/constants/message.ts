@@ -78,5 +78,6 @@ export const PRODUCTS_MESSAGES = {
   BRAND_ID_IS_REQUIRED: 'ID nhãn hiệu sản phẩm là bắt buộc.',
   BRAND_ID_IS_INVALID: 'ID nhãn hiệu sản phẩm không hợp lệ.',
   BRAND_NOT_EXIST: 'Nhãn hiệu sản phẩm không tồn tại.',
-  BRAND_NAME_IS_REQUIRED: 'Tên nhãn hiệu sản phẩm là bắt buộc.'
+  BRAND_NAME_IS_REQUIRED: 'Tên nhãn hiệu sản phẩm là bắt buộc.',
+  GET_PRODUCT_CATEGORY_SUCCESS: 'Lấy thông tin chi tiết danh mục sản phẩm thành công.'
 } as const

@@ -54,3 +54,12 @@ export const getProductCategoriesController = async (
     data: result
   })
 }
+
+// Lấy thông tin chi tiết một danh mục sản phẩm
+export const getProductCategoryController = async (req: Request<ProductCategoryIdReqParams>, res: Response) => {
+  const result = await productCategoriesService.readDetail(new ObjectId(req.params.productCategoryId))
+  res.json({
+    message: PRODUCTS_MESSAGES.GET_PRODUCT_CATEGORY_SUCCESS,
+    data: result
+  })
+}

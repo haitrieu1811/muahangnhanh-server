@@ -11,7 +11,7 @@ import Media from '~/models/databases/Media'
 import { MediaUploadRes } from '~/models/Others'
 import databaseService from '~/services/database.services'
 import { getNameFromFullname, handleUploadImages } from '~/utils/file'
-import { uploadFileToS3 } from '~/utils/s3'
+import { deleteFileFromS3, uploadFileToS3 } from '~/utils/s3'
 
 class MediasService {
   async uploadImages(req: Request, userId: ObjectId) {
@@ -52,6 +52,17 @@ class MediasService {
     return {
       medias: result
     }
+  }
+
+  // Xóa hình ảnh trên DB và AWS S3
+  async deleteImage(imageId: ObjectId) {
+    const deletedImage = await databaseService.medias.findOneAndDelete({
+      _id: imageId
+    })
+    if (deletedImage) {
+      await deleteFileFromS3(`images/${deletedImage.name}`)
+    }
+    return true
   }
 }
 

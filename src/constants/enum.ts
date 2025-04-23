@@ -25,3 +25,8 @@ export enum MediaType {
   Image,
   Video
 }
+
+export enum ProductCategoryStatus {
+  Active,
+  Inactive
+}

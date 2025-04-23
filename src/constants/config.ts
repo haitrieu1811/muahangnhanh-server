@@ -26,6 +26,7 @@ export const isProduction = env === 'production'
 
 export const ENV_CONFIG = {
   PORT: process.env.PORT as string,
+  SERVER_HOST: process.env.SERVER_HOST as string,
   CLIENT_HOST: process.env.CLIENT_HOST as string,
   PASSWORD_SECRET: process.env.PASSWORD_SECRET as string,
 
