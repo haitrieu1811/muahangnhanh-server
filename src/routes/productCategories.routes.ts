@@ -4,6 +4,7 @@ import {
   createProductCategoryController,
   deleteProductCategoryController,
   getProductCategoriesController,
+  getProductCategoryController,
   updateProductCategoryController
 } from '~/controllers/productCategories.controllers'
 import { createProductCategoryValidator, productCategoryIdValidator } from '~/middlewares/productCategories.middlewares'
@@ -50,5 +51,7 @@ productCategoriesRouter.delete(
 )
 
 productCategoriesRouter.get('/', paginationValidator, getProductCategoriesController)
+
+productCategoriesRouter.get('/:productCategoryId', productCategoryIdValidator, getProductCategoryController)
 
 export default productCategoriesRouter

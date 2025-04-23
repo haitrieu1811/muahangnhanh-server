@@ -79,6 +79,15 @@ class ProductCategoriesService {
       }
     }
   }
+
+  async readDetail(productCategoryId: ObjectId) {
+    const productCategory = await databaseService.productCategories.findOne({
+      _id: productCategoryId
+    })
+    return {
+      productCategory
+    }
+  }
 }
 
 const productCategoriesService = new ProductCategoriesService()
