@@ -25,7 +25,7 @@ export type RefreshTokenReqBody = {
 
 export type UpdateMeReqBody = {
   fullName: string
-  avatar?: string
+  avatar?: string | null
 }
 
 export type ChangePasswordReqBody = {

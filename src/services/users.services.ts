@@ -1,6 +1,5 @@
 import isUndefined from 'lodash/isUndefined'
 import omitBy from 'lodash/omitBy'
-import pick from 'lodash/pick'
 import { ObjectId, WithId } from 'mongodb'
 
 import { ENV_CONFIG } from '~/constants/config'
@@ -10,6 +9,7 @@ import User from '~/models/databases/User'
 import { RegisterReqBody, TokenPayload, UpdateMeReqBody, UpdateUserReqBody } from '~/models/requests/users.requests'
 import { PaginationReqQuery } from '~/models/requests/utils.requests'
 import databaseService from '~/services/database.services'
+import mediasService from '~/services/medias.services'
 import { hashPassword } from '~/utils/crypto'
 import { sendForgotPasswordEmail, sendVerifyEmail } from '~/utils/email'
 import { signToken, verifyToken } from '~/utils/jwt'
@@ -185,20 +185,22 @@ class UsersService {
       userVerifyStatus: verifyStatus
     })
     const decodedRefreshToken = await this.decodedRefreshToken(refreshToken)
-    // Lưu phiên đăng nhập vào database
-    await databaseService.refreshTokens.insertOne(
-      new RefreshToken({
-        token: refreshToken,
-        iat: decodedRefreshToken.iat,
-        exp: decodedRefreshToken.exp,
-        userId: _id
-      })
-    )
-    const configuredUser = pick(user, ['_id', 'email', 'fullName', 'createdAt', 'updatedAt'])
+    const [_user] = await Promise.all([
+      this.aggregateUser(_id),
+      // Lưu phiên đăng nhập vào database
+      databaseService.refreshTokens.insertOne(
+        new RefreshToken({
+          token: refreshToken,
+          iat: decodedRefreshToken.iat,
+          exp: decodedRefreshToken.exp,
+          userId: _id
+        })
+      )
+    ])
     return {
       accessToken,
       refreshToken,
-      user: configuredUser
+      user: _user
     }
   }
 
@@ -248,20 +250,80 @@ class UsersService {
     }
   }
 
-  async getMe(userId: ObjectId) {
-    const user = await databaseService.users.findOne(
-      {
-        _id: userId
-      },
-      {
-        projection: {
-          email: 1,
-          fullName: 1,
-          createdAt: 1,
-          updatedAt: 1
+  async aggregateUser(userId: ObjectId) {
+    const users = await databaseService.users
+      .aggregate<User>([
+        {
+          $match: {
+            _id: userId
+          }
+        },
+        {
+          $lookup: {
+            from: 'medias',
+            localField: 'avatar',
+            foreignField: '_id',
+            as: 'avatar'
+          }
+        },
+        {
+          $unwind: {
+            path: '$avatar',
+            preserveNullAndEmptyArrays: true
+          }
+        },
+        {
+          $addFields: {
+            avatar: {
+              $cond: [
+                '$avatar',
+                {
+                  $concat: [ENV_CONFIG.SERVER_HOST, '/static/images/', '$avatar.name']
+                },
+                ''
+              ]
+            },
+            avatarId: {
+              $cond: ['$avatar', '$avatar._id', null]
+            }
+          }
+        },
+        {
+          $group: {
+            _id: '$_id',
+            email: {
+              $first: '$email'
+            },
+            fullName: {
+              $first: '$fullName'
+            },
+            avatar: {
+              $first: '$avatar'
+            },
+            avatarId: {
+              $first: '$avatarId'
+            },
+            status: {
+              $first: '$status'
+            },
+            verifyStatus: {
+              $first: '$verifyStatus'
+            },
+            createdAt: {
+              $first: '$createdAt'
+            },
+            updatedAt: {
+              $first: '$updatedAt'
+            }
+          }
         }
-      }
-    )
+      ])
+      .toArray()
+    return users[0]
+  }
+
+  async getMe(userId: ObjectId) {
+    const user = await this.aggregateUser(userId)
     return {
       user
     }
@@ -271,10 +333,13 @@ class UsersService {
     const configuredBody = omitBy(
       {
         ...body,
-        avatar: body.avatar ? new ObjectId(body.avatar) : undefined
+        avatar: body.avatar !== undefined ? (body.avatar !== null ? new ObjectId(body.avatar) : null) : undefined
       },
       isUndefined
     )
+    const beforeUser = await databaseService.users.findOne({
+      _id: userId
+    })
     const updatedUser = await databaseService.users.findOneAndUpdate(
       {
         _id: userId
@@ -286,17 +351,19 @@ class UsersService {
         }
       },
       {
-        returnDocument: 'after',
-        projection: {
-          email: 1,
-          fullName: 1,
-          createdAt: 1,
-          updatedAt: 1
-        }
+        returnDocument: 'after'
       }
     )
+    // Xóa ảnh không sử dụng
+    if (
+      (beforeUser?.avatar && updatedUser?.avatar && beforeUser.avatar.toString() !== updatedUser.avatar.toString()) ||
+      (updatedUser?.avatar === null && beforeUser?.avatar)
+    ) {
+      await mediasService.deleteImage(beforeUser.avatar)
+    }
+    const user = await this.aggregateUser(userId)
     return {
-      user: updatedUser
+      user
     }
   }
 

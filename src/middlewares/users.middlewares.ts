@@ -275,10 +275,17 @@ export const updateMeValidator = validate(
         }
       },
       avatar: {
-        trim: true,
         optional: true,
-        isMongoId: {
-          errorMessage: USERS_MESSAGES.AVATAR_ID_IS_INVALID
+        custom: {
+          options: (value) => {
+            if (value === null) {
+              return true
+            }
+            if (!ObjectId.isValid(value)) {
+              throw new Error(USERS_MESSAGES.AVATAR_ID_IS_INVALID)
+            }
+            return true
+          }
         }
       }
     },
