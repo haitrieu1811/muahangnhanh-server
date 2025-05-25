@@ -1,9 +1,19 @@
-import { checkSchema } from 'express-validator'
+import { checkSchema, ParamSchema } from 'express-validator'
 
 import HTTP_STATUS from '~/constants/httpStatus'
 import { UTILS_MESSAGES } from '~/constants/message'
 import { ErrorWithStatus } from '~/models/Error'
 import { validate } from '~/utils/validation'
+
+export const imageIdSchema: ParamSchema = {
+  trim: true,
+  notEmpty: {
+    errorMessage: UTILS_MESSAGES.IMAGE_ID_IS_REQUIRED
+  },
+  isMongoId: {
+    errorMessage: UTILS_MESSAGES.IMAGE_ID_IS_INVALID
+  }
+}
 
 export const paginationValidator = validate(
   checkSchema(

@@ -4,8 +4,8 @@ export const UTILS_MESSAGES = {
   LIMIT_MUST_BE_AN_INTEGER: 'Limit phải là một số nguyên.',
   LIMIT_MUST_BE_GREATER_THAN_OR_EQUAL_ZERO: 'Limit phải là một số lớn hơn hoặc bằng 0.',
   PERMISSION_DENIED: 'Quyền truy cập API bị từ chối.',
-  FILE_ID_IS_REQUIRED: 'ID file là bắt buộc',
-  FILE_ID_IS_INVALID: 'ID file không hợp lệ.'
+  IMAGE_ID_IS_REQUIRED: 'ID hình ảnh là bắt buộc',
+  IMAGE_ID_IS_INVALID: 'ID hình ảnh không hợp lệ.'
 } as const
 
 export const USERS_MESSAGES = {
@@ -79,5 +79,18 @@ export const PRODUCTS_MESSAGES = {
   BRAND_ID_IS_INVALID: 'ID nhãn hiệu sản phẩm không hợp lệ.',
   BRAND_NOT_EXIST: 'Nhãn hiệu sản phẩm không tồn tại.',
   BRAND_NAME_IS_REQUIRED: 'Tên nhãn hiệu sản phẩm là bắt buộc.',
-  GET_PRODUCT_CATEGORY_SUCCESS: 'Lấy thông tin chi tiết danh mục sản phẩm thành công.'
+  GET_PRODUCT_CATEGORY_SUCCESS: 'Lấy thông tin chi tiết danh mục sản phẩm thành công.',
+  PRODUCT_PHOTOS_MUST_BE_AN_ARRAY: 'Hình ảnh sản phẩm phải là một mảng.',
+  PRODUCT_PHOTOS_IS_INVALID: 'Hình ảnh sản phẩm không hợp lệ.',
+  PRODUCT_NAME_IS_REQUIRED: 'Tên sản phẩm là bắt buộc.',
+  PRODUCT_NAME_LENGTH_IS_INVALID: 'Tên sản phẩm phải có độ dài từ 10 đến 120 ký tự.',
+  PRODUCT_DESCRIPTION_IS_REQUIRED: 'Mô tả sản phẩm là bắt buộc.',
+  PRODUCT_DESCRIPTION_LENGTH_IS_INVALID: 'Mô tả sản phẩm phải có độ dài tối thiểu 100 ký tự.',
+  PRODUCT_PRICE_IS_REQUIRED: 'Giá sản phẩm là bắt buộc.',
+  PRODUCT_PRICE_MUST_BE_A_INT_GREATER_THAN_ZERO: 'Giá sản phẩm phải là một số nguyên dương lớn hơn không.',
+  PRODUCT_VARIANTS_MUST_BE_AN_ARRAY: 'Biến thể sản phẩm phải là một mảng.',
+  PRODUCT_VARIANTS_IS_INVALID: 'Biến thể sản phẩm không hợp lệ.',
+  PRODUCT_VARIANTS_ITEM_MUST_BE_AN_OBJECT: 'Phần từ biến thể phải là một object.',
+  PRODUCT_VARIANTS_ITEM_MUST_BE_A_STRING: 'Tên phần từ biến thể phải là một chuỗi.',
+  CREATE_PRODUCT_SUCCESS: 'Tạo sản phẩm thành công.'
 } as const

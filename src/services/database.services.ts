@@ -3,6 +3,7 @@ import { Collection, Db, MongoClient } from 'mongodb'
 import { ENV_CONFIG } from '~/constants/config'
 import Brand from '~/models/databases/Brand'
 import Media from '~/models/databases/Media'
+import Product, { ProductVariant } from '~/models/databases/Product'
 import ProductCategory from '~/models/databases/ProductCategory'
 import { RefreshToken } from '~/models/databases/RefreshToken'
 import User from '~/models/databases/User'
@@ -46,6 +47,14 @@ class DatabaseService {
 
   get brands(): Collection<Brand> {
     return this.db.collection(ENV_CONFIG.DB_BRANDS_COLLECTION)
+  }
+
+  get productVariants(): Collection<ProductVariant> {
+    return this.db.collection(ENV_CONFIG.DB_PRODUCT_VARIANTS_COLLECTION)
+  }
+
+  get products(): Collection<Product> {
+    return this.db.collection(ENV_CONFIG.DB_PRODUCTS_COLLECTION)
   }
 }
 

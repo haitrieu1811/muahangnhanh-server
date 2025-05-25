@@ -10,6 +10,7 @@ import staticRouter from '~/routes/static.routes'
 import usersRouter from '~/routes/users.routes'
 import databaseService from '~/services/database.services'
 import { initFolders } from '~/utils/file'
+import productsRouter from '~/routes/products.routes'
 
 databaseService.connect()
 
@@ -28,6 +29,7 @@ app.use('/medias', mediasRouter)
 app.use('/static', staticRouter)
 app.use('/product-categories', productCategoriesRouter)
 app.use('/brands', brandsRouter)
+app.use('/products', productsRouter)
 app.use(defaultErrorHandler as any)
 
 app.listen(port, () => {
