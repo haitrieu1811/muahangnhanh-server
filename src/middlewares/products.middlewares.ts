@@ -1,10 +1,21 @@
+import { NextFunction, Request, Response } from 'express'
 import { checkSchema, ParamSchema } from 'express-validator'
 import { ObjectId } from 'mongodb'
 
-import { PRODUCTS_MESSAGES } from '~/constants/message'
+import { ProductApprovalStatus, ProductStatus } from '~/constants/enum'
+import HTTP_STATUS from '~/constants/httpStatus'
+import { PRODUCTS_MESSAGES, UTILS_MESSAGES } from '~/constants/message'
 import { productCategoryIdSchema } from '~/middlewares/productCategories.middlewares'
 import { imageIdSchema } from '~/middlewares/utils.middlewares'
+import Product from '~/models/databases/Product'
+import { ErrorWithStatus } from '~/models/Error'
+import { TokenPayload } from '~/models/requests/users.requests'
+import databaseService from '~/services/database.services'
+import { numberEnumToArray } from '~/utils/helpers'
 import { validate } from '~/utils/validation'
+
+const productStatuses = numberEnumToArray(ProductStatus)
+const productApprovalStatuses = numberEnumToArray(ProductApprovalStatus)
 
 const priceSchema: ParamSchema = {
   custom: {
@@ -74,8 +85,74 @@ export const createProductValidator = validate(
       categoryId: {
         ...productCategoryIdSchema,
         optional: true
+      },
+      status: {
+        optional: true,
+        isIn: {
+          options: [productStatuses],
+          errorMessage: PRODUCTS_MESSAGES.PRODUCT_STATUS_IS_INVALID
+        }
+      },
+      approvalStatus: {
+        optional: true,
+        isIn: {
+          options: [productApprovalStatuses],
+          errorMessage: PRODUCTS_MESSAGES.PRODUCT_APPROVAL_STATUS_IS_INVALID
+        }
       }
     },
     ['body']
   )
 )
+
+export const productIdValidator = validate(
+  checkSchema(
+    {
+      productId: {
+        trim: true,
+        custom: {
+          options: async (value, { req }) => {
+            if (!value) {
+              throw new ErrorWithStatus({
+                message: PRODUCTS_MESSAGES.PRODUCT_ID_IS_REQUIRED,
+                status: HTTP_STATUS.BAD_REQUEST
+              })
+            }
+            if (!ObjectId.isValid(value)) {
+              throw new ErrorWithStatus({
+                message: PRODUCTS_MESSAGES.PRODUCT_ID_IS_INVALID,
+                status: HTTP_STATUS.BAD_REQUEST
+              })
+            }
+            const product = await databaseService.products.findOne({
+              _id: new ObjectId(value)
+            })
+            if (!product) {
+              throw new ErrorWithStatus({
+                message: PRODUCTS_MESSAGES.PRODUCT_NOT_FOUND,
+                status: HTTP_STATUS.NOT_FOUND
+              })
+            }
+            ;(req as Request).product = product
+            return true
+          }
+        }
+      }
+    },
+    ['params']
+  )
+)
+
+export const productAuthorValidator = async (req: Request, res: Response, next: NextFunction) => {
+  const { userId } = req.decodedAuthorization as TokenPayload
+  const product = req.product as Product
+  if (product.userId.toString() !== userId) {
+    next(
+      new ErrorWithStatus({
+        message: UTILS_MESSAGES.PERMISSION_DENIED,
+        status: HTTP_STATUS.FORBIDDEN
+      })
+    )
+  }
+  next()
+}

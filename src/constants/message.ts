@@ -92,5 +92,12 @@ export const PRODUCTS_MESSAGES = {
   PRODUCT_VARIANTS_IS_INVALID: 'Biến thể sản phẩm không hợp lệ.',
   PRODUCT_VARIANTS_ITEM_MUST_BE_AN_OBJECT: 'Phần từ biến thể phải là một object.',
   PRODUCT_VARIANTS_ITEM_MUST_BE_A_STRING: 'Tên phần từ biến thể phải là một chuỗi.',
-  CREATE_PRODUCT_SUCCESS: 'Tạo sản phẩm thành công.'
+  CREATE_PRODUCT_SUCCESS: 'Tạo sản phẩm thành công.',
+  UPDATE_PRODUCT_SUCCESS: 'Cập nhật sản phẩm thành công.',
+  PRODUCT_ID_IS_REQUIRED: 'ID sản phẩm là bắt buộc.',
+  PRODUCT_ID_IS_INVALID: 'ID sản phẩm không hợp lệ.',
+  PRODUCT_NOT_FOUND: 'Không tìm thấy sản phẩm.',
+  PRODUCT_STATUS_IS_INVALID: 'Trạng thái sản phẩm không hợp lệ.',
+  PRODUCT_APPROVAL_STATUS_IS_INVALID: 'Trạng thái phê duyệt sản phẩm không hợp lệ.',
+  GET_PRODUCTS_SUCCESS: 'Lấy danh sách sản phẩm thành công.'
 } as const

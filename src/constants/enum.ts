@@ -30,3 +30,14 @@ export enum ProductCategoryStatus {
   Active,
   Inactive
 }
+
+export enum ProductStatus {
+  Active,
+  Inactive
+}
+
+export enum ProductApprovalStatus {
+  Pending,
+  Resolved,
+  Rejected
+}

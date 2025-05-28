@@ -1,5 +1,7 @@
 import { ObjectId } from 'mongodb'
 
+import { ProductApprovalStatus, ProductStatus } from '~/constants/enum'
+
 type ProductVariantConstructor = {
   _id?: ObjectId
   productId: ObjectId
@@ -58,6 +60,8 @@ type ProductConstructor = {
   price: number
   priceAfterDiscount?: number
   variants?: ObjectId[]
+  status?: ProductStatus
+  approvalStatus?: ProductApprovalStatus
   createdAt?: Date
   updatedAt?: Date
 }
@@ -73,6 +77,8 @@ export default class Product {
   price: number
   priceAfterDiscount: number
   variants: ObjectId[]
+  status: ProductStatus
+  approvalStatus: ProductApprovalStatus
   createdAt: Date
   updatedAt: Date
 
@@ -87,6 +93,8 @@ export default class Product {
     price,
     priceAfterDiscount,
     variants,
+    status,
+    approvalStatus,
     createdAt,
     updatedAt
   }: ProductConstructor) {
@@ -101,7 +109,43 @@ export default class Product {
     this.price = price
     this.priceAfterDiscount = priceAfterDiscount ?? price
     this.variants = variants ?? []
+    this.status = status ?? ProductStatus.Active // Trạng thái này do người tạo điều chỉnh
+    this.approvalStatus = approvalStatus ?? ProductApprovalStatus.Pending
     this.createdAt = createdAt ?? date
     this.updatedAt = updatedAt ?? date
   }
+}
+
+export type AggregateProduct = {
+  _id: ObjectId
+  thumbnail: {
+    _id: ObjectId
+    url: string
+  }
+  photos: {
+    _id: ObjectId
+    url: string
+  }[]
+  name: string
+  description: string
+  category: {
+    _id: ObjectId
+    thumbnail: string
+    name: string
+    description: string
+    createdAt: string
+    updatedAt: string
+  }
+  author: {
+    _id: ObjectId
+    email: string
+    fullName: string
+    avatar: string
+    createdAt: string
+    updatedAt: string
+  }
+  price: number
+  priceAfterDiscount: number
+  createdAt: string
+  updatedAt: string
 }

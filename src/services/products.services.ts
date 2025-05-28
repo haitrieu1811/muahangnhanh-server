@@ -1,16 +1,32 @@
+import isEmpty from 'lodash/isEmpty'
+import xor from 'lodash/xor'
+import difference from 'lodash/difference'
 import { ObjectId } from 'mongodb'
 
 import { ENV_CONFIG } from '~/constants/config'
-import Product from '~/models/databases/Product'
+import Product, { AggregateProduct } from '~/models/databases/Product'
 import { CreateProductReqBody } from '~/models/requests/products.requests'
 import databaseService from '~/services/database.services'
+import mediasService from '~/services/medias.services'
+import { PaginationReqQuery } from '~/models/requests/utils.requests'
+import { configurePagination } from '~/utils/helpers'
+import { ProductApprovalStatus, ProductStatus } from '~/constants/enum'
 
 class ProductsService {
-  async aggregateProduct(match?: object) {
+  async aggregateProduct({
+    match = {},
+    limit = 20,
+    skip = 0
+  }: {
+    match?: object
+    page?: number
+    limit?: number
+    skip?: number
+  }) {
     const products = await databaseService.products
-      .aggregate([
+      .aggregate<AggregateProduct>([
         {
-          $match: match || {}
+          $match: match
         },
         {
           $lookup: {
@@ -97,7 +113,12 @@ class ProductsService {
         {
           $addFields: {
             thumbnailId: '$thumbnail._id',
-            thumbnail: '$thumbnail.name',
+            thumbnail: {
+              _id: '$thumbnail._id',
+              url: {
+                $concat: [ENV_CONFIG.SERVER_HOST, '/static/images/', '$thumbnail.name']
+              }
+            },
             category: {
               $cond: [
                 '$category',
@@ -192,7 +213,12 @@ class ProductsService {
             'author.status': 0,
             'author.role': 0,
             'author.verifyEmailToken': 0,
-            'author.forgotPasswordToken': 0
+            'author.forgotPasswordToken': 0,
+            'thumbnail.userId': 0,
+            'thumbnail.name': 0,
+            'thumbnail.type': 0,
+            'thumbnail.createdAt': 0,
+            'thumbnail.updatedAt': 0
           }
         },
         {
@@ -201,10 +227,10 @@ class ProductsService {
           }
         },
         {
-          $skip: 0
+          $skip: skip
         },
         {
-          $limit: 20
+          $limit: limit
         }
       ])
       .toArray()
@@ -223,10 +249,94 @@ class ProductsService {
       })
     )
     const products = await this.aggregateProduct({
-      _id: insertedId
+      match: {
+        _id: insertedId
+      }
     })
     return {
       product: products[0]
+    }
+  }
+
+  // Cập nhật sản phẩm
+  async updateProduct({ body, productId }: { body: CreateProductReqBody; productId: ObjectId }) {
+    const beforeProduct = await databaseService.products.findOneAndUpdate(
+      {
+        _id: productId
+      },
+      {
+        $set: {
+          ...body,
+          thumbnail: new ObjectId(body.thumbnail),
+          photos: body.photos?.map((photo) => new ObjectId(photo)),
+          categoryId: new ObjectId(body.categoryId)
+        },
+        $currentDate: {
+          updatedAt: true
+        }
+      },
+      {
+        returnDocument: 'before'
+      }
+    )
+    const products = await this.aggregateProduct({
+      match: {
+        _id: productId
+      }
+    })
+    const updatedProduct = products[0]
+    if (
+      beforeProduct &&
+      updatedProduct &&
+      updatedProduct.thumbnail._id.toString() !== beforeProduct.thumbnail.toString()
+    ) {
+      await mediasService.deleteImage(beforeProduct._id)
+    }
+    // Kiểm tra hai mảng photos có giống nhau hay không
+    // Nếu không giống nhau thì tiến hành xóa các hình ảnh không còn sử dụng nữa
+    if (
+      beforeProduct &&
+      updatedProduct &&
+      !isEmpty(
+        xor(
+          beforeProduct.photos,
+          updatedProduct.photos.map((photo) => photo._id)
+        )
+      )
+    ) {
+      const photosToDelete = difference(
+        beforeProduct.photos,
+        updatedProduct.photos.map((photo) => photo._id)
+      )
+      await Promise.all(photosToDelete.map(async (photo) => await mediasService.deleteImage(photo)))
+    }
+    return {
+      product: updatedProduct
+    }
+  }
+
+  // Lấy danh sách sản phẩm
+  async getProducts(query: PaginationReqQuery) {
+    const match = {
+      status: ProductStatus.Active,
+      approvalStatus: ProductApprovalStatus.Resolved
+    }
+    const { page, limit, skip } = configurePagination(query)
+    const [products, totalRows] = await Promise.all([
+      this.aggregateProduct({
+        limit,
+        skip,
+        match
+      }),
+      databaseService.products.countDocuments(match)
+    ])
+    const totalPages = Math.ceil(totalRows / limit)
+    return {
+      products,
+      page,
+      limit,
+      totalRows,
+      totalPages
     }
   }
 }
