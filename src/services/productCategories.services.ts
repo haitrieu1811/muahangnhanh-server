@@ -69,11 +69,20 @@ class ProductCategoriesService {
     return true
   }
 
-  async read(query: PaginationReqQuery) {
+  async read({ name, ...query }: PaginationReqQuery & { name?: string }) {
     const { page, limit, skip } = configurePagination(query)
+    const text = name
+      ? {
+          $text: { $search: name }
+        }
+      : {}
+    const match = { ...text }
     const [productCategories, totalProductCategories] = await Promise.all([
       databaseService.productCategories
         .aggregate<ProductCategory>([
+          {
+            $match: match
+          },
           {
             $lookup: {
               from: 'medias',
@@ -140,7 +149,7 @@ class ProductCategoriesService {
           }
         ])
         .toArray(),
-      databaseService.productCategories.countDocuments({})
+      databaseService.productCategories.countDocuments(match)
     ])
     return {
       productCategories: productCategories.map((item) => ({

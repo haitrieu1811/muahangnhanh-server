@@ -12,7 +12,9 @@ import databaseService from '~/services/database.services'
 import { initFolders } from '~/utils/file'
 import productsRouter from '~/routes/products.routes'
 
-databaseService.connect()
+databaseService.connect().then(() => {
+  databaseService.indexProductCategories()
+})
 
 initFolders()
 
