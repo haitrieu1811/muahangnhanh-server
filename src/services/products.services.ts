@@ -339,6 +339,20 @@ class ProductsService {
       totalPages
     }
   }
+
+  // Lấy chi tiết sản phẩm
+  async getProduct(productId: ObjectId) {
+    const products = await this.aggregateProduct({
+      match: {
+        _id: productId,
+        status: ProductStatus.Active,
+        approvalStatus: ProductApprovalStatus.Resolved
+      }
+    })
+    return {
+      product: products[0]
+    }
+  }
 }
 
 const productsService = new ProductsService()

@@ -99,5 +99,6 @@ export const PRODUCTS_MESSAGES = {
   PRODUCT_NOT_FOUND: 'Không tìm thấy sản phẩm.',
   PRODUCT_STATUS_IS_INVALID: 'Trạng thái sản phẩm không hợp lệ.',
   PRODUCT_APPROVAL_STATUS_IS_INVALID: 'Trạng thái phê duyệt sản phẩm không hợp lệ.',
-  GET_PRODUCTS_SUCCESS: 'Lấy danh sách sản phẩm thành công.'
+  GET_PRODUCTS_SUCCESS: 'Lấy danh sách sản phẩm thành công.',
+  GET_PRODUCT_SUCCESS: 'Lấy thông tin chi tiết sản phẩm thành công.'
 } as const

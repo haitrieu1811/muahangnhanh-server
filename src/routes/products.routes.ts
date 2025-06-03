@@ -2,6 +2,7 @@ import { Router } from 'express'
 
 import {
   createProductController,
+  getProductController,
   getProductsController,
   updateProductController
 } from '~/controllers/products.controllers'
@@ -23,5 +24,7 @@ productsRouter.put(
 )
 
 productsRouter.get('/', paginationValidator, getProductsController)
+
+productsRouter.get('/:productId', productIdValidator, getProductController)
 
 export default productsRouter

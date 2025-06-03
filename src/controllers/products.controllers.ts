@@ -44,3 +44,13 @@ export const getProductsController = async (
     }
   })
 }
+
+export const getProductController = async (req: Request<ProductIdReqParams>, res: Response) => {
+  const { product } = await productsService.getProduct(new ObjectId(req.params.productId))
+  res.json({
+    message: PRODUCTS_MESSAGES.GET_PRODUCT_SUCCESS,
+    data: {
+      product
+    }
+  })
+}
