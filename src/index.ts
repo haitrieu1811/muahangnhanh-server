@@ -14,6 +14,7 @@ import productsRouter from '~/routes/products.routes'
 
 databaseService.connect().then(() => {
   databaseService.indexProductCategories()
+  databaseService.indexProducts()
 })
 
 initFolders()

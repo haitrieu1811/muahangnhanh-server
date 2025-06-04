@@ -36,6 +36,13 @@ class DatabaseService {
     }
   }
 
+  async indexProducts() {
+    const isExists = await this.products.indexExists(['name_text'])
+    if (!isExists) {
+      await this.products.createIndex({ name: 'text' })
+    }
+  }
+
   get users(): Collection<User> {
     return this.db.collection(ENV_CONFIG.DB_USERS_COLLECTION)
   }

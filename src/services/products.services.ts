@@ -316,8 +316,16 @@ class ProductsService {
   }
 
   // Lấy danh sách sản phẩm
-  async getProducts(query: PaginationReqQuery) {
+  async getProducts({ name, ...query }: PaginationReqQuery & { name?: string }) {
+    const text = name
+      ? {
+          $text: {
+            $search: name
+          }
+        }
+      : {}
     const match = {
+      ...text,
       status: ProductStatus.Active,
       approvalStatus: ProductApprovalStatus.Resolved
     }
