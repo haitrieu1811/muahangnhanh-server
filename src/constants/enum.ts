@@ -41,3 +41,8 @@ export enum ProductApprovalStatus {
   Resolved,
   Rejected
 }
+
+export enum AddressType {
+  Home,
+  Office
+}

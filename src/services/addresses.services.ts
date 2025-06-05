@@ -1,6 +1,7 @@
 import { ObjectId } from 'mongodb'
 
-import { Province } from '~/models/databases/Address'
+import Address, { Province } from '~/models/databases/Address'
+import { CreateAddressReqBody } from '~/models/requests/addresses.requests'
 import databaseService from '~/services/database.services'
 
 class AddressesService {
@@ -53,6 +54,37 @@ class AddressesService {
     return {
       wards,
       totalWards: wards.length
+    }
+  }
+
+  async createAddress({ body, userId }: { body: CreateAddressReqBody; userId: ObjectId }) {
+    const { insertedId } = await databaseService.addresses.insertOne(
+      new Address({
+        ...body,
+        provinceId: new ObjectId(body.provinceId),
+        userId
+      })
+    )
+    const [address] = await Promise.all([
+      databaseService.addresses.findOne({
+        _id: insertedId
+      }),
+      databaseService.users.updateOne(
+        {
+          _id: userId
+        },
+        {
+          $push: {
+            addresses: insertedId
+          },
+          $currentDate: {
+            updatedAt: true
+          }
+        }
+      )
+    ])
+    return {
+      address
     }
   }
 }

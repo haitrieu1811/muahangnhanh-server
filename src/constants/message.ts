@@ -109,5 +109,14 @@ export const ADDRESS_MESSAGES = {
   PROVINCE_ID_IS_REQUIRED: 'ID tỉnh/thành là bắt buộc.',
   PROVINCE_ID_IS_INVALID: 'ID tỉnh/thành không hợp lệ.',
   PROVINCE_NOT_FOUND: 'Không tìm thấy tỉnh thành.',
-  GET_WARDS_SUCCESS: 'Lấy danh sách phường xã thành công.'
+  GET_WARDS_SUCCESS: 'Lấy danh sách phường xã thành công.',
+  CREATE_ADDRESS_SUCCESS: 'Tạo địa chỉ mới thành công.',
+  ADDRESS_FULLNAME_IS_REQUIRED: 'Họ tên người nhận là bắt buộc.',
+  ADDRESS_PHONE_NUMBER_IS_REQUIRED: 'Số điện thoại người nhận là bắt buộc.',
+  ADDRESS_PHONE_NUMBER_IS_INVALID: 'Số điện thoại người nhận không hợp lệ.',
+  ADDRESS_DETAIL_IS_REQUIRED: 'Địa chỉ cụ thể là bắt buộc.',
+  ADDRESS_TYPE_IS_REQUIRED: 'Loại địa chỉ là bắt buộc.',
+  ADDRESS_TYPE_IS_INVALID: 'Loại địa chỉ không hợp lệ.',
+  DISTRICT_ID_IS_REQUIRED: 'ID quận/huyện là bắt buộc.',
+  WARD_ID_IS_REQUIRED: 'ID phường/xã là bắt buộc.'
 } as const

@@ -14,6 +14,7 @@ type UserConstructor = {
   role?: UserRole
   verifyEmailToken?: string
   forgotPasswordToken?: string
+  addresses?: ObjectId[]
   createdAt?: Date
   updatedAt?: Date
 }
@@ -29,6 +30,7 @@ export default class User {
   role: UserRole
   verifyEmailToken: string
   forgotPasswordToken: string
+  addresses: ObjectId[]
   createdAt: Date
   updatedAt: Date
 
@@ -43,6 +45,7 @@ export default class User {
     role,
     verifyEmailToken,
     forgotPasswordToken,
+    addresses,
     createdAt,
     updatedAt
   }: UserConstructor) {
@@ -57,6 +60,7 @@ export default class User {
     this.role = role ?? UserRole.Customer
     this.verifyEmailToken = verifyEmailToken ?? ''
     this.forgotPasswordToken = forgotPasswordToken ?? ''
+    this.addresses = addresses ?? []
     this.createdAt = createdAt ?? date
     this.updatedAt = updatedAt ?? date
   }
