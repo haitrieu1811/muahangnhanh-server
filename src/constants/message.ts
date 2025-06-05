@@ -102,3 +102,12 @@ export const PRODUCTS_MESSAGES = {
   GET_PRODUCTS_SUCCESS: 'Lấy danh sách sản phẩm thành công.',
   GET_PRODUCT_SUCCESS: 'Lấy thông tin chi tiết sản phẩm thành công.'
 } as const
+
+export const ADDRESS_MESSAGES = {
+  GET_PROVINCES_SUCCESS: 'Lấy danh sách tỉnh/thành thành công.',
+  GET_DISTRICTS_SUCCESS: 'Lấy danh sách quận/huyện thành công.',
+  PROVINCE_ID_IS_REQUIRED: 'ID tỉnh/thành là bắt buộc.',
+  PROVINCE_ID_IS_INVALID: 'ID tỉnh/thành không hợp lệ.',
+  PROVINCE_NOT_FOUND: 'Không tìm thấy tỉnh thành.',
+  GET_WARDS_SUCCESS: 'Lấy danh sách phường xã thành công.'
+} as const

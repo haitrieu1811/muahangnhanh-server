@@ -1,6 +1,7 @@
 import { Collection, Db, MongoClient } from 'mongodb'
 
 import { ENV_CONFIG } from '~/constants/config'
+import { Province } from '~/models/databases/Address'
 import Brand from '~/models/databases/Brand'
 import Media from '~/models/databases/Media'
 import Product, { ProductVariant } from '~/models/databases/Product'
@@ -69,6 +70,14 @@ class DatabaseService {
 
   get products(): Collection<Product> {
     return this.db.collection(ENV_CONFIG.DB_PRODUCTS_COLLECTION)
+  }
+
+  get addresses(): Collection<Product> {
+    return this.db.collection(ENV_CONFIG.DB_ADDRESSES_COLLECTION)
+  }
+
+  get provinces(): Collection<Province> {
+    return this.db.collection(ENV_CONFIG.DB_PROVINCES_COLLECTION)
   }
 }
 
