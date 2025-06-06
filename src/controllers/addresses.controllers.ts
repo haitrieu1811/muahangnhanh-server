@@ -48,3 +48,12 @@ export const createAddressController = async (
     data: result
   })
 }
+
+export const getMyAddressesController = async (req: Request, res: Response) => {
+  const { userId } = req.decodedAuthorization as TokenPayload
+  const result = await addressesService.getAddresses(new ObjectId(userId))
+  res.json({
+    message: ADDRESS_MESSAGES.GET_MY_ADDRESSES_SUCCESS,
+    data: result
+  })
+}

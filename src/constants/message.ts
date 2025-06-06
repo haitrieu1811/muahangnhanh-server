@@ -118,5 +118,6 @@ export const ADDRESS_MESSAGES = {
   ADDRESS_TYPE_IS_REQUIRED: 'Loại địa chỉ là bắt buộc.',
   ADDRESS_TYPE_IS_INVALID: 'Loại địa chỉ không hợp lệ.',
   DISTRICT_ID_IS_REQUIRED: 'ID quận/huyện là bắt buộc.',
-  WARD_ID_IS_REQUIRED: 'ID phường/xã là bắt buộc.'
+  WARD_ID_IS_REQUIRED: 'ID phường/xã là bắt buộc.',
+  GET_MY_ADDRESSES_SUCCESS: 'Lấy danh sách địa chỉ của tôi thành công.'
 } as const
