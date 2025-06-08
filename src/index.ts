@@ -5,6 +5,7 @@ import { ENV_CONFIG } from '~/constants/config'
 import { defaultErrorHandler } from '~/middlewares/error.middlewares'
 import addressesRouter from '~/routes/addresses.routes'
 import brandsRouter from '~/routes/brands.routes'
+import cartItemsRouter from '~/routes/cartItems.routes'
 import mediasRouter from '~/routes/medias.routes'
 import productCategoriesRouter from '~/routes/productCategories.routes'
 import productsRouter from '~/routes/products.routes'
@@ -37,6 +38,7 @@ app.use('/brands', brandsRouter)
 app.use('/products', productsRouter)
 app.use('/addresses', addressesRouter)
 app.use('/provinces', provincesRouter)
+app.use('/cart-items', cartItemsRouter)
 app.use(defaultErrorHandler as any)
 
 app.listen(port, () => {

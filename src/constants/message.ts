@@ -128,3 +128,10 @@ export const ADDRESS_MESSAGES = {
   DELETE_ADDRESS_SUCCESS: 'Xóa địa chỉ thành công.',
   SET_DEFAULT_ADDRESS_SUCCESS: 'Đặt địa chỉ mặc định thành công.'
 } as const
+
+export const CART_MESSAGES = {
+  ADD_PRODUCT_TO_CART_SUCCESS: 'Thêm sản phẩm vào giỏ hàng thành công.',
+  QUANTITY_IS_REQUIRED: 'Số lượng là bắt buộc.',
+  QUANTITY_MUST_BE_AN_INT: 'Số lượng phải là một số nguyên.',
+  QUANTITY_MUST_BE_GREATER_THAN_ZERO: 'Số lượng phải lớn hơn 0.'
+} as const
