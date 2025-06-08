@@ -2,6 +2,7 @@ import { Router } from 'express'
 
 import {
   createAddressController,
+  deleteAddressController,
   getAddressController,
   getMyAddressesController,
   updateAddressController
@@ -38,6 +39,15 @@ addressesRouter.put(
   addressAuthorValidator,
   createAddressValidator,
   updateAddressController
+)
+
+addressesRouter.delete(
+  '/:addressId',
+  accessTokenValidator,
+  isVerifiedUserValidator,
+  addressIdValidator,
+  addressAuthorValidator,
+  deleteAddressController
 )
 
 export default addressesRouter

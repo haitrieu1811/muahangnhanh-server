@@ -84,3 +84,10 @@ export const updateAddressController = async (
     data: result
   })
 }
+
+export const deleteAddressController = async (req: Request<AddressIdReqParams>, res: Response) => {
+  await addressesService.deleteAddress(new ObjectId(req.params.addressId))
+  res.json({
+    message: ADDRESS_MESSAGES.DELETE_ADDRESS_SUCCESS
+  })
+}

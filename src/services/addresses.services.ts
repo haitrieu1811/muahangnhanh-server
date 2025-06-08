@@ -235,6 +235,13 @@ class AddressesService {
       address
     }
   }
+
+  async deleteAddress(addressId: ObjectId) {
+    await databaseService.addresses.deleteOne({
+      _id: addressId
+    })
+    return true
+  }
 }
 
 const addressesService = new AddressesService()
