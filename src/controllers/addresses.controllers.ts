@@ -91,3 +91,14 @@ export const deleteAddressController = async (req: Request<AddressIdReqParams>, 
     message: ADDRESS_MESSAGES.DELETE_ADDRESS_SUCCESS
   })
 }
+
+export const setDefaultAddressController = async (req: Request<AddressIdReqParams>, res: Response) => {
+  const { userId } = req.decodedAuthorization as TokenPayload
+  await addressesService.setDefaultAddress({
+    addressId: new ObjectId(req.params.addressId),
+    userId: new ObjectId(userId)
+  })
+  res.json({
+    message: ADDRESS_MESSAGES.SET_DEFAULT_ADDRESS_SUCCESS
+  })
+}

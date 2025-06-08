@@ -242,6 +242,33 @@ class AddressesService {
     })
     return true
   }
+
+  async setDefaultAddress({ addressId, userId }: { addressId: ObjectId; userId: ObjectId }) {
+    await databaseService.addresses.updateMany(
+      {
+        userId
+      },
+      {
+        $set: {
+          isDefault: false
+        }
+      }
+    )
+    await databaseService.addresses.updateOne(
+      {
+        _id: addressId
+      },
+      {
+        $set: {
+          isDefault: true
+        },
+        $currentDate: {
+          updatedAt: true
+        }
+      }
+    )
+    return true
+  }
 }
 
 const addressesService = new AddressesService()

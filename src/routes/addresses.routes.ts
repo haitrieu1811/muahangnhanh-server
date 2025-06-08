@@ -5,6 +5,7 @@ import {
   deleteAddressController,
   getAddressController,
   getMyAddressesController,
+  setDefaultAddressController,
   updateAddressController
 } from '~/controllers/addresses.controllers'
 import { addressAuthorValidator, addressIdValidator, createAddressValidator } from '~/middlewares/addresses.middlewares'
@@ -48,6 +49,15 @@ addressesRouter.delete(
   addressIdValidator,
   addressAuthorValidator,
   deleteAddressController
+)
+
+addressesRouter.post(
+  '/:addressId/set-default',
+  accessTokenValidator,
+  isVerifiedUserValidator,
+  addressIdValidator,
+  addressAuthorValidator,
+  setDefaultAddressController
 )
 
 export default addressesRouter
