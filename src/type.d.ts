@@ -1,5 +1,6 @@
 import 'express'
 
+import Address from '~/models/databases/Address'
 import Product from '~/models/databases/Product'
 import User from '~/models/databases/User'
 import { TokenPayload } from '~/models/requests/users.requests'
@@ -12,5 +13,6 @@ declare module 'express' {
     decodedForgotPasswordToken?: TokenPayload
     user?: User
     product?: Product
+    address?: Address
   }
 }

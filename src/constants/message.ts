@@ -119,5 +119,9 @@ export const ADDRESS_MESSAGES = {
   ADDRESS_TYPE_IS_INVALID: 'Loại địa chỉ không hợp lệ.',
   DISTRICT_ID_IS_REQUIRED: 'ID quận/huyện là bắt buộc.',
   WARD_ID_IS_REQUIRED: 'ID phường/xã là bắt buộc.',
-  GET_MY_ADDRESSES_SUCCESS: 'Lấy danh sách địa chỉ của tôi thành công.'
+  GET_MY_ADDRESSES_SUCCESS: 'Lấy danh sách địa chỉ của tôi thành công.',
+  ADDRESS_ID_IS_REQUIRED: 'ID địa chỉ là bắt buộc.',
+  ADDRESS_ID_IS_INVALID: 'ID địa chỉ không hợp lệ.',
+  ADDRESS_NOT_FOUND: 'Không tìm thấy địa chỉ.',
+  GET_ADDRESS_SUCCESS: 'Lấy thông tin địa chỉ thành công.'
 } as const

@@ -19,3 +19,7 @@ export type CreateAddressReqBody = {
   detail: string
   type: AddressType
 }
+
+export type AddressIdReqParams = ParamsDictionary & {
+  addressId: string
+}

@@ -3,7 +3,12 @@ import { ParamsDictionary } from 'express-serve-static-core'
 import { ObjectId } from 'mongodb'
 
 import { ADDRESS_MESSAGES } from '~/constants/message'
-import { CreateAddressReqBody, DistrictIdReqParams, ProvinceIdReqParams } from '~/models/requests/addresses.requests'
+import {
+  AddressIdReqParams,
+  CreateAddressReqBody,
+  DistrictIdReqParams,
+  ProvinceIdReqParams
+} from '~/models/requests/addresses.requests'
 import { TokenPayload } from '~/models/requests/users.requests'
 import addressesService from '~/services/addresses.services'
 
@@ -54,6 +59,14 @@ export const getMyAddressesController = async (req: Request, res: Response) => {
   const result = await addressesService.getAddresses(new ObjectId(userId))
   res.json({
     message: ADDRESS_MESSAGES.GET_MY_ADDRESSES_SUCCESS,
+    data: result
+  })
+}
+
+export const getAddressController = async (req: Request<AddressIdReqParams>, res: Response) => {
+  const result = await addressesService.getAddress(new ObjectId(req.params.addressId))
+  res.json({
+    message: ADDRESS_MESSAGES.GET_ADDRESS_SUCCESS,
     data: result
   })
 }

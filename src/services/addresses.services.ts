@@ -88,13 +88,11 @@ class AddressesService {
     }
   }
 
-  async getAddresses(userId: ObjectId) {
+  async aggregateAddress(match?: object) {
     const addresses = await databaseService.addresses
       .aggregate([
         {
-          $match: {
-            userId
-          }
+          $match: match
         },
         {
           $lookup: {
@@ -196,8 +194,22 @@ class AddressesService {
         }
       ])
       .toArray()
+    return addresses
+  }
+
+  async getAddresses(userId: ObjectId) {
+    const addresses = await this.aggregateAddress({ userId })
     return {
       addresses
+    }
+  }
+
+  async getAddress(addressId: ObjectId) {
+    const addresses = await this.aggregateAddress({
+      _id: addressId
+    })
+    return {
+      address: addresses[0]
     }
   }
 }
