@@ -70,3 +70,17 @@ export const getAddressController = async (req: Request<AddressIdReqParams>, res
     data: result
   })
 }
+
+export const updateAddressController = async (
+  req: Request<AddressIdReqParams, any, CreateAddressReqBody>,
+  res: Response
+) => {
+  const result = await addressesService.updateAddress({
+    body: req.body,
+    addressId: new ObjectId(req.params.addressId)
+  })
+  res.json({
+    message: ADDRESS_MESSAGES.UPDATE_ADDRESS_SUCCESS,
+    data: result
+  })
+}

@@ -212,6 +212,29 @@ class AddressesService {
       address: addresses[0]
     }
   }
+
+  async updateAddress({ body, addressId }: { body: CreateAddressReqBody; addressId: ObjectId }) {
+    await databaseService.addresses.updateOne(
+      {
+        _id: addressId
+      },
+      {
+        $set: {
+          ...body,
+          provinceId: new ObjectId(body.provinceId)
+        },
+        $currentDate: {
+          updatedAt: true
+        }
+      }
+    )
+    const address = await this.aggregateAddress({
+      _id: addressId
+    })
+    return {
+      address
+    }
+  }
 }
 
 const addressesService = new AddressesService()
