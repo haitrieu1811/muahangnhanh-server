@@ -46,3 +46,11 @@ export enum AddressType {
   Home,
   Office
 }
+
+export enum CartItemStatus {
+  InCart,
+  Waiting,
+  Delivering,
+  Success,
+  Cancel
+}

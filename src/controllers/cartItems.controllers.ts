@@ -22,3 +22,12 @@ export const addProductToCartController = async (
     message: CART_MESSAGES.ADD_PRODUCT_TO_CART_SUCCESS
   })
 }
+
+export const getMyCartController = async (req: Request, res: Response) => {
+  const { userId } = req.decodedAuthorization as TokenPayload
+  const result = await cartItemsService.getMyCart(new ObjectId(userId))
+  res.json({
+    message: CART_MESSAGES.GET_MY_CART_SUCCESS,
+    data: result
+  })
+}

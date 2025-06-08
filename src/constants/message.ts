@@ -133,5 +133,6 @@ export const CART_MESSAGES = {
   ADD_PRODUCT_TO_CART_SUCCESS: 'Thêm sản phẩm vào giỏ hàng thành công.',
   QUANTITY_IS_REQUIRED: 'Số lượng là bắt buộc.',
   QUANTITY_MUST_BE_AN_INT: 'Số lượng phải là một số nguyên.',
-  QUANTITY_MUST_BE_GREATER_THAN_ZERO: 'Số lượng phải lớn hơn 0.'
+  QUANTITY_MUST_BE_GREATER_THAN_ZERO: 'Số lượng phải lớn hơn 0.',
+  GET_MY_CART_SUCCESS: 'Lấy thông tin giỏ hàng thành công.'
 } as const

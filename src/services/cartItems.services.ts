@@ -1,5 +1,7 @@
 import { ObjectId } from 'mongodb'
 
+import { ENV_CONFIG } from '~/constants/config'
+import { CartItemStatus } from '~/constants/enum'
 import CartItem from '~/models/databases/CartItem'
 import Product from '~/models/databases/Product'
 import databaseService from '~/services/database.services'
@@ -36,6 +38,98 @@ class CartItemsService {
       )
     }
     return true
+  }
+
+  async getMyCart(userId: ObjectId) {
+    const cartItems = await databaseService.cartItems
+      .aggregate([
+        {
+          $match: {
+            userId,
+            status: CartItemStatus.InCart
+          }
+        },
+        {
+          $lookup: {
+            from: 'products',
+            localField: 'productId',
+            foreignField: '_id',
+            as: 'product'
+          }
+        },
+        {
+          $unwind: {
+            path: '$product'
+          }
+        },
+        {
+          $lookup: {
+            from: 'medias',
+            localField: 'product.thumbnail',
+            foreignField: '_id',
+            as: 'thumbnail'
+          }
+        },
+        {
+          $unwind: {
+            path: '$thumbnail'
+          }
+        },
+        {
+          $addFields: {
+            'product.thumbnail': {
+              $concat: [ENV_CONFIG.SERVER_HOST, '/static/images/', '$thumbnail.name']
+            }
+          }
+        },
+        {
+          $group: {
+            _id: '$_id',
+            product: {
+              $first: '$product'
+            },
+            unitPrice: {
+              $first: '$unitPrice'
+            },
+            unitPriceAfterDiscount: {
+              $first: '$unitPriceAfterDiscount'
+            },
+            quantity: {
+              $first: '$quantity'
+            },
+            createdAt: {
+              $first: '$createdAt'
+            },
+            updatedAt: {
+              $first: '$updatedAt'
+            }
+          }
+        },
+        {
+          $project: {
+            'product.userId': 0,
+            'product.photos': 0,
+            'product.categoryId': 0,
+            'product.description': 0,
+            'product.variants': 0,
+            'product.status': 0,
+            'product.approvalStatus': 0
+          }
+        },
+        {
+          $sort: {
+            updatedAt: -1
+          }
+        }
+      ])
+      .toArray()
+    const totalItems = cartItems.reduce((acc, item) => (acc += item.quantity), 0)
+    const totalAmount = cartItems.reduce((acc, item) => (acc += item.quantity * item.unitPriceAfterDiscount), 0)
+    return {
+      totalItems,
+      totalAmount,
+      cartItems
+    }
   }
 }
 

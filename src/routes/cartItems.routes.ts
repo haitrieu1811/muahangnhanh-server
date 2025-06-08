@@ -1,6 +1,6 @@
 import { Router } from 'express'
 
-import { addProductToCartController } from '~/controllers/cartItems.controllers'
+import { addProductToCartController, getMyCartController } from '~/controllers/cartItems.controllers'
 import { addProductToCartValidator } from '~/middlewares/cartItems.middlewares'
 import { productIdValidator } from '~/middlewares/products.middlewares'
 import { accessTokenValidator, isVerifiedUserValidator } from '~/middlewares/users.middlewares'
@@ -15,5 +15,7 @@ cartItemsRouter.post(
   addProductToCartValidator,
   addProductToCartController
 )
+
+cartItemsRouter.get('/me', accessTokenValidator, isVerifiedUserValidator, getMyCartController)
 
 export default cartItemsRouter
