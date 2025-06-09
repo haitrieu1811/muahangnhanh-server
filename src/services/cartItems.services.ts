@@ -118,7 +118,7 @@ class CartItemsService {
         },
         {
           $sort: {
-            updatedAt: -1
+            createdAt: -1
           }
         }
       ])
@@ -130,6 +130,32 @@ class CartItemsService {
       totalAmount,
       cartItems
     }
+  }
+
+  async updateCartItem({ cartItemId, quantity }: { cartItemId: ObjectId; quantity: number }) {
+    await databaseService.cartItems.updateOne(
+      {
+        _id: cartItemId
+      },
+      {
+        $set: {
+          quantity
+        },
+        $currentDate: {
+          updatedAt: true
+        }
+      }
+    )
+    return true
+  }
+
+  async deleteCartItems(cartItemIds: ObjectId[]) {
+    await databaseService.cartItems.deleteMany({
+      _id: {
+        $in: cartItemIds
+      }
+    })
+    return true
   }
 }
 
