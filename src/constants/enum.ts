@@ -50,6 +50,15 @@ export enum AddressType {
 export enum CartItemStatus {
   InCart,
   Waiting,
+  Confirmed,
+  Delivering,
+  Success,
+  Cancel
+}
+
+export enum OrderStatus {
+  Waiting,
+  Confirmed,
   Delivering,
   Success,
   Cancel

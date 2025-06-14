@@ -69,6 +69,36 @@ const confirmPasswordSchema: ParamSchema = {
   }
 }
 
+export const userIdSchema: ParamSchema = {
+  trim: true,
+  custom: {
+    options: async (value: string) => {
+      if (!value) {
+        throw new ErrorWithStatus({
+          message: USERS_MESSAGES.USER_ID_IS_REQUIRED,
+          status: HTTP_STATUS.BAD_REQUEST
+        })
+      }
+      if (!ObjectId.isValid(value)) {
+        throw new ErrorWithStatus({
+          message: USERS_MESSAGES.USER_ID_IS_INVALID,
+          status: HTTP_STATUS.BAD_REQUEST
+        })
+      }
+      const user = await databaseService.users.findOne({
+        _id: new ObjectId(value)
+      })
+      if (!user) {
+        throw new ErrorWithStatus({
+          message: USERS_MESSAGES.USER_NOT_FOUND,
+          status: HTTP_STATUS.NOT_FOUND
+        })
+      }
+      return true
+    }
+  }
+}
+
 // Đăng ký tài khoản
 export const registerValidator = validate(
   checkSchema(
@@ -440,35 +470,7 @@ export const isAdminValidator = (req: Request, res: Response, next: NextFunction
 export const userIdValidator = validate(
   checkSchema(
     {
-      userId: {
-        trim: true,
-        custom: {
-          options: async (value: string) => {
-            if (!value) {
-              throw new ErrorWithStatus({
-                message: USERS_MESSAGES.USER_ID_IS_REQUIRED,
-                status: HTTP_STATUS.BAD_REQUEST
-              })
-            }
-            if (!ObjectId.isValid(value)) {
-              throw new ErrorWithStatus({
-                message: USERS_MESSAGES.USER_ID_IS_INVALID,
-                status: HTTP_STATUS.BAD_REQUEST
-              })
-            }
-            const user = await databaseService.users.findOne({
-              _id: new ObjectId(value)
-            })
-            if (!user) {
-              throw new ErrorWithStatus({
-                message: USERS_MESSAGES.USER_NOT_FOUND,
-                status: HTTP_STATUS.NOT_FOUND
-              })
-            }
-            return true
-          }
-        }
-      }
+      userId: userIdSchema
     },
     ['params']
   )
