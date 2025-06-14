@@ -7,6 +7,7 @@ import addressesRouter from '~/routes/addresses.routes'
 import brandsRouter from '~/routes/brands.routes'
 import cartItemsRouter from '~/routes/cartItems.routes'
 import mediasRouter from '~/routes/medias.routes'
+import ordersRouter from '~/routes/orders.routes'
 import productCategoriesRouter from '~/routes/productCategories.routes'
 import productsRouter from '~/routes/products.routes'
 import provincesRouter from '~/routes/provinces.routes'
@@ -39,6 +40,7 @@ app.use('/products', productsRouter)
 app.use('/addresses', addressesRouter)
 app.use('/provinces', provincesRouter)
 app.use('/cart-items', cartItemsRouter)
+app.use('/orders', ordersRouter)
 app.use(defaultErrorHandler as any)
 
 app.listen(port, () => {

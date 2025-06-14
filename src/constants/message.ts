@@ -142,5 +142,18 @@ export const CART_MESSAGES = {
   DELETE_CART_ITEMS_SUCCESS: 'Xóa mặt hàng trong giỏ hàng thành công.',
   CART_ITEM_IDS_IS_REQUIRED: 'ID các mặt hàng là bắt buộc.',
   CART_ITEM_IDS_MUST_BE_AN_ARRAY: 'ID các mặt hàng phải là một mảng.',
-  CART_ITEM_IDS_IS_INVALID: 'ID các mặt hàng không hợp lệ.'
+  CART_ITEM_IDS_IS_INVALID: 'ID các mặt hàng không hợp lệ.',
+  CART_ITEM_IDS_MUST_NOT_BE_EMPTY: 'ID các mặt hàng phải là một mảng không rỗng.'
+} as const
+
+export const ORDER_MESSAGES = {
+  CREATE_ORDER_SUCCESS: 'Đặt hàng thành công.',
+  TOTAL_ITEMS_IS_REQUIRED: 'Tổng số mặt hàng là bắt buộc.',
+  TOTAL_ITEMS_MUST_BE_GREATER_THAN_ZERO: 'Tổng số mặt hàng phải là số nguyên lớn hơn 0.',
+  TOTAL_AMOUNT_IS_REQUIRED: 'Tổng tiền là bắt buộc.',
+  TOTAL_AMOUNT_MUST_BE_GREATER_THAN_ZERO: 'Tổng tiền phải là số nguyên lớn hơn 0.',
+  SELLER_ID_IS_REQUIRED: 'ID người bán là bắt buộc.',
+  SELLER_ID_IS_INVALID: 'ID người bán không hợp lệ.',
+  SELLER_NOT_FOUND: 'Không tìm thấy người bán.',
+  CANNOT_BUY_YOUR_ITEMS: 'Bạn không thể tự mua hàng của mình.'
 } as const
