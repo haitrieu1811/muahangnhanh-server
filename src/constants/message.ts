@@ -155,5 +155,6 @@ export const ORDER_MESSAGES = {
   SELLER_ID_IS_REQUIRED: 'ID người bán là bắt buộc.',
   SELLER_ID_IS_INVALID: 'ID người bán không hợp lệ.',
   SELLER_NOT_FOUND: 'Không tìm thấy người bán.',
-  CANNOT_BUY_YOUR_ITEMS: 'Bạn không thể tự mua hàng của mình.'
+  CANNOT_BUY_YOUR_ITEMS: 'Bạn không thể tự mua hàng của mình.',
+  GET_MY_ORDERS_SUCCESS: 'Lấy danh sách đơn hàng thành công.'
 } as const
