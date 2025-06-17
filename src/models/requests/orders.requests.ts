@@ -5,6 +5,7 @@ export type CreateOrderReqBody = {
   totalItems: number
   totalAmount: number
   note?: string
+  addressId: string
 }
 
 export type OrderIdReqParams = ParamsDictionary & {

@@ -43,7 +43,7 @@ const provinceIdSchema: ParamSchema = {
   }
 }
 
-const addressIdSchema: ParamSchema = {
+export const addressIdSchema: ParamSchema = {
   trim: true,
   custom: {
     options: async (value, { req }) => {

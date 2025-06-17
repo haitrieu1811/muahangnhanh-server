@@ -15,7 +15,8 @@ class OrdersService {
       new Order({
         ...body,
         userId,
-        items: itemIds
+        items: itemIds,
+        addressId: new ObjectId(body.addressId)
       })
     )
     const [order] = await Promise.all([
@@ -102,6 +103,32 @@ class OrdersService {
         }
       },
       {
+        $lookup: {
+          from: 'addresses',
+          localField: 'addressId',
+          foreignField: '_id',
+          as: 'address'
+        }
+      },
+      {
+        $unwind: {
+          path: '$address'
+        }
+      },
+      {
+        $lookup: {
+          from: 'provinces',
+          localField: 'address.provinceId',
+          foreignField: '_id',
+          as: 'province'
+        }
+      },
+      {
+        $unwind: {
+          path: '$province'
+        }
+      },
+      {
         $addFields: {
           'product.thumbnail': {
             _id: '$productThumbnail._id',
@@ -114,12 +141,47 @@ class OrdersService {
             name: '$productCategory.name',
             createdAt: '$productCategory.createdAt',
             updatedAt: '$productCategory.updatedAt'
+          },
+          'address.province': '$province',
+          district: {
+            $filter: {
+              input: '$province.districts',
+              as: 'district',
+              cond: {
+                $eq: ['$$district.id', '$address.districtId']
+              }
+            }
           }
         }
       },
       {
+        $unwind: {
+          path: '$district'
+        }
+      },
+      {
         $addFields: {
-          'items.product': '$product'
+          'items.product': '$product',
+          ward: {
+            $filter: {
+              input: '$district.wards',
+              as: 'ward',
+              cond: {
+                $eq: ['$$ward.id', '$address.wardId']
+              }
+            }
+          }
+        }
+      },
+      {
+        $unwind: {
+          path: '$ward'
+        }
+      },
+      {
+        $addFields: {
+          'address.district': '$district',
+          'address.ward': '$ward'
         }
       },
       {
@@ -127,6 +189,9 @@ class OrdersService {
           _id: '$_id',
           items: {
             $push: '$items'
+          },
+          address: {
+            $first: '$address'
           },
           totalItems: {
             $first: '$totalItems'
@@ -155,7 +220,17 @@ class OrdersService {
           'items.product.photos': 0,
           'items.product.categoryId': 0,
           'items.product.description': 0,
-          'items.product.userId': 0
+          'items.product.userId': 0,
+          'items.product.variants': 0,
+          'address.userId': 0,
+          'address.provinceId': 0,
+          'address.districtId': 0,
+          'address.wardId': 0,
+          'address.province.districts': 0,
+          'address.province.id': 0,
+          'address.district.wards': 0,
+          'address.district.streets': 0,
+          'address.district.projects': 0
         }
       },
       {

@@ -4,6 +4,7 @@ import { ObjectId } from 'mongodb'
 
 import HTTP_STATUS from '~/constants/httpStatus'
 import { CART_MESSAGES, ORDER_MESSAGES, UTILS_MESSAGES } from '~/constants/message'
+import { addressIdSchema } from '~/middlewares/addresses.middlewares'
 import { ErrorWithStatus } from '~/models/Error'
 import { TokenPayload } from '~/models/requests/users.requests'
 import databaseService from '~/services/database.services'
@@ -96,7 +97,8 @@ export const createOrderValidator = validate(
             return true
           }
         }
-      }
+      },
+      addressId: addressIdSchema
     },
     ['body']
   )
