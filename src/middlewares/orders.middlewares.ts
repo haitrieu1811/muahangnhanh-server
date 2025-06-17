@@ -1,10 +1,11 @@
-import { Request } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import { checkSchema } from 'express-validator'
 import { ObjectId } from 'mongodb'
 
 import HTTP_STATUS from '~/constants/httpStatus'
-import { CART_MESSAGES, ORDER_MESSAGES } from '~/constants/message'
+import { CART_MESSAGES, ORDER_MESSAGES, UTILS_MESSAGES } from '~/constants/message'
 import { ErrorWithStatus } from '~/models/Error'
+import { TokenPayload } from '~/models/requests/users.requests'
 import databaseService from '~/services/database.services'
 import { validate } from '~/utils/validation'
 
@@ -100,3 +101,54 @@ export const createOrderValidator = validate(
     ['body']
   )
 )
+
+export const orderIdValidator = validate(
+  checkSchema(
+    {
+      orderId: {
+        trim: true,
+        custom: {
+          options: async (value: string, { req }) => {
+            if (!value) {
+              throw new ErrorWithStatus({
+                status: HTTP_STATUS.BAD_REQUEST,
+                message: ORDER_MESSAGES.ORDER_ID_IS_REQUIRED
+              })
+            }
+            if (!ObjectId.isValid(value)) {
+              throw new ErrorWithStatus({
+                status: HTTP_STATUS.BAD_REQUEST,
+                message: ORDER_MESSAGES.ORDER_ID_IS_INVALID
+              })
+            }
+            const order = await databaseService.orders.findOne({
+              _id: new ObjectId(value)
+            })
+            if (!order) {
+              throw new ErrorWithStatus({
+                status: HTTP_STATUS.NOT_FOUND,
+                message: ORDER_MESSAGES.ORDER_NOT_FOUND
+              })
+            }
+            ;(req as Request).order = order
+            return true
+          }
+        }
+      }
+    },
+    ['params']
+  )
+)
+
+export const orderAuthorValidator = async (req: Request, res: Response, next: NextFunction) => {
+  const { userId } = req.decodedAuthorization as TokenPayload
+  if (req.order?.userId.toString() !== userId) {
+    next(
+      new ErrorWithStatus({
+        status: HTTP_STATUS.FORBIDDEN,
+        message: UTILS_MESSAGES.PERMISSION_DENIED
+      })
+    )
+  }
+  next()
+}

@@ -2,6 +2,7 @@ import 'express'
 
 import Address from '~/models/databases/Address'
 import CartItem from '~/models/databases/CartItem'
+import Order from '~/models/databases/Order'
 import Product from '~/models/databases/Product'
 import User from '~/models/databases/User'
 import { TokenPayload } from '~/models/requests/users.requests'
@@ -17,5 +18,6 @@ declare module 'express' {
     address?: Address
     cartItem?: CartItem
     cartItems?: CartItem[]
+    order?: Order
   }
 }

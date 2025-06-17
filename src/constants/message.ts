@@ -156,5 +156,9 @@ export const ORDER_MESSAGES = {
   SELLER_ID_IS_INVALID: 'ID người bán không hợp lệ.',
   SELLER_NOT_FOUND: 'Không tìm thấy người bán.',
   CANNOT_BUY_YOUR_ITEMS: 'Bạn không thể tự mua hàng của mình.',
-  GET_MY_ORDERS_SUCCESS: 'Lấy danh sách đơn hàng thành công.'
+  GET_MY_ORDERS_SUCCESS: 'Lấy danh sách đơn hàng thành công.',
+  GET_ORDER_SUCCESS: 'Lấy thông tin đơn hàng thành công.',
+  ORDER_ID_IS_REQUIRED: 'ID đơn hàng là bắt buộc.',
+  ORDER_ID_IS_INVALID: 'ID đơn hàng không hợp lệ.',
+  ORDER_NOT_FOUND: 'Không tìm thấy đơn hàng.'
 } as const
