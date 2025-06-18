@@ -3,12 +3,16 @@ import { checkSchema } from 'express-validator'
 import { ObjectId } from 'mongodb'
 
 import HTTP_STATUS from '~/constants/httpStatus'
+import { OrderStatus } from '~/constants/enum'
 import { CART_MESSAGES, ORDER_MESSAGES, UTILS_MESSAGES } from '~/constants/message'
 import { addressIdSchema } from '~/middlewares/addresses.middlewares'
 import { ErrorWithStatus } from '~/models/Error'
 import { TokenPayload } from '~/models/requests/users.requests'
 import databaseService from '~/services/database.services'
+import { numberEnumToArray } from '~/utils/helpers'
 import { validate } from '~/utils/validation'
+
+const statuses = numberEnumToArray(OrderStatus)
 
 export const createOrderValidator = validate(
   checkSchema(
@@ -154,3 +158,17 @@ export const orderAuthorValidator = async (req: Request, res: Response, next: Ne
   }
   next()
 }
+
+export const updateOrderValidator = validate(
+  checkSchema(
+    {
+      status: {
+        isIn: {
+          options: [statuses],
+          errorMessage: ORDER_MESSAGES.ORDER_STATUS_IS_INVALID
+        }
+      }
+    },
+    ['body']
+  )
+)

@@ -1,7 +1,17 @@
 import { Router } from 'express'
 
-import { createOrderController, getMyOrdersController, getOrderController } from '~/controllers/orders.controllers'
-import { createOrderValidator, orderAuthorValidator, orderIdValidator } from '~/middlewares/orders.middlewares'
+import {
+  createOrderController,
+  getMyOrdersController,
+  getOrderController,
+  updateOrderController
+} from '~/controllers/orders.controllers'
+import {
+  createOrderValidator,
+  orderAuthorValidator,
+  orderIdValidator,
+  updateOrderValidator
+} from '~/middlewares/orders.middlewares'
 import { accessTokenValidator, isVerifiedUserValidator } from '~/middlewares/users.middlewares'
 import { paginationValidator } from '~/middlewares/utils.middlewares'
 
@@ -18,6 +28,16 @@ ordersRouter.get(
   orderIdValidator,
   orderAuthorValidator,
   getOrderController
+)
+
+ordersRouter.put(
+  '/:orderId',
+  accessTokenValidator,
+  isVerifiedUserValidator,
+  orderIdValidator,
+  orderAuthorValidator,
+  updateOrderValidator,
+  updateOrderController
 )
 
 export default ordersRouter

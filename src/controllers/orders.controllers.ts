@@ -3,7 +3,7 @@ import { ParamsDictionary } from 'express-serve-static-core'
 import { ObjectId } from 'mongodb'
 
 import { ORDER_MESSAGES } from '~/constants/message'
-import { CreateOrderReqBody, OrderIdReqParams } from '~/models/requests/orders.requests'
+import { CreateOrderReqBody, OrderIdReqParams, UpdateOrderReqBody } from '~/models/requests/orders.requests'
 import { TokenPayload } from '~/models/requests/users.requests'
 import { PaginationReqQuery } from '~/models/requests/utils.requests'
 import ordersService from '~/services/orders.services'
@@ -43,5 +43,15 @@ export const getOrderController = async (req: Request<OrderIdReqParams>, res: Re
   res.json({
     message: ORDER_MESSAGES.GET_ORDER_SUCCESS,
     data: result
+  })
+}
+
+export const updateOrderController = async (req: Request<OrderIdReqParams, any, UpdateOrderReqBody>, res: Response) => {
+  await ordersService.updateOrder({
+    orderId: new ObjectId(req.params.orderId),
+    body: req.body
+  })
+  res.json({
+    message: ORDER_MESSAGES.UPDATE_ORDER_SUCCESS
   })
 }

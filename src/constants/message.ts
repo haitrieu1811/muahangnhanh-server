@@ -160,5 +160,7 @@ export const ORDER_MESSAGES = {
   GET_ORDER_SUCCESS: 'Lấy thông tin đơn hàng thành công.',
   ORDER_ID_IS_REQUIRED: 'ID đơn hàng là bắt buộc.',
   ORDER_ID_IS_INVALID: 'ID đơn hàng không hợp lệ.',
-  ORDER_NOT_FOUND: 'Không tìm thấy đơn hàng.'
+  ORDER_NOT_FOUND: 'Không tìm thấy đơn hàng.',
+  UPDATE_ORDER_SUCCESS: 'Cập nhật đơn hàng thành công.',
+  ORDER_STATUS_IS_INVALID: 'Trạng thái đơn hàng không hợp lệ.'
 } as const
