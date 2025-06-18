@@ -10,7 +10,8 @@ class CartItemsService {
   async addProductToCart({ product, userId, quantity }: { product: Product; userId: ObjectId; quantity: number }) {
     const cartItem = await databaseService.cartItems.findOne({
       productId: product._id,
-      userId
+      userId,
+      status: CartItemStatus.InCart
     })
     if (!cartItem) {
       await databaseService.cartItems.insertOne(

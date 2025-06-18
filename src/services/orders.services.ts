@@ -187,6 +187,9 @@ class OrdersService {
       {
         $group: {
           _id: '$_id',
+          code: {
+            $first: '$code'
+          },
           items: {
             $push: '$items'
           },
