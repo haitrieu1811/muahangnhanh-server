@@ -2,17 +2,19 @@ import { Router } from 'express'
 
 import {
   createOrderController,
+  getAllOrdersController,
   getMyOrdersController,
   getOrderController,
   updateOrderController
 } from '~/controllers/orders.controllers'
 import {
   createOrderValidator,
+  orderAuthorOrAdminValidator,
   orderAuthorValidator,
   orderIdValidator,
   updateOrderValidator
 } from '~/middlewares/orders.middlewares'
-import { accessTokenValidator, isVerifiedUserValidator } from '~/middlewares/users.middlewares'
+import { accessTokenValidator, isAdminValidator, isVerifiedUserValidator } from '~/middlewares/users.middlewares'
 import { paginationValidator } from '~/middlewares/utils.middlewares'
 
 const ordersRouter = Router()
@@ -20,6 +22,15 @@ const ordersRouter = Router()
 ordersRouter.post('/', accessTokenValidator, isVerifiedUserValidator, createOrderValidator, createOrderController)
 
 ordersRouter.get('/me', accessTokenValidator, isVerifiedUserValidator, paginationValidator, getMyOrdersController)
+
+ordersRouter.get(
+  '/all',
+  accessTokenValidator,
+  isVerifiedUserValidator,
+  isAdminValidator,
+  paginationValidator,
+  getAllOrdersController
+)
 
 ordersRouter.get(
   '/:orderId',
@@ -35,7 +46,7 @@ ordersRouter.put(
   accessTokenValidator,
   isVerifiedUserValidator,
   orderIdValidator,
-  orderAuthorValidator,
+  orderAuthorOrAdminValidator,
   updateOrderValidator,
   updateOrderController
 )

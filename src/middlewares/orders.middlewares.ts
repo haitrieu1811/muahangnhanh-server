@@ -3,7 +3,7 @@ import { checkSchema } from 'express-validator'
 import { ObjectId } from 'mongodb'
 
 import HTTP_STATUS from '~/constants/httpStatus'
-import { OrderStatus } from '~/constants/enum'
+import { OrderStatus, UserRole } from '~/constants/enum'
 import { CART_MESSAGES, ORDER_MESSAGES, UTILS_MESSAGES } from '~/constants/message'
 import { addressIdSchema } from '~/middlewares/addresses.middlewares'
 import { ErrorWithStatus } from '~/models/Error'
@@ -149,6 +149,19 @@ export const orderIdValidator = validate(
 export const orderAuthorValidator = async (req: Request, res: Response, next: NextFunction) => {
   const { userId } = req.decodedAuthorization as TokenPayload
   if (req.order?.userId.toString() !== userId) {
+    next(
+      new ErrorWithStatus({
+        status: HTTP_STATUS.FORBIDDEN,
+        message: UTILS_MESSAGES.PERMISSION_DENIED
+      })
+    )
+  }
+  next()
+}
+
+export const orderAuthorOrAdminValidator = async (req: Request, res: Response, next: NextFunction) => {
+  const { userId, userRole } = req.decodedAuthorization as TokenPayload
+  if (req.order?.userId.toString() !== userId && userRole !== UserRole.Admin) {
     next(
       new ErrorWithStatus({
         status: HTTP_STATUS.FORBIDDEN,

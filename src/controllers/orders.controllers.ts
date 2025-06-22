@@ -26,7 +26,7 @@ export const getMyOrdersController = async (
 ) => {
   const { userId } = req.decodedAuthorization as TokenPayload
   const { orders, ...pagination } = await ordersService.getOrders({
-    userId: new ObjectId(userId),
+    match: { userId: new ObjectId(userId) },
     query: req.query
   })
   res.json({
@@ -53,5 +53,21 @@ export const updateOrderController = async (req: Request<OrderIdReqParams, any, 
   })
   res.json({
     message: ORDER_MESSAGES.UPDATE_ORDER_SUCCESS
+  })
+}
+
+export const getAllOrdersController = async (
+  req: Request<ParamsDictionary, any, any, PaginationReqQuery>,
+  res: Response
+) => {
+  const { orders, ...pagination } = await ordersService.getOrders({
+    query: req.query
+  })
+  res.json({
+    message: ORDER_MESSAGES.GET_ALL_ORDERS_SUCCESS,
+    data: {
+      orders,
+      pagination
+    }
   })
 }

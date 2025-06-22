@@ -265,10 +265,7 @@ class OrdersService {
     ]
   }
 
-  async getOrders({ userId, query }: { userId: ObjectId; query: PaginationReqQuery }) {
-    const match = {
-      userId
-    }
+  async getOrders({ match = {}, query }: { match?: object; query: PaginationReqQuery }) {
     const { page, limit, skip } = configurePagination(query)
     const [orders, totalOrders] = await Promise.all([
       databaseService.orders.aggregate(this.aggregateOrder({ match, skip, limit })).toArray(),
