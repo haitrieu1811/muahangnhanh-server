@@ -165,3 +165,14 @@ export const ORDER_MESSAGES = {
   ORDER_STATUS_IS_INVALID: 'Trạng thái đơn hàng không hợp lệ.',
   GET_ALL_ORDERS_SUCCESS: 'Lấy danh sách tất cả đơn hàng thành công.'
 } as const
+
+export const REVIEWS_MESSAGE = {
+  CREATE_REVIEW_SUCCESS: 'Đánh giá sản phẩm thành công.',
+  STAR_POINTS_IS_REQUIRED: 'Số sao đánh giá là bắt buộc.',
+  STAR_POINTS_MUST_BE_AN_INTEGER: 'Số sao đánh giá phải là một số nguyên.',
+  STAR_POINTS_IS_INVALID: 'Số sao đánh giá phải có giá trị từ 1 đến 5.',
+  PHOTOS_MUST_BE_AN_ARRAY: 'Hình ảnh thực tế phải là một mảng.',
+  PHOTOS_IS_INVALID: 'Hình ảnh thực tế không hợp lệ.',
+  PLEASE_BUY_BEFORE_REVIEW: 'Bạn phải mua sản phẩm trước khi đánh giá.',
+  YOU_HAVE_REVIEWED_BEFORE: 'Bạn đã đánh giá trước đó'
+} as const

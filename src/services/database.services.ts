@@ -9,6 +9,7 @@ import Order from '~/models/databases/Order'
 import Product, { ProductVariant } from '~/models/databases/Product'
 import ProductCategory from '~/models/databases/ProductCategory'
 import { RefreshToken } from '~/models/databases/RefreshToken'
+import Review from '~/models/databases/Review'
 import User from '~/models/databases/User'
 
 const uri = `mongodb+srv://${ENV_CONFIG.DB_USERNAME}:${ENV_CONFIG.DB_PASSWORD}@muahangnhanh-cluster.g5ae1.mongodb.net/?retryWrites=true&w=majority&appName=muahangnhanh-cluster`
@@ -88,6 +89,10 @@ class DatabaseService {
 
   get orders(): Collection<Order> {
     return this.db.collection(ENV_CONFIG.DB_ORDERS_COLLECTION)
+  }
+
+  get reviews(): Collection<Review> {
+    return this.db.collection(ENV_CONFIG.DB_REVIEWS_COLLECTION)
   }
 }
 
