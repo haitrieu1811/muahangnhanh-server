@@ -22,3 +22,12 @@ export const createReviewController = async (
     data: result
   })
 }
+
+export const getReviewdProductIdsController = async (req: Request, res: Response) => {
+  const { userId } = req.decodedAuthorization as TokenPayload
+  const result = await reviewsService.getReviewdProductIds(new ObjectId(userId))
+  res.json({
+    message: REVIEWS_MESSAGE.GET_REVIEWD_PRODUCT_IDS_SUCCESS,
+    data: result
+  })
+}

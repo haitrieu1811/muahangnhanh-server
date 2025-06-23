@@ -29,6 +29,19 @@ class ReviewsService {
       review
     }
   }
+
+  // Lấy danh sách ID sản phẩm mà người dùng đã đánh giá rồi
+  async getReviewdProductIds(userId: ObjectId) {
+    const reviewdProducts = await databaseService.reviews
+      .find({
+        userId
+      })
+      .toArray()
+    const reviewdProductIds = reviewdProducts.map((reviewdProduct) => reviewdProduct.productId)
+    return {
+      reviewdProductIds
+    }
+  }
 }
 
 const reviewsService = new ReviewsService()

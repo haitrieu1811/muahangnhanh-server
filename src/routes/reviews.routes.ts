@@ -1,6 +1,6 @@
 import { Router } from 'express'
 
-import { createReviewController } from '~/controllers/reviews.controllers'
+import { createReviewController, getReviewdProductIdsController } from '~/controllers/reviews.controllers'
 import { productIdValidator } from '~/middlewares/products.middlewares'
 import {
   createReviewValidator,
@@ -21,5 +21,7 @@ reviewsRouter.post(
   createReviewValidator,
   createReviewController
 )
+
+reviewsRouter.get('/product-ids', accessTokenValidator, isVerifiedUserValidator, getReviewdProductIdsController)
 
 export default reviewsRouter
