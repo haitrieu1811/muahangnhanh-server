@@ -175,5 +175,6 @@ export const REVIEWS_MESSAGE = {
   PHOTOS_IS_INVALID: 'Hình ảnh thực tế không hợp lệ.',
   PLEASE_BUY_BEFORE_REVIEW: 'Bạn phải mua sản phẩm trước khi đánh giá.',
   YOU_HAVE_REVIEWED_BEFORE: 'Bạn đã đánh giá trước đó',
-  GET_REVIEWD_PRODUCT_IDS_SUCCESS: 'Lấy danh sách ID sản phẩm đã đánh giá thành công.'
+  GET_REVIEWD_PRODUCT_IDS_SUCCESS: 'Lấy danh sách ID sản phẩm đã đánh giá thành công.',
+  GET_REVIEWS_SUCCESS: 'Lấy danh sách đánh giá thành công.'
 } as const

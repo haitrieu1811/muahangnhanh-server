@@ -1,6 +1,10 @@
 import { Router } from 'express'
 
-import { createReviewController, getReviewdProductIdsController } from '~/controllers/reviews.controllers'
+import {
+  createReviewController,
+  getReviewdProductIdsController,
+  getReviewsByProductIdController
+} from '~/controllers/reviews.controllers'
 import { productIdValidator } from '~/middlewares/products.middlewares'
 import {
   createReviewValidator,
@@ -8,6 +12,7 @@ import {
   isPurchasedBeforeValidator
 } from '~/middlewares/reviews.middlewares'
 import { accessTokenValidator, isVerifiedUserValidator } from '~/middlewares/users.middlewares'
+import { paginationValidator } from '~/middlewares/utils.middlewares'
 
 const reviewsRouter = Router()
 
@@ -23,5 +28,7 @@ reviewsRouter.post(
 )
 
 reviewsRouter.get('/product-ids', accessTokenValidator, isVerifiedUserValidator, getReviewdProductIdsController)
+
+reviewsRouter.get('/products/:productId', productIdValidator, paginationValidator, getReviewsByProductIdController)
 
 export default reviewsRouter
