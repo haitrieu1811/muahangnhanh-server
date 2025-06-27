@@ -3,9 +3,8 @@ import { ParamsDictionary } from 'express-serve-static-core'
 import { ObjectId } from 'mongodb'
 
 import { PRODUCTS_MESSAGES } from '~/constants/message'
-import { CreateProductReqBody, ProductIdReqParams } from '~/models/requests/products.requests'
+import { CreateProductReqBody, GetProductsReqQuery, ProductIdReqParams } from '~/models/requests/products.requests'
 import { TokenPayload } from '~/models/requests/users.requests'
-import { PaginationReqQuery } from '~/models/requests/utils.requests'
 import productsService from '~/services/products.services'
 
 export const createProductController = async (
@@ -32,7 +31,7 @@ export const updateProductController = async (
 }
 
 export const getProductsController = async (
-  req: Request<ParamsDictionary, any, any, PaginationReqQuery>,
+  req: Request<ParamsDictionary, any, any, GetProductsReqQuery>,
   res: Response
 ) => {
   const { products, ...pagination } = await productsService.getProducts(req.query)

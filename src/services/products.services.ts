@@ -1,27 +1,31 @@
-import isEmpty from 'lodash/isEmpty'
-import xor from 'lodash/xor'
 import difference from 'lodash/difference'
+import isEmpty from 'lodash/isEmpty'
+import isUndefined from 'lodash/isUndefined'
+import omitBy from 'lodash/omitBy'
+import xor from 'lodash/xor'
 import { ObjectId } from 'mongodb'
 
 import { ENV_CONFIG } from '~/constants/config'
+import { ProductApprovalStatus, ProductStatus } from '~/constants/enum'
 import Product, { AggregateProduct } from '~/models/databases/Product'
-import { CreateProductReqBody } from '~/models/requests/products.requests'
+import { CreateProductReqBody, GetProductsReqQuery } from '~/models/requests/products.requests'
 import databaseService from '~/services/database.services'
 import mediasService from '~/services/medias.services'
-import { PaginationReqQuery } from '~/models/requests/utils.requests'
 import { configurePagination } from '~/utils/helpers'
-import { ProductApprovalStatus, ProductStatus } from '~/constants/enum'
 
 class ProductsService {
   async aggregateProduct({
     match = {},
     limit = 20,
-    skip = 0
+    skip = 0,
+    sortBy = 'createdAt',
+    orderBy = 'desc'
   }: {
     match?: object
-    page?: number
     limit?: number
     skip?: number
+    sortBy?: string
+    orderBy?: 'asc' | 'desc'
   }) {
     const products = await databaseService.products
       .aggregate<AggregateProduct>([
@@ -223,7 +227,7 @@ class ProductsService {
         },
         {
           $sort: {
-            createdAt: -1
+            [sortBy]: orderBy === 'desc' ? -1 : 1
           }
         },
         {
@@ -316,7 +320,8 @@ class ProductsService {
   }
 
   // Lấy danh sách sản phẩm
-  async getProducts({ name, ...query }: PaginationReqQuery & { name?: string }) {
+  async getProducts({ name, sortBy, orderBy, ...query }: GetProductsReqQuery) {
+    // Tìm kiếm theo tên
     const text = name
       ? {
           $text: {
@@ -324,17 +329,22 @@ class ProductsService {
           }
         }
       : {}
-    const match = {
-      ...text,
-      status: ProductStatus.Active,
-      approvalStatus: ProductApprovalStatus.Resolved
-    }
+    const match = omitBy(
+      {
+        ...text,
+        status: ProductStatus.Active,
+        approvalStatus: ProductApprovalStatus.Resolved
+      },
+      isUndefined
+    )
     const { page, limit, skip } = configurePagination(query)
     const [products, totalRows] = await Promise.all([
       this.aggregateProduct({
+        match,
         limit,
         skip,
-        match
+        sortBy,
+        orderBy
       }),
       databaseService.products.countDocuments(match)
     ])
