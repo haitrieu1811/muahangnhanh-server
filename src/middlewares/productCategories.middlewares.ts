@@ -65,28 +65,3 @@ export const productCategoryIdValidator = validate(
     ['params']
   )
 )
-
-export const getProductsValidator = validate(
-  checkSchema(
-    {
-      categoryIds: {
-        trim: true,
-        optional: true,
-        custom: {
-          options: (value: string) => {
-            const categoryIds = value.split('-')
-            const isAllValid = categoryIds.every((categoryId) => ObjectId.isValid(categoryId))
-            if (!isAllValid) {
-              throw new ErrorWithStatus({
-                status: HTTP_STATUS.BAD_REQUEST,
-                message: PRODUCTS_MESSAGES.PRODUCT_CATEGORY_ID_IS_INVALID
-              })
-            }
-            return true
-          }
-        }
-      }
-    },
-    ['query']
-  )
-)

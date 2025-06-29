@@ -6,8 +6,12 @@ import {
   getProductsController,
   updateProductController
 } from '~/controllers/products.controllers'
-import { getProductsValidator } from '~/middlewares/productCategories.middlewares'
-import { createProductValidator, productAuthorValidator, productIdValidator } from '~/middlewares/products.middlewares'
+import {
+  createProductValidator,
+  getProductsValidator,
+  productAuthorValidator,
+  productIdValidator
+} from '~/middlewares/products.middlewares'
 import { accessTokenValidator } from '~/middlewares/users.middlewares'
 import { paginationValidator } from '~/middlewares/utils.middlewares'
 

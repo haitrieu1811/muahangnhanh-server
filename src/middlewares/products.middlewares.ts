@@ -6,6 +6,7 @@ import { ProductApprovalStatus, ProductStatus } from '~/constants/enum'
 import HTTP_STATUS from '~/constants/httpStatus'
 import { PRODUCTS_MESSAGES, UTILS_MESSAGES } from '~/constants/message'
 import { productCategoryIdSchema } from '~/middlewares/productCategories.middlewares'
+import { starPointsSchema } from '~/middlewares/reviews.middlewares'
 import { imageIdSchema } from '~/middlewares/utils.middlewares'
 import Product from '~/models/databases/Product'
 import { ErrorWithStatus } from '~/models/Error'
@@ -156,3 +157,32 @@ export const productAuthorValidator = async (req: Request, res: Response, next: 
   }
   next()
 }
+
+export const getProductsValidator = validate(
+  checkSchema(
+    {
+      categoryIds: {
+        trim: true,
+        optional: true,
+        custom: {
+          options: (value: string) => {
+            const categoryIds = value.split('-')
+            const isAllValid = categoryIds.every((categoryId) => ObjectId.isValid(categoryId))
+            if (!isAllValid) {
+              throw new ErrorWithStatus({
+                status: HTTP_STATUS.BAD_REQUEST,
+                message: PRODUCTS_MESSAGES.PRODUCT_CATEGORY_ID_IS_INVALID
+              })
+            }
+            return true
+          }
+        }
+      },
+      minStarPoints: {
+        ...starPointsSchema,
+        optional: true
+      }
+    },
+    ['query']
+  )
+)

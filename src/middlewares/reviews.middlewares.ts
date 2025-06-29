@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import { checkSchema } from 'express-validator'
+import { checkSchema, ParamSchema } from 'express-validator'
 import { ObjectId } from 'mongodb'
 
 import { OrderStatus } from '~/constants/enum'
@@ -11,25 +11,37 @@ import { TokenPayload } from '~/models/requests/users.requests'
 import databaseService from '~/services/database.services'
 import { validate } from '~/utils/validation'
 
+export const starPointsSchema: ParamSchema = {
+  custom: {
+    options: (value) => {
+      const _value = Number(value)
+      if (!_value) {
+        throw new ErrorWithStatus({
+          message: REVIEWS_MESSAGE.STAR_POINTS_IS_REQUIRED,
+          status: HTTP_STATUS.BAD_REQUEST
+        })
+      }
+      if (!Number.isInteger(_value)) {
+        throw new ErrorWithStatus({
+          message: REVIEWS_MESSAGE.STAR_POINTS_MUST_BE_AN_INTEGER,
+          status: HTTP_STATUS.BAD_REQUEST
+        })
+      }
+      if (_value < 1 || _value > 5) {
+        throw new ErrorWithStatus({
+          message: REVIEWS_MESSAGE.STAR_POINTS_IS_INVALID,
+          status: HTTP_STATUS.BAD_REQUEST
+        })
+      }
+      return true
+    }
+  }
+}
+
 export const createReviewValidator = validate(
   checkSchema(
     {
-      starPoints: {
-        notEmpty: {
-          errorMessage: REVIEWS_MESSAGE.STAR_POINTS_IS_REQUIRED
-        },
-        custom: {
-          options: (value) => {
-            if (!Number.isInteger(value)) {
-              throw new Error(REVIEWS_MESSAGE.STAR_POINTS_MUST_BE_AN_INTEGER)
-            }
-            if (value < 1 || value > 5) {
-              throw new Error(REVIEWS_MESSAGE.STAR_POINTS_IS_INVALID)
-            }
-            return true
-          }
-        }
-      },
+      starPoints: starPointsSchema,
       content: {
         trim: true,
         optional: true

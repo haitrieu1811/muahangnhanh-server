@@ -128,6 +128,7 @@ export type AggregateProduct = {
   }[]
   name: string
   description: string
+  starPoints: 1 | 2 | 3 | 4 | 5
   category: {
     _id: ObjectId
     thumbnail: string

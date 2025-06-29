@@ -21,4 +21,5 @@ export type GetProductsReqQuery = PaginationReqQuery & {
   sortBy?: string
   orderBy?: 'asc' | 'desc'
   categoryIds?: string
+  minStarPoints?: 1 | 2 | 3 | 4 | 5
 }
