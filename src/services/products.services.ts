@@ -320,7 +320,7 @@ class ProductsService {
   }
 
   // Lấy danh sách sản phẩm
-  async getProducts({ name, sortBy, orderBy, ...query }: GetProductsReqQuery) {
+  async getProducts({ name, sortBy, orderBy, categoryIds, ...query }: GetProductsReqQuery) {
     // Tìm kiếm theo tên
     const text = name
       ? {
@@ -329,11 +329,18 @@ class ProductsService {
           }
         }
       : {}
+    const configuredCategoryIds = categoryIds?.split('-')
+    const _configuredCategoryIds = configuredCategoryIds?.map((categoryId) => new ObjectId(categoryId))
     const match = omitBy(
       {
         ...text,
         status: ProductStatus.Active,
-        approvalStatus: ProductApprovalStatus.Resolved
+        approvalStatus: ProductApprovalStatus.Resolved,
+        categoryId: _configuredCategoryIds
+          ? {
+              $in: _configuredCategoryIds
+            }
+          : undefined
       },
       isUndefined
     )

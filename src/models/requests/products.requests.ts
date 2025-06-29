@@ -20,4 +20,5 @@ export type GetProductsReqQuery = PaginationReqQuery & {
   name?: string
   sortBy?: string
   orderBy?: 'asc' | 'desc'
+  categoryIds?: string
 }
