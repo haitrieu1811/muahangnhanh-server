@@ -178,3 +178,22 @@ export const REVIEWS_MESSAGE = {
   GET_REVIEWD_PRODUCT_IDS_SUCCESS: 'Lấy danh sách ID sản phẩm đã đánh giá thành công.',
   GET_REVIEWS_SUCCESS: 'Lấy danh sách đánh giá thành công.'
 } as const
+
+export const BLOGS_MESSAGE = {
+  CREATE_BLOG_SUCCESS: 'Tạo blog thành công.',
+  BLOG_TITLE_IS_REQUIRED: 'Tiêu đề blog là bắt buộc.',
+  BLOG_CONTENT_IS_REQUIRED: 'Nội dung blog là bắt buộc.',
+  BLOG_STATUS_IS_INVALID: 'Trạng thái blog không hợp lệ.',
+  BLOG_ORDER_MUST_BE_A_INT: 'Thứ tự blog phải là một số nguyên.',
+  BLOG_ORDER_MUST_BE_GREATER_THAN_ZERO: 'Thứ tự blog phải lớn hơn 0.',
+  UPDATE_BLOG_SUCCESS: 'Cập nhật blog thành công.',
+  BLOG_ID_IS_REQUIRED: 'ID blog là bắt buộc.',
+  BLOG_ID_IS_INVALID: 'ID blog không hợp lệ.',
+  BLOG_NOT_FOUND: 'Không tìm thấy blog.',
+  GET_BLOGS_SUCCESS: 'Lấy danh sách blog thành công.',
+  GET_BLOG_SUCCESS: 'Lấy thông tin blog thành công.',
+  DELETE_BLOGS_SUCCESS: 'Xóa bài viết thành công',
+  BLOG_IDS_IS_REQUIRED: 'ID bài viết là bắt buộc.',
+  BLOG_IDS_MUST_BE_AN_ARRAY: 'ID bài viết phải là một mảng.',
+  BLOG_IDS_IS_INVALID: 'ID bài viết không hợp lệ.'
+} as const

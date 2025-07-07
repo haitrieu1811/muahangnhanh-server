@@ -2,6 +2,7 @@ import { Collection, Db, MongoClient } from 'mongodb'
 
 import { ENV_CONFIG } from '~/constants/config'
 import Address, { Province } from '~/models/databases/Address'
+import Blog from '~/models/databases/Blog'
 import Brand from '~/models/databases/Brand'
 import CartItem from '~/models/databases/CartItem'
 import Media from '~/models/databases/Media'
@@ -93,6 +94,10 @@ class DatabaseService {
 
   get reviews(): Collection<Review> {
     return this.db.collection(ENV_CONFIG.DB_REVIEWS_COLLECTION)
+  }
+
+  get blogs(): Collection<Blog> {
+    return this.db.collection(ENV_CONFIG.DB_BLOGS_COLLECTION)
   }
 }
 

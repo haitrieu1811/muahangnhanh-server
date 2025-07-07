@@ -1,6 +1,7 @@
 import 'express'
 
 import Address from '~/models/databases/Address'
+import Blog from '~/models/databases/Blog'
 import CartItem from '~/models/databases/CartItem'
 import Order from '~/models/databases/Order'
 import Product from '~/models/databases/Product'
@@ -19,5 +20,6 @@ declare module 'express' {
     cartItem?: CartItem
     cartItems?: CartItem[]
     order?: Order
+    blog?: Blog
   }
 }

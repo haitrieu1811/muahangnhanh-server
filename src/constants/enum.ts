@@ -63,3 +63,8 @@ export enum OrderStatus {
   Success,
   Cancel
 }
+
+export enum BlogStatus {
+  Active,
+  Inactive
+}

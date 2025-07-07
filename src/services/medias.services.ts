@@ -4,6 +4,7 @@ import mime from 'mime'
 import { ObjectId } from 'mongodb'
 import path from 'path'
 import sharp from 'sharp'
+import { ENV_CONFIG } from '~/constants/config'
 
 import { UPLOAD_IMAGE_DIR } from '~/constants/dir'
 import { MediaType } from '~/constants/enum'
@@ -45,7 +46,8 @@ class MediasService {
         return {
           _id: insertedId,
           name: newFullName,
-          type: MediaType.Image
+          type: MediaType.Image,
+          url: `${ENV_CONFIG.SERVER_HOST}/static/images/${newFullName}`
         }
       })
     )

@@ -4,6 +4,7 @@ import express from 'express'
 import { ENV_CONFIG } from '~/constants/config'
 import { defaultErrorHandler } from '~/middlewares/error.middlewares'
 import addressesRouter from '~/routes/addresses.routes'
+import blogsRouter from '~/routes/blogs.routes'
 import brandsRouter from '~/routes/brands.routes'
 import cartItemsRouter from '~/routes/cartItems.routes'
 import mediasRouter from '~/routes/medias.routes'
@@ -43,6 +44,7 @@ app.use('/provinces', provincesRouter)
 app.use('/cart-items', cartItemsRouter)
 app.use('/orders', ordersRouter)
 app.use('/reviews', reviewsRouter)
+app.use('/blogs', blogsRouter)
 app.use(defaultErrorHandler as any)
 
 app.listen(port, () => {
