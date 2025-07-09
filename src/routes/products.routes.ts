@@ -2,6 +2,7 @@ import { Router } from 'express'
 
 import {
   createProductController,
+  getAllProductsController,
   getProductController,
   getProductsController,
   updateProductController
@@ -12,7 +13,7 @@ import {
   productAuthorValidator,
   productIdValidator
 } from '~/middlewares/products.middlewares'
-import { accessTokenValidator } from '~/middlewares/users.middlewares'
+import { accessTokenValidator, isAdminValidator, isVerifiedUserValidator } from '~/middlewares/users.middlewares'
 import { paginationValidator } from '~/middlewares/utils.middlewares'
 
 const productsRouter = Router()
@@ -22,6 +23,8 @@ productsRouter.post('/', accessTokenValidator, createProductValidator, createPro
 productsRouter.put(
   '/:productId',
   accessTokenValidator,
+  isAdminValidator,
+  isVerifiedUserValidator,
   productIdValidator,
   productAuthorValidator,
   createProductValidator,
@@ -29,6 +32,16 @@ productsRouter.put(
 )
 
 productsRouter.get('/', paginationValidator, getProductsValidator, getProductsController)
+
+productsRouter.get(
+  '/all',
+  accessTokenValidator,
+  isAdminValidator,
+  isVerifiedUserValidator,
+  paginationValidator,
+  getProductsValidator,
+  getAllProductsController
+)
 
 productsRouter.get('/:productId', productIdValidator, getProductController)
 

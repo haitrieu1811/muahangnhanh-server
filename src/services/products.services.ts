@@ -225,6 +225,12 @@ class ProductsService {
           priceAfterDiscount: {
             $first: '$priceAfterDiscount'
           },
+          status: {
+            $first: '$status'
+          },
+          categoryId: {
+            $first: '$categoryId'
+          },
           createdAt: {
             $first: '$createdAt'
           },
@@ -257,6 +263,7 @@ class ProductsService {
           'author.role': 0,
           'author.verifyEmailToken': 0,
           'author.forgotPasswordToken': 0,
+          'author.addresses': 0,
           'thumbnail.userId': 0,
           'thumbnail.name': 0,
           'thumbnail.type': 0,
@@ -345,31 +352,31 @@ class ProductsService {
       }
     })
     const updatedProduct = products[0]
-    if (
-      beforeProduct &&
-      updatedProduct &&
-      updatedProduct.thumbnail._id.toString() !== beforeProduct.thumbnail.toString()
-    ) {
-      await mediasService.deleteImage(beforeProduct._id)
-    }
-    // Kiểm tra hai mảng photos có giống nhau hay không
-    // Nếu không giống nhau thì tiến hành xóa các hình ảnh không còn sử dụng nữa
-    if (
-      beforeProduct &&
-      updatedProduct &&
-      !isEmpty(
-        xor(
-          beforeProduct.photos,
-          updatedProduct.photos.map((photo) => photo._id)
-        )
-      )
-    ) {
-      const photosToDelete = difference(
-        beforeProduct.photos,
-        updatedProduct.photos.map((photo) => photo._id)
-      )
-      await Promise.all(photosToDelete.map(async (photo) => await mediasService.deleteImage(photo)))
-    }
+    // if (
+    //   beforeProduct &&
+    //   updatedProduct &&
+    //   updatedProduct.thumbnail._id.toString() !== beforeProduct.thumbnail.toString()
+    // ) {
+    //   await mediasService.deleteImage(beforeProduct._id)
+    // }
+    // // Kiểm tra hai mảng photos có giống nhau hay không
+    // // Nếu không giống nhau thì tiến hành xóa các hình ảnh không còn sử dụng nữa
+    // if (
+    //   beforeProduct &&
+    //   updatedProduct &&
+    //   !isEmpty(
+    //     xor(
+    //       beforeProduct.photos,
+    //       updatedProduct.photos.map((photo) => photo._id)
+    //     )
+    //   )
+    // ) {
+    //   const photosToDelete = difference(
+    //     beforeProduct.photos,
+    //     updatedProduct.photos.map((photo) => photo._id)
+    //   )
+    //   await Promise.all(photosToDelete.map(async (photo) => await mediasService.deleteImage(photo)))
+    // }
     return {
       product: updatedProduct
     }
@@ -435,13 +442,67 @@ class ProductsService {
   async getProduct(productId: ObjectId) {
     const { products } = await this.aggregateProduct({
       match: {
-        _id: productId,
-        status: ProductStatus.Active,
-        approvalStatus: ProductApprovalStatus.Resolved
+        _id: productId
+        // status: ProductStatus.Active,
+        // approvalStatus: ProductApprovalStatus.Resolved
       }
     })
     return {
       product: products[0]
+    }
+  }
+
+  // Lấy danh sách sản phẩm
+  async getAllProducts({ name, sortBy, orderBy, categoryIds, minStarPoints, ...query }: GetProductsReqQuery) {
+    // Tìm kiếm theo tên
+    const text = name
+      ? {
+          $text: {
+            $search: name
+          }
+        }
+      : {}
+    const configuredCategoryIds = categoryIds?.split('-')
+    const _configuredCategoryIds = configuredCategoryIds?.map((categoryId) => new ObjectId(categoryId))
+    const match = omitBy(
+      {
+        ...text,
+        categoryId: _configuredCategoryIds
+          ? {
+              $in: _configuredCategoryIds
+            }
+          : undefined
+      },
+      isUndefined
+    )
+    const matchAfterAggregate = omitBy(
+      {
+        starPoints: minStarPoints
+          ? {
+              $gte: Number(minStarPoints)
+            }
+          : undefined
+      },
+      isUndefined
+    )
+    const { page, limit, skip } = configurePagination(query)
+    const [{ products, totalProducts: totalRows }] = await Promise.all([
+      this.aggregateProduct({
+        match,
+        limit,
+        skip,
+        sortBy,
+        orderBy,
+        matchAfterAggregate
+      })
+    ])
+    const totalPages = Math.ceil(totalRows / limit)
+    return {
+      products,
+      page,
+      limit,
+      totalRows,
+      totalPages
     }
   }
 }

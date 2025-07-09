@@ -4,8 +4,8 @@ import mime from 'mime'
 import { ObjectId } from 'mongodb'
 import path from 'path'
 import sharp from 'sharp'
-import { ENV_CONFIG } from '~/constants/config'
 
+import { ENV_CONFIG } from '~/constants/config'
 import { UPLOAD_IMAGE_DIR } from '~/constants/dir'
 import { MediaType } from '~/constants/enum'
 import Media from '~/models/databases/Media'
@@ -20,10 +20,10 @@ class MediasService {
     const result: MediaUploadRes[] = await Promise.all(
       images.map(async (image) => {
         const newName = getNameFromFullname(image.newFilename)
-        const newFullName = `${newName}.jpg`
+        const newFullName = `${newName}.png`
         const newPath = path.resolve(UPLOAD_IMAGE_DIR, newFullName)
         if (image.newFilename !== newFullName) {
-          await sharp(image.filepath).jpeg().toFile(newPath)
+          await sharp(image.filepath).png().toFile(newPath)
         }
         await uploadFileToS3({
           filename: `images/${newFullName}`,
