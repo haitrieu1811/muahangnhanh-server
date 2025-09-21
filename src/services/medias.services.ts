@@ -10,11 +10,14 @@ import { UPLOAD_IMAGE_DIR } from '~/constants/dir'
 import { MediaType } from '~/constants/enum'
 import Media from '~/models/databases/Media'
 import { MediaUploadRes } from '~/models/Others'
+import { PaginationReqQuery } from '~/models/requests/utils.requests'
 import databaseService from '~/services/database.services'
 import { getNameFromFullname, handleUploadImages } from '~/utils/file'
+import { configurePagination } from '~/utils/helpers'
 import { deleteFileFromS3, uploadFileToS3 } from '~/utils/s3'
 
 class MediasService {
+  // Tải ảnh lên
   async uploadImages(req: Request, userId: ObjectId) {
     const images = await handleUploadImages(req)
     const result: MediaUploadRes[] = await Promise.all(
@@ -65,6 +68,64 @@ class MediasService {
       await deleteFileFromS3(`images/${deletedImage.name}`)
     }
     return true
+  }
+
+  // Lấy danh sách hình ảnh
+  async getImages({ userId, query }: { userId: ObjectId; query: PaginationReqQuery }) {
+    const { skip, page, limit } = configurePagination(query)
+    const [images, totalImages] = await Promise.all([
+      databaseService.medias
+        .aggregate([
+          {
+            $match: {
+              userId
+            }
+          },
+          {
+            $addFields: {
+              url: {
+                $concat: [ENV_CONFIG.SERVER_HOST, '/static/images/', '$name']
+              }
+            }
+          },
+          {
+            $group: {
+              _id: '$_id',
+              url: {
+                $first: '$url'
+              },
+              createdAt: {
+                $first: '$createdAt'
+              },
+              updatedAt: {
+                $first: '$updatedAt'
+              }
+            }
+          },
+          {
+            $sort: {
+              createdAt: -1
+            }
+          },
+          {
+            $skip: skip
+          },
+          {
+            $limit: limit
+          }
+        ])
+        .toArray(),
+      databaseService.medias.countDocuments({
+        userId
+      })
+    ])
+    return {
+      images,
+      page,
+      limit,
+      totalRows: totalImages,
+      totalPages: Math.ceil(totalImages / limit)
+    }
   }
 }
 

@@ -21,7 +21,7 @@ class DatabaseService {
 
   constructor() {
     this.client = new MongoClient(uri)
-    this.db = this.client.db('muahangnhanhDB')
+    this.db = this.client.db(ENV_CONFIG.DB_NAME)
   }
 
   async connect() {

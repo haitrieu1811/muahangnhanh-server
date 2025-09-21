@@ -59,7 +59,8 @@ export const MEDIAS_MESSAGES = {
   IMAGE_FILE_TYPE_INVALID: 'Loại file ảnh không hợp lệ.',
   IMAGE_FIELD_IS_REQUIRED: 'Trường image là bắt buộc.',
   UPLOAD_IMAGE_SUCCEED: 'Tải ảnh lên thành công.',
-  FILE_NOT_FOUND: 'Không tìm thấy file.'
+  FILE_NOT_FOUND: 'Không tìm thấy file.',
+  GET_IMAGES_SUCCESS: 'Lấy danh sách hình ảnh thành công.'
 } as const
 
 export const PRODUCTS_MESSAGES = {
