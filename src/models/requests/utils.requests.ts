@@ -8,3 +8,7 @@ export type PaginationReqQuery = Query & {
 export type ServeImageRequestParams = ParamsDictionary & {
   name: string
 }
+
+export type ImageIdReqParams = ParamsDictionary & {
+  imageId: string
+}

@@ -4,7 +4,7 @@ import { ParamsDictionary } from 'express-serve-static-core'
 
 import { MEDIAS_MESSAGES } from '~/constants/message'
 import { TokenPayload } from '~/models/requests/users.requests'
-import { PaginationReqQuery, ServeImageRequestParams } from '~/models/requests/utils.requests'
+import { ImageIdReqParams, PaginationReqQuery, ServeImageRequestParams } from '~/models/requests/utils.requests'
 import mediasService from '~/services/medias.services'
 import { sendFileFromS3 } from '~/utils/s3'
 
@@ -40,5 +40,13 @@ export const getImagesController = async (
       images,
       pagination
     }
+  })
+}
+
+// Xóa hình ảnh
+export const deleteImageController = async (req: Request<ImageIdReqParams>, res: Response) => {
+  await mediasService.deleteImage(new ObjectId(req.params.imageId))
+  res.json({
+    message: MEDIAS_MESSAGES.DELETE_IMAGE_SUCCESS
   })
 }

@@ -1,8 +1,10 @@
 import { checkSchema, ParamSchema } from 'express-validator'
+import { ObjectId } from 'mongodb'
 
 import HTTP_STATUS from '~/constants/httpStatus'
-import { UTILS_MESSAGES } from '~/constants/message'
+import { MEDIAS_MESSAGES, UTILS_MESSAGES } from '~/constants/message'
 import { ErrorWithStatus } from '~/models/Error'
+import databaseService from '~/services/database.services'
 import { validate } from '~/utils/validation'
 
 export const imageIdSchema: ParamSchema = {
@@ -60,5 +62,42 @@ export const paginationValidator = validate(
       }
     },
     ['query']
+  )
+)
+
+export const imageIdValidator = validate(
+  checkSchema(
+    {
+      imageId: {
+        trim: true,
+        custom: {
+          options: async (value) => {
+            if (!value) {
+              throw new ErrorWithStatus({
+                message: MEDIAS_MESSAGES.IMAGE_ID_IS_REQUIRED,
+                status: HTTP_STATUS.BAD_REQUEST
+              })
+            }
+            if (!ObjectId.isValid(value)) {
+              throw new ErrorWithStatus({
+                message: MEDIAS_MESSAGES.IMAGE_ID_IS_INVALID,
+                status: HTTP_STATUS.BAD_REQUEST
+              })
+            }
+            const image = await databaseService.medias.findOne({
+              _id: new ObjectId(value)
+            })
+            if (!image) {
+              throw new ErrorWithStatus({
+                message: MEDIAS_MESSAGES.IMAGE_NOT_FOUND,
+                status: HTTP_STATUS.NOT_FOUND
+              })
+            }
+            return true
+          }
+        }
+      }
+    },
+    ['params']
   )
 )

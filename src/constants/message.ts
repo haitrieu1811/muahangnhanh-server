@@ -60,7 +60,11 @@ export const MEDIAS_MESSAGES = {
   IMAGE_FIELD_IS_REQUIRED: 'Trường image là bắt buộc.',
   UPLOAD_IMAGE_SUCCEED: 'Tải ảnh lên thành công.',
   FILE_NOT_FOUND: 'Không tìm thấy file.',
-  GET_IMAGES_SUCCESS: 'Lấy danh sách hình ảnh thành công.'
+  GET_IMAGES_SUCCESS: 'Lấy danh sách hình ảnh thành công.',
+  IMAGE_ID_IS_REQUIRED: 'ID hình ảnh là bắt buộc.',
+  IMAGE_ID_IS_INVALID: 'ID hình ảnh không hợp lệ.',
+  IMAGE_NOT_FOUND: 'Không tìm thấy hình ảnh.',
+  DELETE_IMAGE_SUCCESS: 'Xóa hình ảnh thành công.'
 } as const
 
 export const PRODUCTS_MESSAGES = {
