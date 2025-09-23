@@ -67,3 +67,10 @@ export const getAllProductsController = async (
     }
   })
 }
+
+export const deleteProductController = async (req: Request<ProductIdReqParams>, res: Response) => {
+  await productsService.deleteProduct(new ObjectId(req.params.productId))
+  res.json({
+    message: PRODUCTS_MESSAGES.DELETE_PRODUCT_SUCCESS
+  })
+}

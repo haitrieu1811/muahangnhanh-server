@@ -1,8 +1,5 @@
-import difference from 'lodash/difference'
-import isEmpty from 'lodash/isEmpty'
 import isUndefined from 'lodash/isUndefined'
 import omitBy from 'lodash/omitBy'
-import xor from 'lodash/xor'
 import { ObjectId } from 'mongodb'
 
 import { ENV_CONFIG } from '~/constants/config'
@@ -10,7 +7,6 @@ import { ProductApprovalStatus, ProductStatus } from '~/constants/enum'
 import Product, { AggregateProduct } from '~/models/databases/Product'
 import { CreateProductReqBody, GetProductsReqQuery } from '~/models/requests/products.requests'
 import databaseService from '~/services/database.services'
-import mediasService from '~/services/medias.services'
 import { configurePagination } from '~/utils/helpers'
 
 class ProductsService {
@@ -504,6 +500,16 @@ class ProductsService {
       totalRows,
       totalPages
     }
+  }
+
+  /**
+   * Xóa một sản phẩm
+   */
+  async deleteProduct(productId: ObjectId) {
+    await databaseService.products.deleteOne({
+      _id: productId
+    })
+    return true
   }
 }
 

@@ -2,6 +2,7 @@ import { Router } from 'express'
 
 import {
   createProductController,
+  deleteProductController,
   getAllProductsController,
   getProductController,
   getProductsController,
@@ -44,5 +45,14 @@ productsRouter.get(
 )
 
 productsRouter.get('/:productId', productIdValidator, getProductController)
+
+productsRouter.delete(
+  '/:productId',
+  accessTokenValidator,
+  isVerifiedUserValidator,
+  isAdminValidator,
+  productIdValidator,
+  deleteProductController
+)
 
 export default productsRouter

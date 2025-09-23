@@ -106,7 +106,8 @@ export const PRODUCTS_MESSAGES = {
   PRODUCT_APPROVAL_STATUS_IS_INVALID: 'Trạng thái phê duyệt sản phẩm không hợp lệ.',
   GET_PRODUCTS_SUCCESS: 'Lấy danh sách sản phẩm thành công.',
   GET_PRODUCT_SUCCESS: 'Lấy thông tin chi tiết sản phẩm thành công.',
-  GET_ALL_PRODUCTS_SUCCESS: 'Lấy danh sách tất cả sản phẩm thành công.'
+  GET_ALL_PRODUCTS_SUCCESS: 'Lấy danh sách tất cả sản phẩm thành công.',
+  DELETE_PRODUCT_SUCCESS: 'Xóa sản phẩm thành công.'
 } as const
 
 export const ADDRESS_MESSAGES = {
