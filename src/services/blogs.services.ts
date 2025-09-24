@@ -210,6 +210,12 @@ class BlogsService {
       deletedCount
     }
   }
+
+  async deleteBlog(blogId: ObjectId) {
+    return databaseService.blogs.deleteOne({
+      _id: blogId
+    })
+  }
 }
 
 const blogsService = new BlogsService()

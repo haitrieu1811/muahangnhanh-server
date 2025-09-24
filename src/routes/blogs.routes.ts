@@ -2,6 +2,7 @@ import { Router } from 'express'
 
 import {
   createBlogController,
+  deleteBlogController,
   deleteBlogsController,
   getBlogController,
   getBlogsController,
@@ -49,6 +50,15 @@ blogsRouter.delete(
   isAdminValidator,
   deleteBlogsValidator,
   deleteBlogsController
+)
+
+blogsRouter.delete(
+  '/:blogId',
+  accessTokenValidator,
+  isVerifiedUserValidator,
+  isAdminValidator,
+  blogIdValidator,
+  deleteBlogController
 )
 
 export default blogsRouter

@@ -202,5 +202,6 @@ export const BLOGS_MESSAGE = {
   DELETE_BLOGS_SUCCESS: 'Xóa bài viết thành công',
   BLOG_IDS_IS_REQUIRED: 'ID bài viết là bắt buộc.',
   BLOG_IDS_MUST_BE_AN_ARRAY: 'ID bài viết phải là một mảng.',
-  BLOG_IDS_IS_INVALID: 'ID bài viết không hợp lệ.'
+  BLOG_IDS_IS_INVALID: 'ID bài viết không hợp lệ.',
+  DELETE_BLOG_SUCCESS: 'Xóa blog thành công.'
 } as const

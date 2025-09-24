@@ -5,7 +5,6 @@ import ProductCategory from '~/models/databases/ProductCategory'
 import { CreateProductCategoryReqBody } from '~/models/requests/productCategories.requests'
 import { PaginationReqQuery } from '~/models/requests/utils.requests'
 import databaseService from '~/services/database.services'
-import mediasService from '~/services/medias.services'
 import { configurePagination } from '~/utils/helpers'
 
 class ProductCategoriesService {
@@ -26,9 +25,6 @@ class ProductCategoriesService {
   }
 
   async update(body: CreateProductCategoryReqBody, productCategoryId: ObjectId) {
-    const productCategory = await databaseService.productCategories.findOne({
-      _id: productCategoryId
-    })
     const updatedProductCategory = await databaseService.productCategories.findOneAndUpdate(
       {
         _id: productCategoryId
@@ -46,26 +42,15 @@ class ProductCategoriesService {
         returnDocument: 'after'
       }
     )
-    // Nếu cập nhật hình ảnh thì xóa thông tin ảnh cũ trên DB và AWS S3
-    if (
-      updatedProductCategory &&
-      productCategory &&
-      updatedProductCategory.thumbnail.toString() !== productCategory.thumbnail.toString()
-    ) {
-      await mediasService.deleteImage(productCategory.thumbnail)
-    }
     return {
       productCategory: updatedProductCategory
     }
   }
 
   async delete(productCategoryId: ObjectId) {
-    const deletedProductCategory = await databaseService.productCategories.findOneAndDelete({
+    await databaseService.productCategories.deleteOne({
       _id: productCategoryId
     })
-    if (deletedProductCategory) {
-      await mediasService.deleteImage(deletedProductCategory.thumbnail)
-    }
     return true
   }
 

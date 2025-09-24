@@ -55,3 +55,10 @@ export const deleteBlogsController = async (req: Request<ParamsDictionary, any, 
     data: result
   })
 }
+
+export const deleteBlogController = async (req: Request<BlogIdReqParams>, res: Response) => {
+  await blogsService.deleteBlog(new ObjectId(req.params.blogId))
+  res.json({
+    message: BLOGS_MESSAGE.DELETE_BLOG_SUCCESS
+  })
+}
