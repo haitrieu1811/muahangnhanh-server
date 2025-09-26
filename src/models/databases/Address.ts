@@ -1,23 +1,22 @@
 import { ObjectId } from 'mongodb'
+
 import { AddressType } from '~/constants/enum'
 
-type Ward = {
-  id: string
+export type Commune = {
+  _id: ObjectId
+  provinceId: ObjectId
   name: string
   prefix: string
-}
-
-type District = {
-  id: string
-  name: string
-  wards: Ward[]
+  createdAt: Date
+  updatedAt: Date
 }
 
 export type Province = {
   _id: ObjectId
-  code: string
   name: string
-  districts: District[]
+  prefix: string
+  createdAt: Date
+  updatedAt: Date
 }
 
 type AddressConstructor = {
@@ -26,8 +25,7 @@ type AddressConstructor = {
   fullName: string
   phoneNumber: string
   provinceId: ObjectId
-  districtId: string
-  wardId: string
+  communeId: ObjectId
   detail: string
   type: AddressType
   isDefault?: boolean
@@ -41,8 +39,7 @@ export default class Address {
   fullName: string
   phoneNumber: string
   provinceId: ObjectId
-  districtId: string
-  wardId: string
+  communeId: ObjectId
   detail: string
   type: AddressType
   isDefault: boolean
@@ -55,8 +52,7 @@ export default class Address {
     fullName,
     phoneNumber,
     provinceId,
-    districtId,
-    wardId,
+    communeId,
     detail,
     type,
     isDefault,
@@ -69,8 +65,7 @@ export default class Address {
     this.fullName = fullName
     this.phoneNumber = phoneNumber
     this.provinceId = provinceId
-    this.districtId = districtId
-    this.wardId = wardId
+    this.communeId = communeId
     this.detail = detail
     this.type = type
     this.isDefault = isDefault ?? false

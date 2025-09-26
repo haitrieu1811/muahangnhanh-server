@@ -3,7 +3,6 @@ import { Router } from 'express'
 import {
   createAddressController,
   deleteAddressController,
-  getAddressController,
   getMyAddressesController,
   setDefaultAddressController,
   updateAddressController
@@ -22,15 +21,6 @@ addressesRouter.post(
 )
 
 addressesRouter.get('/me', accessTokenValidator, isVerifiedUserValidator, getMyAddressesController)
-
-addressesRouter.get(
-  '/:addressId',
-  accessTokenValidator,
-  isVerifiedUserValidator,
-  addressIdValidator,
-  addressAuthorValidator,
-  getAddressController
-)
 
 addressesRouter.put(
   '/:addressId',

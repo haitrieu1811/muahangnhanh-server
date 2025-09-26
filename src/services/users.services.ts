@@ -9,7 +9,6 @@ import User from '~/models/databases/User'
 import { RegisterReqBody, TokenPayload, UpdateMeReqBody, UpdateUserReqBody } from '~/models/requests/users.requests'
 import { PaginationReqQuery } from '~/models/requests/utils.requests'
 import databaseService from '~/services/database.services'
-import mediasService from '~/services/medias.services'
 import { hashPassword } from '~/utils/crypto'
 import { sendForgotPasswordEmail, sendVerifyEmail } from '~/utils/email'
 import { signToken, verifyToken } from '~/utils/jwt'
@@ -337,9 +336,6 @@ class UsersService {
       },
       isUndefined
     )
-    const beforeUser = await databaseService.users.findOne({
-      _id: userId
-    })
     const updatedUser = await databaseService.users.findOneAndUpdate(
       {
         _id: userId
@@ -354,16 +350,8 @@ class UsersService {
         returnDocument: 'after'
       }
     )
-    // Xóa ảnh không sử dụng
-    if (
-      (beforeUser?.avatar && updatedUser?.avatar && beforeUser.avatar.toString() !== updatedUser.avatar.toString()) ||
-      (updatedUser?.avatar === null && beforeUser?.avatar)
-    ) {
-      await mediasService.deleteImage(beforeUser.avatar)
-    }
-    const user = await this.aggregateUser(userId)
     return {
-      user
+      user: updatedUser
     }
   }
 

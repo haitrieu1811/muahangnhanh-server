@@ -109,16 +109,10 @@ export const createAddressValidator = validate(
         }
       },
       provinceId: provinceIdSchema,
-      districtId: {
+      communeId: {
         trim: true,
         notEmpty: {
-          errorMessage: ADDRESS_MESSAGES.DISTRICT_ID_IS_REQUIRED
-        }
-      },
-      wardId: {
-        trim: true,
-        notEmpty: {
-          errorMessage: ADDRESS_MESSAGES.WARD_ID_IS_REQUIRED
+          errorMessage: ADDRESS_MESSAGES.COMMUNES_ID_IS_REQUIRED
         }
       },
       detail: {

@@ -111,6 +111,8 @@ export const PRODUCTS_MESSAGES = {
 } as const
 
 export const ADDRESS_MESSAGES = {
+  COMMUNES_ID_IS_REQUIRED: 'ID phường/xã là bắt buộc.',
+  GET_COMMUNES_SUCCESS: 'Lấy danh sách phường/xã thành công.',
   GET_PROVINCES_SUCCESS: 'Lấy danh sách tỉnh/thành thành công.',
   GET_DISTRICTS_SUCCESS: 'Lấy danh sách quận/huyện thành công.',
   PROVINCE_ID_IS_REQUIRED: 'ID tỉnh/thành là bắt buộc.',
