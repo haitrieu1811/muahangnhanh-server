@@ -33,6 +33,7 @@ cartItemsRouter.put(
   accessTokenValidator,
   isVerifiedUserValidator,
   cartItemIdValidator,
+  addProductToCartValidator,
   updateCartItemController
 )
 

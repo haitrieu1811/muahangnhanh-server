@@ -3,7 +3,7 @@ import { checkSchema } from 'express-validator'
 import { ObjectId } from 'mongodb'
 
 import HTTP_STATUS from '~/constants/httpStatus'
-import { OrderStatus, UserRole } from '~/constants/enum'
+import { OrderStatus, ShippingMethod, UserRole } from '~/constants/enum'
 import { CART_MESSAGES, ORDER_MESSAGES, UTILS_MESSAGES } from '~/constants/message'
 import { addressIdSchema } from '~/middlewares/addresses.middlewares'
 import { ErrorWithStatus } from '~/models/Error'
@@ -13,6 +13,7 @@ import { numberEnumToArray } from '~/utils/helpers'
 import { validate } from '~/utils/validation'
 
 const statuses = numberEnumToArray(OrderStatus)
+const shippingMethods = numberEnumToArray(ShippingMethod)
 
 export const createOrderValidator = validate(
   checkSchema(
@@ -96,6 +97,53 @@ export const createOrderValidator = validate(
               throw new ErrorWithStatus({
                 status: HTTP_STATUS.BAD_REQUEST,
                 message: ORDER_MESSAGES.TOTAL_AMOUNT_MUST_BE_GREATER_THAN_ZERO
+              })
+            }
+            return true
+          }
+        }
+      },
+      note: {
+        optional: true,
+        trim: true,
+        isLength: {
+          options: { max: 500 },
+          errorMessage: ORDER_MESSAGES.NOTE_MAX_LENGTH_IS_500_CHARACTERS
+        }
+      },
+      shippingMethod: {
+        isIn: {
+          options: [shippingMethods],
+          errorMessage: ORDER_MESSAGES.SHIPPING_METHOD_IS_INVALID
+        }
+      },
+      shippingFee: {
+        custom: {
+          options: (value) => {
+            if (value === undefined) {
+              throw new ErrorWithStatus({
+                status: HTTP_STATUS.BAD_REQUEST,
+                message: ORDER_MESSAGES.SHIPPING_FEE_IS_REQUIRED
+              })
+            }
+            if (!Number.isInteger(value) || value < 0) {
+              throw new ErrorWithStatus({
+                status: HTTP_STATUS.BAD_REQUEST,
+                message: ORDER_MESSAGES.SHIPPING_FEE_MUST_BE_GREATER_THAN_OR_EQUAL_TO_ZERO
+              })
+            }
+            return true
+          }
+        }
+      },
+      totalDiscount: {
+        optional: true,
+        custom: {
+          options: (value) => {
+            if (!Number.isInteger(value) || value < 0) {
+              throw new ErrorWithStatus({
+                status: HTTP_STATUS.BAD_REQUEST,
+                message: ORDER_MESSAGES.TOTAL_DISCOUNT_MUST_BE_GREATER_THAN_OR_EQUAL_TO_ZERO
               })
             }
             return true

@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb'
 
-import { OrderStatus } from '~/constants/enum'
+import { OrderStatus, ShippingMethod } from '~/constants/enum'
 import { generateRandomString } from '~/utils/helpers'
 
 type OrderConstructor = {
@@ -9,8 +9,11 @@ type OrderConstructor = {
   items: ObjectId[]
   addressId: ObjectId
   code?: string
+  shippingMethod: ShippingMethod
+  shippingFee: number
   totalItems: number
   totalAmount: number
+  totalDiscount?: number
   note?: string
   status?: OrderStatus
   orderedAt?: Date
@@ -29,8 +32,11 @@ export default class Order {
   items: ObjectId[]
   addressId: ObjectId
   code: string
+  shippingMethod: ShippingMethod
+  shippingFee: number
   totalItems: number
   totalAmount: number
+  totalDiscount: number
   note: string
   status: OrderStatus
   orderedAt: Date
@@ -48,8 +54,11 @@ export default class Order {
     items,
     addressId,
     code,
+    shippingMethod,
+    shippingFee,
     totalItems,
     totalAmount,
+    totalDiscount = 0,
     note,
     status,
     orderedAt,
@@ -67,8 +76,11 @@ export default class Order {
     this.items = items
     this.addressId = addressId
     this.code = code ?? generateRandomString(14)
+    this.shippingMethod = shippingMethod
+    this.shippingFee = shippingFee
     this.totalItems = totalItems
     this.totalAmount = totalAmount
+    this.totalDiscount = totalDiscount
     this.note = note ?? ''
     this.status = status ?? OrderStatus.Waiting
     this.orderedAt = orderedAt ?? date

@@ -67,3 +67,8 @@ export enum BlogStatus {
   Active,
   Inactive
 }
+
+export enum ShippingMethod {
+  Normal,
+  Fast
+}

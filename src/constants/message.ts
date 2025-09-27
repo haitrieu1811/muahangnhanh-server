@@ -172,7 +172,15 @@ export const ORDER_MESSAGES = {
   ORDER_NOT_FOUND: 'Không tìm thấy đơn hàng.',
   UPDATE_ORDER_SUCCESS: 'Cập nhật đơn hàng thành công.',
   ORDER_STATUS_IS_INVALID: 'Trạng thái đơn hàng không hợp lệ.',
-  GET_ALL_ORDERS_SUCCESS: 'Lấy danh sách tất cả đơn hàng thành công.'
+  GET_ALL_ORDERS_SUCCESS: 'Lấy danh sách tất cả đơn hàng thành công.',
+  NOTE_MAX_LENGTH_IS_500_CHARACTERS: 'Ghi chú đơn hàng tối đa 500 ký tự.',
+  SHIPPING_METHOD_IS_INVALID: 'Phương thức vận chuyển không hợp lệ.',
+  ADDRESS_ID_IS_REQUIRED: 'ID địa chỉ là bắt buộc.',
+  ADDRESS_ID_IS_INVALID: 'ID địa chỉ không hợp lệ.',
+  ADDRESS_NOT_FOUND: 'Không tìm thấy địa chỉ.',
+  SHIPPING_FEE_IS_REQUIRED: 'Phí vận chuyển là bắt buộc.',
+  SHIPPING_FEE_MUST_BE_GREATER_THAN_OR_EQUAL_TO_ZERO: 'Phí vận chuyển phải là một số nguyên lớn hơn hoặc bằng 0.',
+  TOTAL_DISCOUNT_MUST_BE_GREATER_THAN_OR_EQUAL_TO_ZERO: 'Tổng giảm giá phải là một số nguyên lớn hơn hoặc bằng 0.'
 } as const
 
 export const REVIEWS_MESSAGE = {
