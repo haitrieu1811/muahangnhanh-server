@@ -13,6 +13,7 @@ class CartItemsService {
       userId,
       status: CartItemStatus.InCart
     })
+    // Thêm mới nếu chưa người dùng chưa thêm sản phẩm này vào giỏ hàng
     if (!cartItem) {
       await databaseService.cartItems.insertOne(
         new CartItem({
@@ -23,12 +24,18 @@ class CartItemsService {
           unitPriceAfterDiscount: product.priceAfterDiscount
         })
       )
-    } else {
+    }
+    // Cập nhật số lượng nếu người dùng đã thêm sản phẩm này vào giỏ hàng
+    else {
       await databaseService.cartItems.updateOne(
         {
           _id: cartItem._id
         },
         {
+          $set: {
+            unitPrice: product.price,
+            unitPriceAfterDiscount: product.priceAfterDiscount
+          },
           $inc: {
             quantity
           },
