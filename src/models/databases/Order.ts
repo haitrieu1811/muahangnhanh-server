@@ -16,12 +16,6 @@ type OrderConstructor = {
   totalDiscount?: number
   note?: string
   status?: OrderStatus
-  orderedAt?: Date
-  confirmedAt?: Date | null
-  shippedAt?: Date | null
-  canceledAt?: Date | null
-  succeededAt?: Date | null
-  ratedAt?: Date | null
   createdAt?: Date
   updatedAt?: Date
 }
@@ -39,12 +33,6 @@ export default class Order {
   totalDiscount: number
   note: string
   status: OrderStatus
-  orderedAt: Date
-  confirmedAt: Date | null
-  shippedAt: Date | null
-  canceledAt: Date | null
-  succeededAt: Date | null
-  ratedAt: Date | null
   createdAt: Date
   updatedAt: Date
 
@@ -61,12 +49,6 @@ export default class Order {
     totalDiscount = 0,
     note,
     status,
-    orderedAt,
-    confirmedAt,
-    shippedAt,
-    canceledAt,
-    succeededAt,
-    ratedAt,
     createdAt,
     updatedAt
   }: OrderConstructor) {
@@ -83,12 +65,6 @@ export default class Order {
     this.totalDiscount = totalDiscount
     this.note = note ?? ''
     this.status = status ?? OrderStatus.Waiting
-    this.orderedAt = orderedAt ?? date
-    this.confirmedAt = confirmedAt ?? null
-    this.shippedAt = shippedAt ?? null
-    this.succeededAt = succeededAt ?? null
-    this.canceledAt = canceledAt ?? null
-    this.ratedAt = ratedAt ?? null
     this.createdAt = createdAt ?? date
     this.updatedAt = updatedAt ?? date
   }

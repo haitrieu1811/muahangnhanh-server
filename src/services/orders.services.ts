@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb'
 import { ENV_CONFIG } from '~/constants/config'
 
-import { CartItemStatus, OrderStatus } from '~/constants/enum'
+import { CartItemStatus } from '~/constants/enum'
 import Order from '~/models/databases/Order'
 import OrderEvent from '~/models/databases/OrderEvent'
 import { CreateOrderReqBody, GetOrdersReqQuery, UpdateOrderReqBody } from '~/models/requests/orders.requests'
@@ -273,71 +273,19 @@ class OrdersService {
   }
 
   async updateOrder({ orderId, body }: { orderId: ObjectId; body: UpdateOrderReqBody }) {
-    switch (body.status) {
-      case OrderStatus.Confirmed:
-        await databaseService.orders.updateOne(
-          {
-            _id: orderId
-          },
-          {
-            $set: {
-              status: body.status
-            },
-            $currentDate: {
-              confirmedAt: true
-            }
-          }
-        )
-        break
-      case OrderStatus.Delivering:
-        await databaseService.orders.updateOne(
-          {
-            _id: orderId
-          },
-          {
-            $set: {
-              status: body.status
-            },
-            $currentDate: {
-              shippedAt: true
-            }
-          }
-        )
-        break
-      case OrderStatus.Success:
-        await databaseService.orders.updateOne(
-          {
-            _id: orderId
-          },
-          {
-            $set: {
-              status: body.status
-            },
-            $currentDate: {
-              succeededAt: true
-            }
-          }
-        )
-        break
-      case OrderStatus.Cancel:
-        await databaseService.orders.updateOne(
-          {
-            _id: orderId
-          },
-          {
-            $set: {
-              status: body.status
-            },
-            $currentDate: {
-              canceledAt: true
-            }
-          }
-        )
-        break
-      default:
-        break
-    }
-    return true
+    return await databaseService.orders.updateOne(
+      {
+        _id: orderId
+      },
+      {
+        $set: {
+          status: body.status
+        },
+        $currentDate: {
+          updatedAt: true
+        }
+      }
+    )
   }
 
   async createOrderEvent(body: { orderId: ObjectId; content: string }) {
