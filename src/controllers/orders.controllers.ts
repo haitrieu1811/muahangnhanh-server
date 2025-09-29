@@ -6,6 +6,7 @@ import { ObjectId } from 'mongodb'
 
 import { ORDER_MESSAGES } from '~/constants/message'
 import {
+  CancelOrderReqBody,
   CreateOrderReqBody,
   GetOrdersReqQuery,
   OrderIdReqParams,
@@ -83,5 +84,15 @@ export const getAllOrdersController = async (
       orders,
       pagination
     }
+  })
+}
+
+export const cancelOrderController = async (req: Request<OrderIdReqParams, any, CancelOrderReqBody>, res: Response) => {
+  await ordersService.updateOrder({
+    orderId: new ObjectId(req.params.orderId),
+    body: req.body
+  })
+  res.json({
+    message: ORDER_MESSAGES.CANCEL_ORDER_SUCCESS
   })
 }

@@ -26,3 +26,7 @@ export type GetOrdersReqQuery = Query &
   PaginationReqQuery & {
     status?: OrderStatus
   }
+
+export type CancelOrderReqBody = {
+  status: OrderStatus
+}

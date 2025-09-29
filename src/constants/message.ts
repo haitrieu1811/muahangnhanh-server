@@ -156,6 +156,7 @@ export const CART_MESSAGES = {
 } as const
 
 export const ORDER_MESSAGES = {
+  CANCEL_ORDER_SUCCESS: 'Hủy bỏ đơn hàng thành công.',
   CREATE_ORDER_SUCCESS: 'Đặt hàng thành công.',
   TOTAL_ITEMS_IS_REQUIRED: 'Tổng số mặt hàng là bắt buộc.',
   TOTAL_ITEMS_MUST_BE_GREATER_THAN_ZERO: 'Tổng số mặt hàng phải là số nguyên lớn hơn 0.',

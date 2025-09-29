@@ -1,6 +1,7 @@
 import { Router } from 'express'
 
 import {
+  cancelOrderController,
   createOrderController,
   getAllOrdersController,
   getMyOrdersController,
@@ -49,6 +50,15 @@ ordersRouter.put(
   orderAuthorOrAdminValidator,
   updateOrderValidator,
   updateOrderController
+)
+
+ordersRouter.post(
+  '/:orderId/cancel',
+  accessTokenValidator,
+  isVerifiedUserValidator,
+  orderIdValidator,
+  orderAuthorValidator,
+  cancelOrderController
 )
 
 export default ordersRouter
