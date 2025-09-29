@@ -247,3 +247,40 @@ export const createOrderEventValidator = validate(
     ['body']
   )
 )
+
+export const orderEventIdValidator = validate(
+  checkSchema(
+    {
+      orderEventId: {
+        trim: true,
+        custom: {
+          options: async (value: string) => {
+            if (!value) {
+              throw new ErrorWithStatus({
+                status: HTTP_STATUS.BAD_REQUEST,
+                message: ORDER_MESSAGES.ORDER_EVENT_ID_IS_REQUIRED
+              })
+            }
+            if (!ObjectId.isValid(value)) {
+              throw new ErrorWithStatus({
+                status: HTTP_STATUS.BAD_REQUEST,
+                message: ORDER_MESSAGES.ORDER_EVENT_ID_IS_INVALID
+              })
+            }
+            const orderEvent = await databaseService.orderEvents.findOne({
+              _id: new ObjectId(value)
+            })
+            if (!orderEvent) {
+              throw new ErrorWithStatus({
+                status: HTTP_STATUS.NOT_FOUND,
+                message: ORDER_MESSAGES.ORDER_EVENT_NOT_FOUND
+              })
+            }
+            return true
+          }
+        }
+      }
+    },
+    ['params']
+  )
+)

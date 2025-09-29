@@ -4,6 +4,7 @@ import {
   cancelOrderController,
   createOrderController,
   createOrderEventController,
+  deleteOrderEventController,
   getAllOrdersController,
   getMyOrdersController,
   getOrderController,
@@ -15,6 +16,7 @@ import {
   createOrderValidator,
   orderAuthorOrAdminValidator,
   orderAuthorValidator,
+  orderEventIdValidator,
   orderIdValidator,
   updateOrderValidator
 } from '~/middlewares/orders.middlewares'
@@ -81,6 +83,15 @@ ordersRouter.get(
   isAdminValidator,
   orderIdValidator,
   getOrderEventsController
+)
+
+ordersRouter.delete(
+  '/events/:orderEventId',
+  accessTokenValidator,
+  isVerifiedUserValidator,
+  isAdminValidator,
+  orderEventIdValidator,
+  deleteOrderEventController
 )
 
 export default ordersRouter

@@ -9,6 +9,7 @@ import {
   CancelOrderReqBody,
   CreateOrderReqBody,
   GetOrdersReqQuery,
+  OrderEventIdReqParams,
   OrderIdReqParams,
   UpdateOrderReqBody
 } from '~/models/requests/orders.requests'
@@ -121,5 +122,12 @@ export const getOrderEventsController = async (req: Request<OrderIdReqParams>, r
   res.json({
     message: ORDER_MESSAGES.GET_ORDER_EVENTS_SUCCESS,
     data
+  })
+}
+
+export const deleteOrderEventController = async (req: Request<OrderEventIdReqParams>, res: Response) => {
+  await ordersService.deleteOrderEvent(new ObjectId(req.params.orderEventId))
+  res.json({
+    message: ORDER_MESSAGES.DELETE_ORDER_EVENT_SUCCESS
   })
 }

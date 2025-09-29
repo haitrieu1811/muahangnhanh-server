@@ -30,3 +30,7 @@ export type GetOrdersReqQuery = Query &
 export type CancelOrderReqBody = {
   status: OrderStatus
 }
+
+export type OrderEventIdReqParams = ParamsDictionary & {
+  orderEventId: string
+}

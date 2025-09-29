@@ -366,6 +366,12 @@ class OrdersService {
       orderEvents
     }
   }
+
+  async deleteOrderEvent(orderEventId: ObjectId) {
+    return await databaseService.orderEvents.deleteOne({
+      _id: orderEventId
+    })
+  }
 }
 
 const ordersService = new OrdersService()

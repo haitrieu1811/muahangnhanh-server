@@ -184,7 +184,11 @@ export const ORDER_MESSAGES = {
   SHIPPING_FEE_MUST_BE_GREATER_THAN_OR_EQUAL_TO_ZERO: 'Phí vận chuyển phải là một số nguyên lớn hơn hoặc bằng 0.',
   TOTAL_DISCOUNT_MUST_BE_GREATER_THAN_OR_EQUAL_TO_ZERO: 'Tổng giảm giá phải là một số nguyên lớn hơn hoặc bằng 0.',
   ORDER_EVENT_CONTENT_IS_REQUIRED: 'Nội dung của sự kiện đơn hàng là bắt buộc.',
-  GET_ORDER_EVENTS_SUCCESS: 'Lấy danh sách sự kiện của đơn hàng thành công.'
+  GET_ORDER_EVENTS_SUCCESS: 'Lấy danh sách sự kiện của đơn hàng thành công.',
+  DELETE_ORDER_EVENT_SUCCESS: 'Xóa sự kiện đơn hàng thành công.',
+  ORDER_EVENT_ID_IS_REQUIRED: 'ID sự kiện đơn hàng là bắt buộc.',
+  ORDER_EVENT_ID_IS_INVALID: 'ID sự kiện đơn hàng không hợp lệ.',
+  ORDER_EVENT_NOT_FOUND: 'Không tìm thấy sự kiện đơn hàng.'
 } as const
 
 export const REVIEWS_MESSAGE = {
