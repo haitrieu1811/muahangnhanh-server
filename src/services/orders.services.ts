@@ -343,6 +343,29 @@ class OrdersService {
   async createOrderEvent(body: { orderId: ObjectId; content: string }) {
     return await databaseService.orderEvents.insertOne(new OrderEvent(body))
   }
+
+  async getOrderEvents(orderId: ObjectId) {
+    const match = { orderId }
+    const [orderEvents, totalOrderEvents] = await Promise.all([
+      databaseService.orderEvents
+        .find(match)
+        .project({ orderId: 0 })
+        .sort({
+          createdAt: -1
+        })
+        .toArray(),
+      databaseService.orderEvents.countDocuments(match),
+      databaseService.orders.updateOne(match, {
+        $currentDate: {
+          updatedAt: true
+        }
+      })
+    ])
+    return {
+      totalOrderEvents,
+      orderEvents
+    }
+  }
 }
 
 const ordersService = new OrdersService()

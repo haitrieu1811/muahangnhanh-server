@@ -183,7 +183,8 @@ export const ORDER_MESSAGES = {
   SHIPPING_FEE_IS_REQUIRED: 'Phí vận chuyển là bắt buộc.',
   SHIPPING_FEE_MUST_BE_GREATER_THAN_OR_EQUAL_TO_ZERO: 'Phí vận chuyển phải là một số nguyên lớn hơn hoặc bằng 0.',
   TOTAL_DISCOUNT_MUST_BE_GREATER_THAN_OR_EQUAL_TO_ZERO: 'Tổng giảm giá phải là một số nguyên lớn hơn hoặc bằng 0.',
-  ORDER_EVENT_CONTENT_IS_REQUIRED: 'Nội dung của sự kiện đơn hàng là bắt buộc.'
+  ORDER_EVENT_CONTENT_IS_REQUIRED: 'Nội dung của sự kiện đơn hàng là bắt buộc.',
+  GET_ORDER_EVENTS_SUCCESS: 'Lấy danh sách sự kiện của đơn hàng thành công.'
 } as const
 
 export const REVIEWS_MESSAGE = {

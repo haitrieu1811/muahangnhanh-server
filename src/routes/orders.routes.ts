@@ -7,6 +7,7 @@ import {
   getAllOrdersController,
   getMyOrdersController,
   getOrderController,
+  getOrderEventsController,
   updateOrderController
 } from '~/controllers/orders.controllers'
 import {
@@ -71,6 +72,15 @@ ordersRouter.post(
   orderIdValidator,
   createOrderEventValidator,
   createOrderEventController
+)
+
+ordersRouter.get(
+  '/:orderId/events',
+  accessTokenValidator,
+  isVerifiedUserValidator,
+  isAdminValidator,
+  orderIdValidator,
+  getOrderEventsController
 )
 
 export default ordersRouter

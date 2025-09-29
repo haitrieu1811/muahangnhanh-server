@@ -115,3 +115,11 @@ export const createOrderEventController = async (
     message: ORDER_MESSAGES.CREATE_ORDER_EVENT_SUCCESS
   })
 }
+
+export const getOrderEventsController = async (req: Request<OrderIdReqParams>, res: Response) => {
+  const data = await ordersService.getOrderEvents(new ObjectId(req.params.orderId))
+  res.json({
+    message: ORDER_MESSAGES.GET_ORDER_EVENTS_SUCCESS,
+    data
+  })
+}
