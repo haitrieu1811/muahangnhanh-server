@@ -3,8 +3,7 @@ import { ENV_CONFIG } from '~/constants/config'
 
 import { CartItemStatus, OrderStatus } from '~/constants/enum'
 import Order from '~/models/databases/Order'
-import { CreateOrderReqBody, UpdateOrderReqBody } from '~/models/requests/orders.requests'
-import { PaginationReqQuery } from '~/models/requests/utils.requests'
+import { CreateOrderReqBody, GetOrdersReqQuery, UpdateOrderReqBody } from '~/models/requests/orders.requests'
 import databaseService from '~/services/database.services'
 import { configurePagination } from '~/utils/helpers'
 
@@ -51,59 +50,6 @@ class OrdersService {
       },
       {
         $lookup: {
-          from: 'cartItems',
-          localField: 'items',
-          foreignField: '_id',
-          as: 'items'
-        }
-      },
-      {
-        $unwind: {
-          path: '$items'
-        }
-      },
-      {
-        $lookup: {
-          from: 'products',
-          localField: 'items.productId',
-          foreignField: '_id',
-          as: 'product'
-        }
-      },
-      {
-        $unwind: {
-          path: '$product'
-        }
-      },
-      {
-        $lookup: {
-          from: 'medias',
-          localField: 'product.thumbnail',
-          foreignField: '_id',
-          as: 'productThumbnail'
-        }
-      },
-      {
-        $unwind: {
-          path: '$productThumbnail'
-        }
-      },
-      {
-        $lookup: {
-          from: 'productCategories',
-          localField: 'product.categoryId',
-          foreignField: '_id',
-          as: 'productCategory'
-        }
-      },
-      {
-        $unwind: {
-          path: '$productCategory',
-          preserveNullAndEmptyArrays: true
-        }
-      },
-      {
-        $lookup: {
           from: 'addresses',
           localField: 'addressId',
           foreignField: '_id',
@@ -112,7 +58,8 @@ class OrdersService {
       },
       {
         $unwind: {
-          path: '$address'
+          path: '$address',
+          preserveNullAndEmptyArrays: true
         }
       },
       {
@@ -125,82 +72,112 @@ class OrdersService {
       },
       {
         $unwind: {
-          path: '$province'
+          path: '$province',
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $lookup: {
+          from: 'communes',
+          localField: 'address.communeId',
+          foreignField: '_id',
+          as: 'commune'
+        }
+      },
+      {
+        $unwind: {
+          path: '$commune',
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $lookup: {
+          from: 'cartItems',
+          localField: 'items',
+          foreignField: '_id',
+          as: 'items'
+        }
+      },
+      {
+        $unwind: {
+          path: '$items',
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $lookup: {
+          from: 'products',
+          localField: 'items.productId',
+          foreignField: '_id',
+          as: 'product'
+        }
+      },
+      {
+        $unwind: {
+          path: '$product',
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $lookup: {
+          from: 'medias',
+          localField: 'product.thumbnail',
+          foreignField: '_id',
+          as: 'productThumbnail'
+        }
+      },
+      {
+        $unwind: {
+          path: '$productThumbnail',
+          preserveNullAndEmptyArrays: true
         }
       },
       {
         $addFields: {
-          'product.thumbnail': {
-            _id: '$productThumbnail._id',
-            url: {
-              $concat: [ENV_CONFIG.SERVER_HOST, '/static/images/', '$productThumbnail.name']
-            }
-          },
-          'product.category': {
-            _id: '$productCategory._id',
-            name: '$productCategory.name',
-            createdAt: '$productCategory.createdAt',
-            updatedAt: '$productCategory.updatedAt'
-          },
           'address.province': '$province',
-          district: {
-            $filter: {
-              input: '$province.districts',
-              as: 'district',
-              cond: {
-                $eq: ['$$district.id', '$address.districtId']
-              }
-            }
+          'address.commune': '$commune',
+          'product.thumbnail': {
+            $cond: [
+              '$productThumbnail',
+              {
+                $concat: [ENV_CONFIG.SERVER_HOST, '/static/images/', '$productThumbnail.name']
+              },
+              null
+            ]
           }
         }
       },
       {
-        $unwind: {
-          path: '$district'
-        }
-      },
-      {
         $addFields: {
-          'items.product': '$product',
-          ward: {
-            $filter: {
-              input: '$district.wards',
-              as: 'ward',
-              cond: {
-                $eq: ['$$ward.id', '$address.wardId']
-              }
-            }
-          }
-        }
-      },
-      {
-        $unwind: {
-          path: '$ward'
-        }
-      },
-      {
-        $addFields: {
-          'address.district': '$district',
-          'address.ward': '$ward'
+          'items.product': '$product'
         }
       },
       {
         $group: {
           _id: '$_id',
-          code: {
-            $first: '$code'
+          address: {
+            $first: '$address'
           },
           items: {
             $push: '$items'
           },
-          address: {
-            $first: '$address'
+          code: {
+            $first: '$code'
+          },
+          shippingMethod: {
+            $first: '$shippingMethod'
+          },
+          shippingFee: {
+            $first: '$shippingFee'
           },
           totalItems: {
             $first: '$totalItems'
           },
           totalAmount: {
             $first: '$totalAmount'
+          },
+          totalDiscount: {
+            $first: '$totalDiscount'
           },
           note: {
             $first: '$note'
@@ -217,11 +194,14 @@ class OrdersService {
           shippedAt: {
             $first: '$shippedAt'
           },
+          canceledAt: {
+            $first: '$canceledAt'
+          },
           succeededAt: {
             $first: '$succeededAt'
           },
-          canceledAt: {
-            $first: '$canceledAt'
+          ratedAt: {
+            $first: '$ratedAt'
           },
           createdAt: {
             $first: '$createdAt'
@@ -233,22 +213,18 @@ class OrdersService {
       },
       {
         $project: {
+          'address.userId': 0,
+          'address.provinceId': 0,
+          'address.communeId': 0,
+          'address.commune.provinceId': 0,
           'items.userId': 0,
           'items.productId': 0,
           'items.product.photos': 0,
-          'items.product.categoryId': 0,
           'items.product.description': 0,
           'items.product.userId': 0,
           'items.product.variants': 0,
-          'address.userId': 0,
-          'address.provinceId': 0,
-          'address.districtId': 0,
-          'address.wardId': 0,
-          'address.province.districts': 0,
-          'address.province.id': 0,
-          'address.district.wards': 0,
-          'address.district.streets': 0,
-          'address.district.projects': 0
+          'items.product.status': 0,
+          'items.product.approvalStatus': 0
         }
       },
       {
@@ -265,7 +241,7 @@ class OrdersService {
     ]
   }
 
-  async getOrders({ match = {}, query }: { match?: object; query: PaginationReqQuery }) {
+  async getOrders({ match = {}, query }: { match?: object; query: GetOrdersReqQuery }) {
     const { page, limit, skip } = configurePagination(query)
     const [orders, totalOrders] = await Promise.all([
       databaseService.orders.aggregate(this.aggregateOrder({ match, skip, limit })).toArray(),

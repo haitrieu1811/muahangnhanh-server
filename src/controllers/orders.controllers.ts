@@ -1,9 +1,16 @@
 import { Request, Response } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
+import isUndefined from 'lodash/isUndefined'
+import omitBy from 'lodash/omitBy'
 import { ObjectId } from 'mongodb'
 
 import { ORDER_MESSAGES } from '~/constants/message'
-import { CreateOrderReqBody, OrderIdReqParams, UpdateOrderReqBody } from '~/models/requests/orders.requests'
+import {
+  CreateOrderReqBody,
+  GetOrdersReqQuery,
+  OrderIdReqParams,
+  UpdateOrderReqBody
+} from '~/models/requests/orders.requests'
 import { TokenPayload } from '~/models/requests/users.requests'
 import { PaginationReqQuery } from '~/models/requests/utils.requests'
 import ordersService from '~/services/orders.services'
@@ -21,12 +28,19 @@ export const createOrderController = async (req: Request<ParamsDictionary, any, 
 }
 
 export const getMyOrdersController = async (
-  req: Request<ParamsDictionary, any, any, PaginationReqQuery>,
+  req: Request<ParamsDictionary, any, any, GetOrdersReqQuery>,
   res: Response
 ) => {
   const { userId } = req.decodedAuthorization as TokenPayload
+  const configuredQuery = omitBy(
+    {
+      userId: new ObjectId(userId),
+      status: req.query.status !== undefined ? Number(req.query.status) : undefined
+    },
+    isUndefined
+  )
   const { orders, ...pagination } = await ordersService.getOrders({
-    match: { userId: new ObjectId(userId) },
+    match: configuredQuery,
     query: req.query
   })
   res.json({

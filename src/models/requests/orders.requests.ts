@@ -1,6 +1,7 @@
-import { ParamsDictionary } from 'express-serve-static-core'
+import { ParamsDictionary, Query } from 'express-serve-static-core'
 
 import { OrderStatus, ShippingMethod } from '~/constants/enum'
+import { PaginationReqQuery } from '~/models/requests/utils.requests'
 
 export type CreateOrderReqBody = {
   items: string[]
@@ -20,3 +21,8 @@ export type OrderIdReqParams = ParamsDictionary & {
 export type UpdateOrderReqBody = {
   status: OrderStatus
 }
+
+export type GetOrdersReqQuery = Query &
+  PaginationReqQuery & {
+    status?: OrderStatus
+  }
