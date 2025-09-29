@@ -233,3 +233,17 @@ export const updateOrderValidator = validate(
     ['body']
   )
 )
+
+export const createOrderEventValidator = validate(
+  checkSchema(
+    {
+      content: {
+        trim: true,
+        notEmpty: {
+          errorMessage: ORDER_MESSAGES.ORDER_EVENT_CONTENT_IS_REQUIRED
+        }
+      }
+    },
+    ['body']
+  )
+)

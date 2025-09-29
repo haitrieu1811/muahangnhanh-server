@@ -3,12 +3,14 @@ import { Router } from 'express'
 import {
   cancelOrderController,
   createOrderController,
+  createOrderEventController,
   getAllOrdersController,
   getMyOrdersController,
   getOrderController,
   updateOrderController
 } from '~/controllers/orders.controllers'
 import {
+  createOrderEventValidator,
   createOrderValidator,
   orderAuthorOrAdminValidator,
   orderAuthorValidator,
@@ -59,6 +61,16 @@ ordersRouter.post(
   orderIdValidator,
   orderAuthorValidator,
   cancelOrderController
+)
+
+ordersRouter.post(
+  '/:orderId/events',
+  accessTokenValidator,
+  isVerifiedUserValidator,
+  isAdminValidator,
+  orderIdValidator,
+  createOrderEventValidator,
+  createOrderEventController
 )
 
 export default ordersRouter

@@ -96,3 +96,22 @@ export const cancelOrderController = async (req: Request<OrderIdReqParams, any, 
     message: ORDER_MESSAGES.CANCEL_ORDER_SUCCESS
   })
 }
+
+export const createOrderEventController = async (
+  req: Request<
+    OrderIdReqParams,
+    any,
+    {
+      content: string
+    }
+  >,
+  res: Response
+) => {
+  await ordersService.createOrderEvent({
+    orderId: new ObjectId(req.params.orderId),
+    content: req.body.content
+  })
+  res.json({
+    message: ORDER_MESSAGES.CREATE_ORDER_EVENT_SUCCESS
+  })
+}

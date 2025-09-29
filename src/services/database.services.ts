@@ -7,6 +7,7 @@ import Brand from '~/models/databases/Brand'
 import CartItem from '~/models/databases/CartItem'
 import Media from '~/models/databases/Media'
 import Order from '~/models/databases/Order'
+import OrderEvent from '~/models/databases/OrderEvent'
 import Product, { ProductVariant } from '~/models/databases/Product'
 import ProductCategory from '~/models/databases/ProductCategory'
 import { RefreshToken } from '~/models/databases/RefreshToken'
@@ -102,6 +103,10 @@ class DatabaseService {
 
   get blogs(): Collection<Blog> {
     return this.db.collection(ENV_CONFIG.DB_BLOGS_COLLECTION)
+  }
+
+  get orderEvents(): Collection<OrderEvent> {
+    return this.db.collection(ENV_CONFIG.DB_ORDER_EVENTS_COLLECTION)
   }
 }
 

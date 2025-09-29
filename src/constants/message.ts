@@ -156,6 +156,7 @@ export const CART_MESSAGES = {
 } as const
 
 export const ORDER_MESSAGES = {
+  CREATE_ORDER_EVENT_SUCCESS: 'Thêm sự kiện cho đơn hàng thành công',
   CANCEL_ORDER_SUCCESS: 'Hủy bỏ đơn hàng thành công.',
   CREATE_ORDER_SUCCESS: 'Đặt hàng thành công.',
   TOTAL_ITEMS_IS_REQUIRED: 'Tổng số mặt hàng là bắt buộc.',
@@ -181,7 +182,8 @@ export const ORDER_MESSAGES = {
   ADDRESS_NOT_FOUND: 'Không tìm thấy địa chỉ.',
   SHIPPING_FEE_IS_REQUIRED: 'Phí vận chuyển là bắt buộc.',
   SHIPPING_FEE_MUST_BE_GREATER_THAN_OR_EQUAL_TO_ZERO: 'Phí vận chuyển phải là một số nguyên lớn hơn hoặc bằng 0.',
-  TOTAL_DISCOUNT_MUST_BE_GREATER_THAN_OR_EQUAL_TO_ZERO: 'Tổng giảm giá phải là một số nguyên lớn hơn hoặc bằng 0.'
+  TOTAL_DISCOUNT_MUST_BE_GREATER_THAN_OR_EQUAL_TO_ZERO: 'Tổng giảm giá phải là một số nguyên lớn hơn hoặc bằng 0.',
+  ORDER_EVENT_CONTENT_IS_REQUIRED: 'Nội dung của sự kiện đơn hàng là bắt buộc.'
 } as const
 
 export const REVIEWS_MESSAGE = {

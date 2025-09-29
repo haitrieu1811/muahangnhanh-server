@@ -3,6 +3,7 @@ import { ENV_CONFIG } from '~/constants/config'
 
 import { CartItemStatus, OrderStatus } from '~/constants/enum'
 import Order from '~/models/databases/Order'
+import OrderEvent from '~/models/databases/OrderEvent'
 import { CreateOrderReqBody, GetOrdersReqQuery, UpdateOrderReqBody } from '~/models/requests/orders.requests'
 import databaseService from '~/services/database.services'
 import { configurePagination } from '~/utils/helpers'
@@ -337,6 +338,10 @@ class OrdersService {
         break
     }
     return true
+  }
+
+  async createOrderEvent(body: { orderId: ObjectId; content: string }) {
+    return await databaseService.orderEvents.insertOne(new OrderEvent(body))
   }
 }
 
