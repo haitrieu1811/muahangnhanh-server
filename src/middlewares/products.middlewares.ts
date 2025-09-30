@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { checkSchema, ParamSchema } from 'express-validator'
 import { ObjectId } from 'mongodb'
 
-import { ProductApprovalStatus, ProductStatus } from '~/constants/enum'
+import { ProductStatus } from '~/constants/enum'
 import HTTP_STATUS from '~/constants/httpStatus'
 import { PRODUCTS_MESSAGES, UTILS_MESSAGES } from '~/constants/message'
 import { productCategoryIdSchema } from '~/middlewares/productCategories.middlewares'
@@ -16,7 +16,6 @@ import { numberEnumToArray } from '~/utils/helpers'
 import { validate } from '~/utils/validation'
 
 const productStatuses = numberEnumToArray(ProductStatus)
-const productApprovalStatuses = numberEnumToArray(ProductApprovalStatus)
 
 const priceSchema: ParamSchema = {
   custom: {
@@ -92,13 +91,6 @@ export const createProductValidator = validate(
         isIn: {
           options: [productStatuses],
           errorMessage: PRODUCTS_MESSAGES.PRODUCT_STATUS_IS_INVALID
-        }
-      },
-      approvalStatus: {
-        optional: true,
-        isIn: {
-          options: [productApprovalStatuses],
-          errorMessage: PRODUCTS_MESSAGES.PRODUCT_APPROVAL_STATUS_IS_INVALID
         }
       }
     },

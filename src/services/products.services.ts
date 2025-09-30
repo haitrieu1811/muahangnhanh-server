@@ -3,7 +3,7 @@ import omitBy from 'lodash/omitBy'
 import { ObjectId } from 'mongodb'
 
 import { ENV_CONFIG } from '~/constants/config'
-import { ProductApprovalStatus, ProductStatus } from '~/constants/enum'
+import { ProductStatus } from '~/constants/enum'
 import Product, { AggregateProduct } from '~/models/databases/Product'
 import { CreateProductReqBody, GetProductsReqQuery } from '~/models/requests/products.requests'
 import databaseService from '~/services/database.services'
@@ -394,7 +394,6 @@ class ProductsService {
       {
         ...text,
         status: ProductStatus.Active,
-        approvalStatus: ProductApprovalStatus.Resolved,
         categoryId: _configuredCategoryIds
           ? {
               $in: _configuredCategoryIds
@@ -439,8 +438,6 @@ class ProductsService {
     const { products } = await this.aggregateProduct({
       match: {
         _id: productId
-        // status: ProductStatus.Active,
-        // approvalStatus: ProductApprovalStatus.Resolved
       }
     })
     return {

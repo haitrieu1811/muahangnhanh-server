@@ -224,8 +224,7 @@ class OrdersService {
           'items.product.description': 0,
           'items.product.userId': 0,
           'items.product.variants': 0,
-          'items.product.status': 0,
-          'items.product.approvalStatus': 0
+          'items.product.status': 0
         }
       },
       {
