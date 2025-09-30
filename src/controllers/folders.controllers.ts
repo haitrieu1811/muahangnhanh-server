@@ -34,3 +34,12 @@ export const updateFolderController = async (
     data
   })
 }
+
+export const getFoldersController = async (req: Request, res: Response) => {
+  const { userId } = req.decodedAuthorization as TokenPayload
+  const data = await foldersService.findMany(new ObjectId(userId))
+  res.json({
+    message: 'Lấy danh sách thư mục thành công.',
+    data
+  })
+}

@@ -40,6 +40,18 @@ class FoldersService {
       folder
     }
   }
+
+  async findMany(userId: ObjectId) {
+    const match = { userId }
+    const [folders, totalFolders] = await Promise.all([
+      databaseService.folders.find(match).toArray(),
+      databaseService.folders.countDocuments(match)
+    ])
+    return {
+      totalFolders,
+      folders
+    }
+  }
 }
 
 const foldersService = new FoldersService()

@@ -1,13 +1,13 @@
 import { Router } from 'express'
 
-import { createFolderController, updateFolderController } from '~/controllers/folders.controllers'
+import { createFolderController, getFoldersController, updateFolderController } from '~/controllers/folders.controllers'
 import {
   createFolderValidator,
   folderAuthorValidator,
   folderIdValidator,
   updateFolderValidator
 } from '~/middlewares/folders.middlewares'
-import { accessTokenValidator } from '~/middlewares/users.middlewares'
+import { accessTokenValidator, isVerifiedUserValidator } from '~/middlewares/users.middlewares'
 
 const foldersRouer = Router()
 
@@ -16,10 +16,13 @@ foldersRouer.post('/', accessTokenValidator, createFolderValidator, createFolder
 foldersRouer.put(
   '/:folderId',
   accessTokenValidator,
+  isVerifiedUserValidator,
   folderIdValidator,
   folderAuthorValidator,
   updateFolderValidator,
   updateFolderController
 )
+
+foldersRouer.get('/me', accessTokenValidator, isVerifiedUserValidator, getFoldersController)
 
 export default foldersRouer
