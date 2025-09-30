@@ -30,7 +30,7 @@ export const updateProductController = async (
   })
 }
 
-export const getProductsController = async (
+export const getProductsByCustomerController = async (
   req: Request<ParamsDictionary, any, any, GetProductsReqQuery>,
   res: Response
 ) => {
@@ -58,7 +58,7 @@ export const getAllProductsController = async (
   req: Request<ParamsDictionary, any, any, GetProductsReqQuery>,
   res: Response
 ) => {
-  const { products, ...pagination } = await productsService.getAllProducts(req.query)
+  const { products, ...pagination } = await productsService.getProducts(req.query)
   res.json({
     message: PRODUCTS_MESSAGES.GET_ALL_PRODUCTS_SUCCESS,
     data: {

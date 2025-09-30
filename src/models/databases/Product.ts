@@ -1,7 +1,5 @@
 import { ObjectId } from 'mongodb'
 
-import { ProductStatus } from '~/constants/enum'
-
 type ProductVariantConstructor = {
   _id?: ObjectId
   productId: ObjectId
@@ -49,18 +47,18 @@ export class ProductVariant {
   }
 }
 
-type ProductConstructor = {
+export type ProductConstructor = {
   _id?: ObjectId
   thumbnail: ObjectId
   photos?: ObjectId[]
   name: string
-  categoryId?: ObjectId
+  categoryId: ObjectId
   description: string
   userId: ObjectId
   price: number
   priceAfterDiscount?: number
-  variants?: ObjectId[]
-  status?: ProductStatus
+  isFlashSale?: boolean
+  isActive?: boolean
   createdAt?: Date
   updatedAt?: Date
 }
@@ -70,43 +68,43 @@ export default class Product {
   thumbnail: ObjectId
   photos: ObjectId[]
   name: string
-  categoryId: ObjectId | null
+  categoryId: ObjectId
   description: string
   userId: ObjectId
   price: number
   priceAfterDiscount: number
-  variants: ObjectId[]
-  status: ProductStatus
+  isFlashSale: boolean
+  isActive: boolean
   createdAt: Date
   updatedAt: Date
 
   constructor({
-    _id,
+    _id = new ObjectId(),
     thumbnail,
-    photos,
+    photos = [],
     name,
     categoryId,
     description,
     userId,
     price,
-    priceAfterDiscount,
-    variants,
-    status,
+    priceAfterDiscount = price,
+    isFlashSale = false,
+    isActive = true,
     createdAt,
     updatedAt
   }: ProductConstructor) {
     const date = new Date()
-    this._id = _id ?? new ObjectId()
+    this._id = _id
     this.thumbnail = thumbnail
-    this.photos = photos ?? []
+    this.photos = photos
     this.name = name
-    this.categoryId = categoryId ?? null
+    this.categoryId = categoryId
     this.description = description
     this.userId = userId
     this.price = price
-    this.priceAfterDiscount = priceAfterDiscount ?? price
-    this.variants = variants ?? []
-    this.status = status ?? ProductStatus.Active
+    this.priceAfterDiscount = priceAfterDiscount
+    this.isFlashSale = isFlashSale
+    this.isActive = isActive
     this.createdAt = createdAt ?? date
     this.updatedAt = updatedAt ?? date
   }

@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from 'express'
 import { checkSchema, ParamSchema } from 'express-validator'
 import { ObjectId } from 'mongodb'
 
-import { ProductStatus } from '~/constants/enum'
 import HTTP_STATUS from '~/constants/httpStatus'
 import { PRODUCTS_MESSAGES, UTILS_MESSAGES } from '~/constants/message'
 import { productCategoryIdSchema } from '~/middlewares/productCategories.middlewares'
@@ -12,10 +11,7 @@ import Product from '~/models/databases/Product'
 import { ErrorWithStatus } from '~/models/Error'
 import { TokenPayload } from '~/models/requests/users.requests'
 import databaseService from '~/services/database.services'
-import { numberEnumToArray } from '~/utils/helpers'
 import { validate } from '~/utils/validation'
-
-const productStatuses = numberEnumToArray(ProductStatus)
 
 const priceSchema: ParamSchema = {
   custom: {
@@ -85,13 +81,6 @@ export const createProductValidator = validate(
       categoryId: {
         ...productCategoryIdSchema,
         optional: true
-      },
-      status: {
-        optional: true,
-        isIn: {
-          options: [productStatuses],
-          errorMessage: PRODUCTS_MESSAGES.PRODUCT_STATUS_IS_INVALID
-        }
       }
     },
     ['body']
@@ -172,6 +161,48 @@ export const getProductsValidator = validate(
       },
       minStarPoints: {
         ...starPointsSchema,
+        optional: true
+      },
+      isFlashSale: {
+        optional: true,
+        isBoolean: {
+          errorMessage: PRODUCTS_MESSAGES.IS_FLASH_SALE_IS_INVALID
+        },
+        customSanitizer: {
+          options: (value: string) => {
+            if (value === 'true') return true
+            if (value === 'false') return false
+            return value
+          }
+        }
+      },
+      isActive: {
+        optional: true,
+        isBoolean: {
+          errorMessage: PRODUCTS_MESSAGES.IS_ACTIVE_IS_INVALID
+        },
+        customSanitizer: {
+          options: (value: string) => {
+            if (value === 'true') return true
+            if (value === 'false') return false
+            return value
+          }
+        }
+      },
+      orderBy: {
+        trim: true,
+        optional: true,
+        isIn: {
+          options: [['asc', 'desc']],
+          errorMessage: PRODUCTS_MESSAGES.ORDER_BY_IS_INVALID
+        }
+      },
+      name: {
+        trim: true,
+        optional: true
+      },
+      sortBy: {
+        trim: true,
         optional: true
       }
     },

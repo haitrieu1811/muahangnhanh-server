@@ -119,7 +119,6 @@ class CartItemsService {
             'product.photos': 0,
             'product.categoryId': 0,
             'product.description': 0,
-            'product.variants': 0,
             'product.status': 0
           }
         },

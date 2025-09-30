@@ -5,7 +5,7 @@ import {
   deleteProductController,
   getAllProductsController,
   getProductController,
-  getProductsController,
+  getProductsByCustomerController,
   updateProductController
 } from '~/controllers/products.controllers'
 import {
@@ -32,7 +32,7 @@ productsRouter.put(
   updateProductController
 )
 
-productsRouter.get('/', paginationValidator, getProductsValidator, getProductsController)
+productsRouter.get('/', paginationValidator, getProductsValidator, getProductsByCustomerController)
 
 productsRouter.get(
   '/all',

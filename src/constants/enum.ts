@@ -30,11 +30,6 @@ export enum ProductCategoryStatus {
   Inactive
 }
 
-export enum ProductStatus {
-  Active,
-  Inactive
-}
-
 export enum AddressType {
   Home,
   Office

@@ -223,7 +223,6 @@ class OrdersService {
           'items.product.photos': 0,
           'items.product.description': 0,
           'items.product.userId': 0,
-          'items.product.variants': 0,
           'items.product.status': 0
         }
       },

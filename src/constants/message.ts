@@ -107,7 +107,10 @@ export const PRODUCTS_MESSAGES = {
   GET_PRODUCTS_SUCCESS: 'Lấy danh sách sản phẩm thành công.',
   GET_PRODUCT_SUCCESS: 'Lấy thông tin chi tiết sản phẩm thành công.',
   GET_ALL_PRODUCTS_SUCCESS: 'Lấy danh sách tất cả sản phẩm thành công.',
-  DELETE_PRODUCT_SUCCESS: 'Xóa sản phẩm thành công.'
+  DELETE_PRODUCT_SUCCESS: 'Xóa sản phẩm thành công.',
+  ORDER_BY_IS_INVALID: 'Sắp xếp theo thứ tự không hợp lệ.',
+  IS_FLASH_SALE_IS_INVALID: 'Is flash sale phải là boolean.',
+  IS_ACTIVE_IS_INVALID: 'Trạng thái hoạt động phải là boolean.'
 } as const
 
 export const ADDRESS_MESSAGES = {

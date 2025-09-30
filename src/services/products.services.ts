@@ -3,7 +3,6 @@ import omitBy from 'lodash/omitBy'
 import { ObjectId } from 'mongodb'
 
 import { ENV_CONFIG } from '~/constants/config'
-import { ProductStatus } from '~/constants/enum'
 import Product, { AggregateProduct } from '~/models/databases/Product'
 import { CreateProductReqBody, GetProductsReqQuery } from '~/models/requests/products.requests'
 import databaseService from '~/services/database.services'
@@ -224,6 +223,12 @@ class ProductsService {
           status: {
             $first: '$status'
           },
+          isFlashSale: {
+            $first: '$isFlashSale'
+          },
+          isActive: {
+            $first: '$isActive'
+          },
           categoryId: {
             $first: '$categoryId'
           },
@@ -323,7 +328,7 @@ class ProductsService {
 
   // Cập nhật sản phẩm
   async updateProduct({ body, productId }: { body: CreateProductReqBody; productId: ObjectId }) {
-    const beforeProduct = await databaseService.products.findOneAndUpdate(
+    await databaseService.products.updateOne(
       {
         _id: productId
       },
@@ -337,9 +342,6 @@ class ProductsService {
         $currentDate: {
           updatedAt: true
         }
-      },
-      {
-        returnDocument: 'before'
       }
     )
     const { products } = await this.aggregateProduct({
@@ -348,52 +350,28 @@ class ProductsService {
       }
     })
     const updatedProduct = products[0]
-    // if (
-    //   beforeProduct &&
-    //   updatedProduct &&
-    //   updatedProduct.thumbnail._id.toString() !== beforeProduct.thumbnail.toString()
-    // ) {
-    //   await mediasService.deleteImage(beforeProduct._id)
-    // }
-    // // Kiểm tra hai mảng photos có giống nhau hay không
-    // // Nếu không giống nhau thì tiến hành xóa các hình ảnh không còn sử dụng nữa
-    // if (
-    //   beforeProduct &&
-    //   updatedProduct &&
-    //   !isEmpty(
-    //     xor(
-    //       beforeProduct.photos,
-    //       updatedProduct.photos.map((photo) => photo._id)
-    //     )
-    //   )
-    // ) {
-    //   const photosToDelete = difference(
-    //     beforeProduct.photos,
-    //     updatedProduct.photos.map((photo) => photo._id)
-    //   )
-    //   await Promise.all(photosToDelete.map(async (photo) => await mediasService.deleteImage(photo)))
-    // }
     return {
       product: updatedProduct
     }
   }
 
   // Lấy danh sách sản phẩm
-  async getProducts({ name, sortBy, orderBy, categoryIds, minStarPoints, ...query }: GetProductsReqQuery) {
+  async getProducts(query: GetProductsReqQuery) {
     // Tìm kiếm theo tên
-    const text = name
+    const text = query.name
       ? {
           $text: {
-            $search: name
+            $search: query.name
           }
         }
       : {}
-    const configuredCategoryIds = categoryIds?.split('-')
+    const configuredCategoryIds = query.categoryIds?.split('-')
     const _configuredCategoryIds = configuredCategoryIds?.map((categoryId) => new ObjectId(categoryId))
     const match = omitBy(
       {
         ...text,
-        status: ProductStatus.Active,
+        isFlashSale: query.isFlashSale,
+        isActive: query.isActive,
         categoryId: _configuredCategoryIds
           ? {
               $in: _configuredCategoryIds
@@ -404,9 +382,9 @@ class ProductsService {
     )
     const matchAfterAggregate = omitBy(
       {
-        starPoints: minStarPoints
+        starPoints: query.minStarPoints
           ? {
-              $gte: Number(minStarPoints)
+              $gte: Number(query.minStarPoints)
             }
           : undefined
       },
@@ -418,8 +396,8 @@ class ProductsService {
         match,
         limit,
         skip,
-        sortBy,
-        orderBy,
+        sortBy: query.sortBy,
+        orderBy: query.orderBy,
         matchAfterAggregate
       })
     ])
@@ -442,60 +420,6 @@ class ProductsService {
     })
     return {
       product: products[0]
-    }
-  }
-
-  // Lấy danh sách sản phẩm
-  async getAllProducts({ name, sortBy, orderBy, categoryIds, minStarPoints, ...query }: GetProductsReqQuery) {
-    // Tìm kiếm theo tên
-    const text = name
-      ? {
-          $text: {
-            $search: name
-          }
-        }
-      : {}
-    const configuredCategoryIds = categoryIds?.split('-')
-    const _configuredCategoryIds = configuredCategoryIds?.map((categoryId) => new ObjectId(categoryId))
-    const match = omitBy(
-      {
-        ...text,
-        categoryId: _configuredCategoryIds
-          ? {
-              $in: _configuredCategoryIds
-            }
-          : undefined
-      },
-      isUndefined
-    )
-    const matchAfterAggregate = omitBy(
-      {
-        starPoints: minStarPoints
-          ? {
-              $gte: Number(minStarPoints)
-            }
-          : undefined
-      },
-      isUndefined
-    )
-    const { page, limit, skip } = configurePagination(query)
-    const [{ products, totalProducts: totalRows }] = await Promise.all([
-      this.aggregateProduct({
-        match,
-        limit,
-        skip,
-        sortBy,
-        orderBy,
-        matchAfterAggregate
-      })
-    ])
-    const totalPages = Math.ceil(totalRows / limit)
-    return {
-      products,
-      page,
-      limit,
-      totalRows,
-      totalPages
     }
   }
 
