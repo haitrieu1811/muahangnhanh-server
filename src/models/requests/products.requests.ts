@@ -23,4 +23,6 @@ export type GetProductsReqQuery = Query &
     isFlashSale?: boolean
     isActive?: boolean
     status?: string
+    minPrice?: number
+    maxPrice?: number
   }

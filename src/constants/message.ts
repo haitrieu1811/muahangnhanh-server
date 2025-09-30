@@ -110,7 +110,9 @@ export const PRODUCTS_MESSAGES = {
   DELETE_PRODUCT_SUCCESS: 'Xóa sản phẩm thành công.',
   ORDER_BY_IS_INVALID: 'Sắp xếp theo thứ tự không hợp lệ.',
   IS_FLASH_SALE_IS_INVALID: 'Is flash sale phải là boolean.',
-  IS_ACTIVE_IS_INVALID: 'Trạng thái hoạt động phải là boolean.'
+  IS_ACTIVE_IS_INVALID: 'Trạng thái hoạt động phải là boolean.',
+  MIN_PRICE_MUST_BE_AN_INT_GREATER_THAN_ZERO: 'Giá tối thiểu phải là một số nguyên lớn hơn 0.',
+  MAX_PRICE_MUST_BE_AN_INT_GREATER_THAN_ZERO: 'Giá tối đa phải là một số nguyên lớn hơn 0.'
 } as const
 
 export const ADDRESS_MESSAGES = {

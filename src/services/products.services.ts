@@ -365,13 +365,25 @@ class ProductsService {
           }
         }
       : {}
+    // Lọc ID danh mục sản phẩm
     const configuredCategoryIds = query.categoryIds?.split('-')
     const _configuredCategoryIds = configuredCategoryIds?.map((categoryId) => new ObjectId(categoryId))
+    // Bộ lọc tìm kiếm
     const match = omitBy(
       {
         ...text,
         isFlashSale: query.isFlashSale,
         isActive: query.isActive,
+        priceAfterDiscount:
+          query.minPrice || query.maxPrice
+            ? omitBy(
+                {
+                  $gte: query.minPrice,
+                  $lte: query.maxPrice
+                },
+                isUndefined
+              )
+            : undefined,
         categoryId: _configuredCategoryIds
           ? {
               $in: _configuredCategoryIds
@@ -380,6 +392,7 @@ class ProductsService {
       },
       isUndefined
     )
+    // Lọc theo sao
     const matchAfterAggregate = omitBy(
       {
         starPoints: query.minStarPoints
