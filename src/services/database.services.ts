@@ -5,6 +5,7 @@ import Address, { Commune, Province } from '~/models/databases/Address'
 import Blog from '~/models/databases/Blog'
 import Brand from '~/models/databases/Brand'
 import CartItem from '~/models/databases/CartItem'
+import Folder from '~/models/databases/Folder'
 import Media from '~/models/databases/Media'
 import Order from '~/models/databases/Order'
 import OrderEvent from '~/models/databases/OrderEvent'
@@ -107,6 +108,10 @@ class DatabaseService {
 
   get orderEvents(): Collection<OrderEvent> {
     return this.db.collection(ENV_CONFIG.DB_ORDER_EVENTS_COLLECTION)
+  }
+
+  get folders(): Collection<Folder> {
+    return this.db.collection(ENV_CONFIG.DB_FOLDERS_COLLECTION)
   }
 }
 
