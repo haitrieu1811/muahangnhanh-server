@@ -7,7 +7,11 @@ import {
   getProductCategoryController,
   updateProductCategoryController
 } from '~/controllers/productCategories.controllers'
-import { createProductCategoryValidator, productCategoryIdValidator } from '~/middlewares/productCategories.middlewares'
+import {
+  createProductCategoryValidator,
+  isEmptyProductCategoryValidator,
+  productCategoryIdValidator
+} from '~/middlewares/productCategories.middlewares'
 
 import {
   accessTokenValidator,
@@ -47,6 +51,7 @@ productCategoriesRouter.delete(
   isActiveUserValidator,
   isAdminValidator,
   productCategoryIdValidator,
+  isEmptyProductCategoryValidator,
   deleteProductCategoryController
 )
 

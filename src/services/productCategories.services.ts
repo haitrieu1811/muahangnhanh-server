@@ -82,11 +82,22 @@ class ProductCategoriesService {
             }
           },
           {
+            $lookup: {
+              from: 'products',
+              localField: '_id',
+              foreignField: 'categoryId',
+              as: 'products'
+            }
+          },
+          {
             $addFields: {
               thumbnail: {
                 $concat: [ENV_CONFIG.SERVER_HOST, '/static/images/', '$thumbnail.name']
               },
-              thumbnailId: '$thumbnail._id'
+              thumbnailId: '$thumbnail._id',
+              totalProducts: {
+                $size: '$products'
+              }
             }
           },
           {
@@ -106,6 +117,9 @@ class ProductCategoriesService {
               },
               status: {
                 $first: '$status'
+              },
+              totalProducts: {
+                $first: '$totalProducts'
               },
               createdAt: {
                 $first: '$createdAt'
@@ -137,10 +151,7 @@ class ProductCategoriesService {
       databaseService.productCategories.countDocuments(match)
     ])
     return {
-      productCategories: productCategories.map((item) => ({
-        ...item,
-        status: String(item.status)
-      })),
+      productCategories,
       pagination: {
         page,
         limit,

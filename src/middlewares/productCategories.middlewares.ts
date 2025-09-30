@@ -1,3 +1,4 @@
+import { NextFunction, Request, Response } from 'express'
 import { checkSchema, ParamSchema } from 'express-validator'
 import { ObjectId } from 'mongodb'
 
@@ -5,6 +6,7 @@ import HTTP_STATUS from '~/constants/httpStatus'
 import { PRODUCTS_MESSAGES } from '~/constants/message'
 import { imageIdSchema } from '~/middlewares/utils.middlewares'
 import { ErrorWithStatus } from '~/models/Error'
+import { ProductCategoryIdReqParams } from '~/models/requests/productCategories.requests'
 import databaseService from '~/services/database.services'
 import { validate } from '~/utils/validation'
 
@@ -65,3 +67,22 @@ export const productCategoryIdValidator = validate(
     ['params']
   )
 )
+
+export const isEmptyProductCategoryValidator = async (
+  req: Request<ProductCategoryIdReqParams>,
+  res: Response,
+  next: NextFunction
+) => {
+  const totalProducts = await databaseService.products.countDocuments({
+    categoryId: new ObjectId(req.params.productCategoryId)
+  })
+  if (totalProducts > 0) {
+    next(
+      new ErrorWithStatus({
+        status: HTTP_STATUS.BAD_REQUEST,
+        message: PRODUCTS_MESSAGES.PRODUCT_CATEGORY_MUST_BE_EMPTY
+      })
+    )
+  }
+  next()
+}
