@@ -6,7 +6,7 @@ import HTTP_STATUS from '~/constants/httpStatus'
 import { PRODUCTS_MESSAGES, UTILS_MESSAGES } from '~/constants/message'
 import { productCategoryIdSchema } from '~/middlewares/productCategories.middlewares'
 import { starPointsSchema } from '~/middlewares/reviews.middlewares'
-import { imageIdSchema } from '~/middlewares/utils.middlewares'
+import { generateCollectionIdValidator, imageIdSchema } from '~/middlewares/utils.middlewares'
 import Product from '~/models/databases/Product'
 import { ErrorWithStatus } from '~/models/Error'
 import { TokenPayload } from '~/models/requests/users.requests'
@@ -87,43 +87,16 @@ export const createProductValidator = validate(
   )
 )
 
-export const productIdValidator = validate(
-  checkSchema(
-    {
-      productId: {
-        trim: true,
-        custom: {
-          options: async (value, { req }) => {
-            if (!value) {
-              throw new ErrorWithStatus({
-                message: PRODUCTS_MESSAGES.PRODUCT_ID_IS_REQUIRED,
-                status: HTTP_STATUS.BAD_REQUEST
-              })
-            }
-            if (!ObjectId.isValid(value)) {
-              throw new ErrorWithStatus({
-                message: PRODUCTS_MESSAGES.PRODUCT_ID_IS_INVALID,
-                status: HTTP_STATUS.BAD_REQUEST
-              })
-            }
-            const product = await databaseService.products.findOne({
-              _id: new ObjectId(value)
-            })
-            if (!product) {
-              throw new ErrorWithStatus({
-                message: PRODUCTS_MESSAGES.PRODUCT_NOT_FOUND,
-                status: HTTP_STATUS.NOT_FOUND
-              })
-            }
-            ;(req as Request).product = product
-            return true
-          }
-        }
-      }
-    },
-    ['params']
-  )
-)
+export const productIdValidator = generateCollectionIdValidator({
+  field: 'productId',
+  collection: databaseService.products,
+  emptyErrorMessage: PRODUCTS_MESSAGES.PRODUCT_ID_IS_REQUIRED,
+  invalidErrorMessage: PRODUCTS_MESSAGES.PRODUCT_ID_IS_INVALID,
+  notFoundErrorMessage: PRODUCTS_MESSAGES.PRODUCT_NOT_FOUND,
+  onPass: ({ req, document }) => {
+    req.product = document
+  }
+})
 
 export const productAuthorValidator = async (req: Request, res: Response, next: NextFunction) => {
   const { userId } = req.decodedAuthorization as TokenPayload

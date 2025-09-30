@@ -1,5 +1,6 @@
+import { Request } from 'express'
 import { checkSchema, ParamSchema } from 'express-validator'
-import { ObjectId } from 'mongodb'
+import { Collection, ObjectId, WithId } from 'mongodb'
 
 import HTTP_STATUS from '~/constants/httpStatus'
 import { MEDIAS_MESSAGES, UTILS_MESSAGES } from '~/constants/message'
@@ -101,3 +102,59 @@ export const imageIdValidator = validate(
     ['params']
   )
 )
+
+export const generateCollectionIdValidator = <Document = any>({
+  field,
+  collection,
+  emptyErrorMessage,
+  invalidErrorMessage,
+  notFoundErrorMessage,
+  onPass
+}: {
+  field: string
+  collection: Collection<any>
+  emptyErrorMessage: string
+  invalidErrorMessage: string
+  notFoundErrorMessage: string
+  onPass?: ({ req, document }: { req: Request; document: WithId<Document> }) => void
+}) =>
+  validate(
+    checkSchema(
+      {
+        [field]: {
+          trim: true,
+          custom: {
+            options: async (value, { req }) => {
+              if (!value) {
+                throw new ErrorWithStatus({
+                  message: emptyErrorMessage,
+                  status: HTTP_STATUS.BAD_REQUEST
+                })
+              }
+              if (!ObjectId.isValid(value)) {
+                throw new ErrorWithStatus({
+                  message: invalidErrorMessage,
+                  status: HTTP_STATUS.BAD_REQUEST
+                })
+              }
+              const document = await collection.findOne({
+                _id: new ObjectId(value)
+              })
+              if (!document) {
+                throw new ErrorWithStatus({
+                  message: notFoundErrorMessage,
+                  status: HTTP_STATUS.NOT_FOUND
+                })
+              }
+              onPass?.({
+                req: req as Request,
+                document: document as WithId<Document>
+              })
+              return true
+            }
+          }
+        }
+      },
+      ['params']
+    )
+  )
