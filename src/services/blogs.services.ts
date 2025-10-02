@@ -94,6 +94,20 @@ class BlogsService {
           }
         },
         {
+          $lookup: {
+            from: 'metadata',
+            localField: '_id',
+            foreignField: 'documentId',
+            as: 'metadata'
+          }
+        },
+        {
+          $unwind: {
+            path: '$metadata',
+            preserveNullAndEmptyArrays: true
+          }
+        },
+        {
           $addFields: {
             thumbnail: {
               _id: '$thumbnail._id',
@@ -109,6 +123,9 @@ class BlogsService {
                 },
                 ''
               ]
+            },
+            metadata: {
+              $cond: ['$metadata', '$metadata', null]
             }
           }
         },
@@ -132,6 +149,9 @@ class BlogsService {
             },
             status: {
               $first: '$status'
+            },
+            metadata: {
+              $first: '$metadata'
             },
             createdAt: {
               $first: '$createdAt'
@@ -166,7 +186,8 @@ class BlogsService {
             'author.role': 0,
             'author.verifyEmailToken': 0,
             'author.forgotPasswordToken': 0,
-            'author.addresses': 0
+            'author.addresses': 0,
+            'metadata.documentId': 0
           }
         }
       ])

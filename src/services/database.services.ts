@@ -7,6 +7,7 @@ import Brand from '~/models/databases/Brand'
 import CartItem from '~/models/databases/CartItem'
 import Folder from '~/models/databases/Folder'
 import Media from '~/models/databases/Media'
+import Metadata from '~/models/databases/Metadata'
 import Order from '~/models/databases/Order'
 import OrderEvent from '~/models/databases/OrderEvent'
 import Product, { ProductVariant } from '~/models/databases/Product'
@@ -112,6 +113,10 @@ class DatabaseService {
 
   get folders(): Collection<Folder> {
     return this.db.collection(ENV_CONFIG.DB_FOLDERS_COLLECTION)
+  }
+
+  get metadata(): Collection<Metadata> {
+    return this.db.collection(ENV_CONFIG.DB_METADATA_COLLECTION)
   }
 }
 

@@ -119,6 +119,20 @@ class ProductsService {
         }
       },
       {
+        $lookup: {
+          from: 'metadata',
+          localField: '_id',
+          foreignField: 'documentId',
+          as: 'metadata'
+        }
+      },
+      {
+        $unwind: {
+          path: '$metadata',
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
         $addFields: {
           thumbnailId: '$thumbnail._id',
           thumbnail: {
@@ -187,6 +201,9 @@ class ProductsService {
               },
               null
             ]
+          },
+          metadata: {
+            $cond: ['$metadata', '$metadata', null]
           }
         }
       },
@@ -232,6 +249,9 @@ class ProductsService {
           categoryId: {
             $first: '$categoryId'
           },
+          metadata: {
+            $first: '$metadata'
+          },
           createdAt: {
             $first: '$createdAt'
           },
@@ -269,7 +289,8 @@ class ProductsService {
           'thumbnail.name': 0,
           'thumbnail.type': 0,
           'thumbnail.createdAt': 0,
-          'thumbnail.updatedAt': 0
+          'thumbnail.updatedAt': 0,
+          'metadata.documentId': 0
         }
       }
     ]
@@ -436,9 +457,7 @@ class ProductsService {
     }
   }
 
-  /**
-   * Xóa một sản phẩm
-   */
+  // Xóa một sản phẩm
   async deleteProduct(productId: ObjectId) {
     await databaseService.products.deleteOne({
       _id: productId

@@ -9,6 +9,7 @@ import brandsRouter from '~/routes/brands.routes'
 import cartItemsRouter from '~/routes/cartItems.routes'
 import foldersRouer from '~/routes/folders.routes'
 import mediasRouter from '~/routes/medias.routes'
+import metadataRouter from '~/routes/metadata.routes'
 import ordersRouter from '~/routes/orders.routes'
 import productCategoriesRouter from '~/routes/productCategories.routes'
 import productsRouter from '~/routes/products.routes'
@@ -47,6 +48,7 @@ app.use('/orders', ordersRouter)
 app.use('/reviews', reviewsRouter)
 app.use('/blogs', blogsRouter)
 app.use('/folders', foldersRouer)
+app.use('/metadata', metadataRouter)
 app.use(defaultErrorHandler as any)
 
 app.listen(port, () => {

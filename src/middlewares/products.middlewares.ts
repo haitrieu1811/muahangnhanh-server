@@ -191,7 +191,6 @@ export const getProductsValidator = validate(
         customSanitizer: {
           options: (value: string) => {
             if (NUMBER_GREATER_THAN_ONE_REGEX.test(value)) {
-              console.log(value)
               return Number(value)
             }
             return value
