@@ -14,7 +14,7 @@ import {
   productAuthorValidator,
   productIdValidator
 } from '~/middlewares/products.middlewares'
-import { accessTokenValidator, isAdminValidator, isVerifiedUserValidator } from '~/middlewares/users.middlewares'
+import { accessTokenValidator, isAdminValidator } from '~/middlewares/users.middlewares'
 import { paginationValidator } from '~/middlewares/utils.middlewares'
 
 const productsRouter = Router()
@@ -25,7 +25,6 @@ productsRouter.put(
   '/:productId',
   accessTokenValidator,
   isAdminValidator,
-  isVerifiedUserValidator,
   productIdValidator,
   productAuthorValidator,
   createProductValidator,
@@ -38,7 +37,6 @@ productsRouter.get(
   '/all',
   accessTokenValidator,
   isAdminValidator,
-  isVerifiedUserValidator,
   paginationValidator,
   getProductsValidator,
   getAllProductsController
@@ -49,7 +47,6 @@ productsRouter.get('/:productId', productIdValidator, getProductController)
 productsRouter.delete(
   '/:productId',
   accessTokenValidator,
-  isVerifiedUserValidator,
   isAdminValidator,
   productIdValidator,
   deleteProductController

@@ -22,7 +22,6 @@ import {
   forgotPasswordValidator,
   isActiveUserValidator,
   isAdminValidator,
-  isVerifiedUserValidator,
   loginValidator,
   refreshTokenValidator,
   registerValidator,
@@ -71,7 +70,6 @@ usersRouter.get(
   '/all',
   accessTokenValidator,
   isActiveUserValidator,
-  isVerifiedUserValidator,
   isAdminValidator,
   paginationValidator,
   getAllUsersController
@@ -82,7 +80,6 @@ usersRouter.patch(
   '/:userId',
   accessTokenValidator,
   isActiveUserValidator,
-  isVerifiedUserValidator,
   isAdminValidator,
   userIdValidator,
   updateUserValidator,
@@ -94,7 +91,6 @@ usersRouter.delete(
   '/:userId',
   accessTokenValidator,
   isActiveUserValidator,
-  isVerifiedUserValidator,
   isAdminValidator,
   userIdValidator,
   deleteUserController

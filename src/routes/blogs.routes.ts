@@ -14,24 +14,16 @@ import {
   createBlogValidator,
   deleteBlogsValidator
 } from '~/middlewares/blogs.middlewares'
-import { accessTokenValidator, isAdminValidator, isVerifiedUserValidator } from '~/middlewares/users.middlewares'
+import { accessTokenValidator, isAdminValidator } from '~/middlewares/users.middlewares'
 import { paginationValidator } from '~/middlewares/utils.middlewares'
 
 const blogsRouter = Router()
 
-blogsRouter.post(
-  '/',
-  accessTokenValidator,
-  isVerifiedUserValidator,
-  isAdminValidator,
-  createBlogValidator,
-  createBlogController
-)
+blogsRouter.post('/', accessTokenValidator, isAdminValidator, createBlogValidator, createBlogController)
 
 blogsRouter.put(
   '/:blogId',
   accessTokenValidator,
-  isVerifiedUserValidator,
   isAdminValidator,
   blogIdValidator,
   blogAuthorValidator,
@@ -43,22 +35,8 @@ blogsRouter.get('/', paginationValidator, getBlogsController)
 
 blogsRouter.get('/:blogId', blogIdValidator, getBlogController)
 
-blogsRouter.delete(
-  '/',
-  accessTokenValidator,
-  isVerifiedUserValidator,
-  isAdminValidator,
-  deleteBlogsValidator,
-  deleteBlogsController
-)
+blogsRouter.delete('/', accessTokenValidator, isAdminValidator, deleteBlogsValidator, deleteBlogsController)
 
-blogsRouter.delete(
-  '/:blogId',
-  accessTokenValidator,
-  isVerifiedUserValidator,
-  isAdminValidator,
-  blogIdValidator,
-  deleteBlogController
-)
+blogsRouter.delete('/:blogId', accessTokenValidator, isAdminValidator, blogIdValidator, deleteBlogController)
 
 export default blogsRouter

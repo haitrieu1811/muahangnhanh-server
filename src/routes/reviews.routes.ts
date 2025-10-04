@@ -11,7 +11,7 @@ import {
   isHasNotReviewdValidator,
   isPurchasedBeforeValidator
 } from '~/middlewares/reviews.middlewares'
-import { accessTokenValidator, isVerifiedUserValidator } from '~/middlewares/users.middlewares'
+import { accessTokenValidator } from '~/middlewares/users.middlewares'
 import { paginationValidator } from '~/middlewares/utils.middlewares'
 
 const reviewsRouter = Router()
@@ -19,7 +19,6 @@ const reviewsRouter = Router()
 reviewsRouter.post(
   '/products/:productId',
   accessTokenValidator,
-  isVerifiedUserValidator,
   productIdValidator,
   isPurchasedBeforeValidator, // Kiểm tra đã mua sản phẩm thành công để được đánh giá
   isHasNotReviewdValidator, // Kiểm tra xem đã đánh giá sản phẩm trước đó rồi hay chưa
@@ -27,7 +26,7 @@ reviewsRouter.post(
   createReviewController
 )
 
-reviewsRouter.get('/product-ids', accessTokenValidator, isVerifiedUserValidator, getReviewdProductIdsController)
+reviewsRouter.get('/product-ids', accessTokenValidator, getReviewdProductIdsController)
 
 reviewsRouter.get('/products/:productId', productIdValidator, paginationValidator, getReviewsByProductIdController)
 

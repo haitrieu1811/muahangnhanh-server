@@ -13,12 +13,7 @@ import {
   productCategoryIdValidator
 } from '~/middlewares/productCategories.middlewares'
 
-import {
-  accessTokenValidator,
-  isActiveUserValidator,
-  isAdminValidator,
-  isVerifiedUserValidator
-} from '~/middlewares/users.middlewares'
+import { accessTokenValidator, isActiveUserValidator, isAdminValidator } from '~/middlewares/users.middlewares'
 import { paginationValidator } from '~/middlewares/utils.middlewares'
 
 const productCategoriesRouter = Router()
@@ -26,7 +21,6 @@ const productCategoriesRouter = Router()
 productCategoriesRouter.post(
   '/',
   accessTokenValidator,
-  isVerifiedUserValidator,
   isActiveUserValidator,
   isAdminValidator,
   createProductCategoryValidator,
@@ -36,7 +30,6 @@ productCategoriesRouter.post(
 productCategoriesRouter.put(
   '/:productCategoryId',
   accessTokenValidator,
-  isVerifiedUserValidator,
   isActiveUserValidator,
   isAdminValidator,
   productCategoryIdValidator,
@@ -47,7 +40,6 @@ productCategoriesRouter.put(
 productCategoriesRouter.delete(
   '/:productCategoryId',
   accessTokenValidator,
-  isVerifiedUserValidator,
   isActiveUserValidator,
   isAdminValidator,
   productCategoryIdValidator,

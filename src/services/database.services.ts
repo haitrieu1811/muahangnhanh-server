@@ -3,9 +3,7 @@ import { Collection, Db, MongoClient } from 'mongodb'
 import { ENV_CONFIG } from '~/constants/config'
 import Address, { Commune, Province } from '~/models/databases/Address'
 import Blog from '~/models/databases/Blog'
-import Brand from '~/models/databases/Brand'
 import CartItem from '~/models/databases/CartItem'
-import Folder from '~/models/databases/Folder'
 import Media from '~/models/databases/Media'
 import Metadata from '~/models/databases/Metadata'
 import Order from '~/models/databases/Order'
@@ -67,10 +65,6 @@ class DatabaseService {
     return this.db.collection(ENV_CONFIG.DB_PRODUCT_CATEGORIES_COLLECTION)
   }
 
-  get brands(): Collection<Brand> {
-    return this.db.collection(ENV_CONFIG.DB_BRANDS_COLLECTION)
-  }
-
   get productVariants(): Collection<ProductVariant> {
     return this.db.collection(ENV_CONFIG.DB_PRODUCT_VARIANTS_COLLECTION)
   }
@@ -109,10 +103,6 @@ class DatabaseService {
 
   get orderEvents(): Collection<OrderEvent> {
     return this.db.collection(ENV_CONFIG.DB_ORDER_EVENTS_COLLECTION)
-  }
-
-  get folders(): Collection<Folder> {
-    return this.db.collection(ENV_CONFIG.DB_FOLDERS_COLLECTION)
   }
 
   get metadata(): Collection<Metadata> {

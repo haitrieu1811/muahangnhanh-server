@@ -8,24 +8,17 @@ import {
   updateAddressController
 } from '~/controllers/addresses.controllers'
 import { addressAuthorValidator, addressIdValidator, createAddressValidator } from '~/middlewares/addresses.middlewares'
-import { accessTokenValidator, isVerifiedUserValidator } from '~/middlewares/users.middlewares'
+import { accessTokenValidator } from '~/middlewares/users.middlewares'
 
 const addressesRouter = Router()
 
-addressesRouter.post(
-  '/',
-  accessTokenValidator,
-  isVerifiedUserValidator,
-  createAddressValidator,
-  createAddressController
-)
+addressesRouter.post('/', accessTokenValidator, createAddressValidator, createAddressController)
 
-addressesRouter.get('/me', accessTokenValidator, isVerifiedUserValidator, getMyAddressesController)
+addressesRouter.get('/me', accessTokenValidator, getMyAddressesController)
 
 addressesRouter.put(
   '/:addressId',
   accessTokenValidator,
-  isVerifiedUserValidator,
   addressIdValidator,
   addressAuthorValidator,
   createAddressValidator,
@@ -35,7 +28,6 @@ addressesRouter.put(
 addressesRouter.delete(
   '/:addressId',
   accessTokenValidator,
-  isVerifiedUserValidator,
   addressIdValidator,
   addressAuthorValidator,
   deleteAddressController
@@ -44,7 +36,6 @@ addressesRouter.delete(
 addressesRouter.post(
   '/:addressId/set-default',
   accessTokenValidator,
-  isVerifiedUserValidator,
   addressIdValidator,
   addressAuthorValidator,
   setDefaultAddressController

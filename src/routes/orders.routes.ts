@@ -20,37 +20,22 @@ import {
   orderIdValidator,
   updateOrderValidator
 } from '~/middlewares/orders.middlewares'
-import { accessTokenValidator, isAdminValidator, isVerifiedUserValidator } from '~/middlewares/users.middlewares'
+import { accessTokenValidator, isAdminValidator } from '~/middlewares/users.middlewares'
 import { paginationValidator } from '~/middlewares/utils.middlewares'
 
 const ordersRouter = Router()
 
-ordersRouter.post('/', accessTokenValidator, isVerifiedUserValidator, createOrderValidator, createOrderController)
+ordersRouter.post('/', accessTokenValidator, createOrderValidator, createOrderController)
 
-ordersRouter.get('/me', accessTokenValidator, isVerifiedUserValidator, paginationValidator, getMyOrdersController)
+ordersRouter.get('/me', accessTokenValidator, paginationValidator, getMyOrdersController)
 
-ordersRouter.get(
-  '/all',
-  accessTokenValidator,
-  isVerifiedUserValidator,
-  isAdminValidator,
-  paginationValidator,
-  getAllOrdersController
-)
+ordersRouter.get('/all', accessTokenValidator, isAdminValidator, paginationValidator, getAllOrdersController)
 
-ordersRouter.get(
-  '/:orderId',
-  accessTokenValidator,
-  isVerifiedUserValidator,
-  orderIdValidator,
-  orderAuthorValidator,
-  getOrderController
-)
+ordersRouter.get('/:orderId', accessTokenValidator, orderIdValidator, orderAuthorValidator, getOrderController)
 
 ordersRouter.put(
   '/:orderId',
   accessTokenValidator,
-  isVerifiedUserValidator,
   orderIdValidator,
   orderAuthorOrAdminValidator,
   updateOrderValidator,
@@ -60,7 +45,6 @@ ordersRouter.put(
 ordersRouter.post(
   '/:orderId/cancel',
   accessTokenValidator,
-  isVerifiedUserValidator,
   orderIdValidator,
   orderAuthorValidator,
   cancelOrderController
@@ -69,26 +53,16 @@ ordersRouter.post(
 ordersRouter.post(
   '/:orderId/events',
   accessTokenValidator,
-  isVerifiedUserValidator,
-  isAdminValidator,
   orderIdValidator,
   createOrderEventValidator,
   createOrderEventController
 )
 
-ordersRouter.get(
-  '/:orderId/events',
-  accessTokenValidator,
-  isVerifiedUserValidator,
-  isAdminValidator,
-  orderIdValidator,
-  getOrderEventsController
-)
+ordersRouter.get('/:orderId/events', accessTokenValidator, isAdminValidator, orderIdValidator, getOrderEventsController)
 
 ordersRouter.delete(
   '/events/:orderEventId',
   accessTokenValidator,
-  isVerifiedUserValidator,
   isAdminValidator,
   orderEventIdValidator,
   deleteOrderEventController

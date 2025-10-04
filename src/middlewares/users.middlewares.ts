@@ -6,7 +6,7 @@ import capitalize from 'lodash/capitalize'
 import { ObjectId, WithId } from 'mongodb'
 
 import { ENV_CONFIG } from '~/constants/config'
-import { UserRole, UserStatus, UserVerifyStatus } from '~/constants/enum'
+import { UserRole, UserStatus } from '~/constants/enum'
 import HTTP_STATUS from '~/constants/httpStatus'
 import { USERS_MESSAGES, UTILS_MESSAGES } from '~/constants/message'
 import User from '~/models/databases/User'
@@ -427,19 +427,6 @@ export const forgotPasswordTokenValidator = validate(
     ['body']
   )
 )
-
-export const isVerifiedUserValidator = (req: Request, res: Response, next: NextFunction) => {
-  const { userVerifyStatus } = req.decodedAuthorization as TokenPayload
-  if (userVerifyStatus !== UserVerifyStatus.Verified) {
-    next(
-      new ErrorWithStatus({
-        message: USERS_MESSAGES.UNVERIFIED_USER,
-        status: HTTP_STATUS.FORBIDDEN
-      })
-    )
-  }
-  next()
-}
 
 export const isActiveUserValidator = (req: Request, res: Response, next: NextFunction) => {
   const { userStatus } = req.decodedAuthorization as TokenPayload

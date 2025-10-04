@@ -7,19 +7,13 @@ import {
   metadataDocumentIdValidator,
   metadataIdValidator
 } from '~/middlewares/metadata.middlewares'
-import {
-  accessTokenValidator,
-  isActiveUserValidator,
-  isAdminValidator,
-  isVerifiedUserValidator
-} from '~/middlewares/users.middlewares'
+import { accessTokenValidator, isActiveUserValidator, isAdminValidator } from '~/middlewares/users.middlewares'
 
 const metadataRouter = Router()
 
 metadataRouter.post(
   '/documents/:documentId',
   accessTokenValidator,
-  isVerifiedUserValidator,
   isActiveUserValidator,
   isAdminValidator,
   metadataDocumentIdValidator,
@@ -31,7 +25,6 @@ metadataRouter.post(
 metadataRouter.put(
   '/:metadataId',
   accessTokenValidator,
-  isVerifiedUserValidator,
   isActiveUserValidator,
   isAdminValidator,
   metadataIdValidator,
