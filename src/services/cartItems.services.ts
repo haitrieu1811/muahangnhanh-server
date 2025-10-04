@@ -8,14 +8,14 @@ import databaseService from '~/services/database.services'
 
 class CartItemsService {
   async addProductToCart({ product, userId, quantity }: { product: Product; userId: ObjectId; quantity: number }) {
-    const cartItem = await databaseService.cartItems.findOne({
+    let cartItem = await databaseService.cartItems.findOne({
       productId: product._id,
       userId,
       status: CartItemStatus.InCart
     })
     // Thêm mới nếu chưa người dùng chưa thêm sản phẩm này vào giỏ hàng
     if (!cartItem) {
-      await databaseService.cartItems.insertOne(
+      const { insertedId } = await databaseService.cartItems.insertOne(
         new CartItem({
           userId,
           quantity,
@@ -24,10 +24,13 @@ class CartItemsService {
           unitPriceAfterDiscount: product.priceAfterDiscount
         })
       )
+      cartItem = await databaseService.cartItems.findOne({
+        _id: insertedId
+      })
     }
     // Cập nhật số lượng nếu người dùng đã thêm sản phẩm này vào giỏ hàng
     else {
-      await databaseService.cartItems.updateOne(
+      cartItem = await databaseService.cartItems.findOneAndUpdate(
         {
           _id: cartItem._id
         },
@@ -42,10 +45,15 @@ class CartItemsService {
           $currentDate: {
             updatedAt: true
           }
+        },
+        {
+          returnDocument: 'after'
         }
       )
     }
-    return true
+    return {
+      cartItem
+    }
   }
 
   async getMyCart(userId: ObjectId) {
