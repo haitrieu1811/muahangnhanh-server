@@ -8,6 +8,8 @@ import { TokenPayload } from '~/models/requests/users.requests'
 import addressesService from '~/services/addresses.services'
 
 export const getProvincesController = async (req: Request, res: Response) => {
+  console.log(421421421)
+
   const result = await addressesService.getProvinces()
   res.json({
     message: ADDRESS_MESSAGES.GET_PROVINCES_SUCCESS,
