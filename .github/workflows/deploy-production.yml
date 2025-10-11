@@ -11,23 +11,29 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22.20.0
-          cache: "npm"
+      # - name: Use Node.js ${{ matrix.node-version }}
+      #   uses: actions/setup-node@v4
+      #   with:
+      #     node-version: 22.20.0
+      #     cache: "npm"
       - name: Create .env file
         run: echo "${{secrets.ENV_PRODUCTION}}" > .env.production
-      - run: npm i --force
-      - run: npm run build
-      - name: Send telegram message after build success
+      - name: Build Docker image
+        run: docker build --platform linux/amd64 -t haitrieu1811/muahangnhanh-server:v0 .
+      - name: Login to Dockerhub
+        run: docker login -u ${{secrets.DOCKERHUB_USERNAME}} -p ${{secrets.DOCKERHUB_PASSWORD}}
+      - name: Push Docker image to Dockerhub
+        run: docker push haitrieu1811/muahangnhanh-server:v0
+      # - run: npm i --force
+      # - run: npm run build
+      - name: Send telegram message after build Docker image success
         if: success()
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
           message: |
-            ✅ Successfully built the project
+            ✅ Build Docker image successfully
             ${{ github.actor }} created commit:
             Commit message: ${{ github.event.commits[0].message }}
             Repository: ${{ github.repository }}
@@ -39,7 +45,7 @@ jobs:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
           message: |
-            ❌ Built a failed project
+            ❌ Build Docker image failed
             ${{ github.actor }} created commit:
             Commit message: ${{ github.event.commits[0].message }}
             Repository: ${{ github.repository }}
@@ -57,15 +63,22 @@ jobs:
           password: ${{ secrets.PASSWORD_PRODUCTION }}
           port: ${{ secrets.PORT_PRODUCTION }}
           script: |
-            export NVM_DIR=~/.nvm
-            source ~/.nvm/nvm.sh
-            cd ~/muahangnhanh-server
-            git fetch --all
-            git reset --hard origin/main
-            echo "${{secrets.ENV_PRODUCTION}}" > .env.production
-            npm i --force
-            npm run build
-            pm2 restart MuaHangNhanhServer
+            docker login -u ${{secrets.DOCKERHUB_USERNAME}} -p ${{secrets.DOCKERHUB_PASSWORD}}
+            docker pull haitrieu1811/muahangnhanh-server:v0
+            docker container stop muahangnhanh-server
+            docker container rm muahangnhanh-server
+            docker container run --restart unless-stopped --name muahangnhanh-server -dp 4000:4000 haitrieu1811/muahangnhanh-server:v0
+            docker image prune -f
+          # script: |
+          #   export NVM_DIR=~/.nvm
+          #   source ~/.nvm/nvm.sh
+          #   cd ~/muahangnhanh-server
+          #   git fetch --all
+          #   git reset --hard origin/main
+          #   echo "${{secrets.ENV_PRODUCTION}}" > .env.production
+          #   npm i --force
+          #   npm run build
+          #   pm2 restart MuaHangNhanhServer
       - name: Send telegram message after deploy success
         if: success()
         uses: appleboy/telegram-action@master
@@ -73,7 +86,7 @@ jobs:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
           message: |
-            ✅ Successfully deploy the project
+            ✅ Docker image deployed successfully
             ${{ github.actor }} created commit:
             Commit message: ${{ github.event.commits[0].message }}
             Repository: ${{ github.repository }}
@@ -85,7 +98,7 @@ jobs:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
           message: |
-            ❌ Deploy a failed project
+            ❌ Docker image deployment failed
             ${{ github.actor }} created commit:
             Commit message: ${{ github.event.commits[0].message }}
             Repository: ${{ github.repository }}
