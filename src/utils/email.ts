@@ -90,7 +90,7 @@ export const sendForgotPasswordEmail = async (toAddress: string, forgotPasswordT
         '{{content}}',
         'Nếu bạn là người yêu cầu đặt lại mật khẩu thì vui lòng nhấn nút bên dưới để khôi phục lại mật khẩu, nếu không vui lòng bỏ qua mail này.'
       )
-      .replace('{{href}}', `${ENV_CONFIG.CLIENT_HOST}/reset-password?token=${forgotPasswordToken}`)
+      .replace('{{href}}', `${ENV_CONFIG.CLIENT_HOST}/auth/reset-password?token=${forgotPasswordToken}`)
       .replace('{{buttonName}}', 'Đặt lại mật khẩu')
   )
 }

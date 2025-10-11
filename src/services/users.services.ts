@@ -412,7 +412,7 @@ class UsersService {
   }
 
   async resetPassword(userId: ObjectId, newPassword: string) {
-    const [{ user }] = await Promise.all([
+    await Promise.all([
       this.changePassword(userId, newPassword),
       databaseService.users.updateOne(
         {
@@ -425,6 +425,7 @@ class UsersService {
         }
       )
     ])
+    const user = await this.aggregateUser(userId)
     const [accessToken, refreshToken] = await this.signAccessAndRefreshToken({
       userId: user._id.toString(),
       userRole: user.role,
