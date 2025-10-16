@@ -1,4 +1,13 @@
+import { Request } from 'express'
+import { JsonWebTokenError } from 'jsonwebtoken'
+import capitalize from 'lodash/capitalize'
+
+import { ENV_CONFIG } from '~/constants/config'
+import HTTP_STATUS from '~/constants/httpStatus'
+import { USERS_MESSAGES } from '~/constants/message'
+import { ErrorWithStatus } from '~/models/Error'
 import { PaginationReqQuery } from '~/models/requests/utils.requests'
+import { verifyToken } from '~/utils/jwt'
 
 export const generateRandomString = (length: number): string => {
   let result = ''
@@ -24,5 +33,33 @@ export const configurePagination = (query: PaginationReqQuery) => {
     page: _page,
     limit: _limit,
     skip
+  }
+}
+
+export const verifyAccessToken = async (accessToken: string, req?: Request) => {
+  if (!accessToken) {
+    throw new ErrorWithStatus({
+      message: USERS_MESSAGES.ACCESS_TOKEN_IS_REQUIRED,
+      status: HTTP_STATUS.UNAUTHORIZED
+    })
+  }
+  try {
+    const decodedAuthorization = await verifyToken({
+      token: accessToken,
+      secretOrPublicKey: ENV_CONFIG.JWT_SECRET_ACCESS_TOKEN
+    })
+    if (req) {
+      req.decodedAuthorization = decodedAuthorization
+      return true
+    }
+    return decodedAuthorization
+  } catch (error) {
+    if (error instanceof JsonWebTokenError) {
+      throw new ErrorWithStatus({
+        status: HTTP_STATUS.UNAUTHORIZED,
+        message: capitalize(error.message)
+      })
+    }
+    throw error
   }
 }

@@ -14,7 +14,7 @@ import { ErrorWithStatus } from '~/models/Error'
 import { TokenPayload, VerifyEmailTokenReqBody } from '~/models/requests/users.requests'
 import databaseService from '~/services/database.services'
 import { hashPassword } from '~/utils/crypto'
-import { numberEnumToArray } from '~/utils/helpers'
+import { numberEnumToArray, verifyAccessToken } from '~/utils/helpers'
 import { verifyToken } from '~/utils/jwt'
 import { validate } from '~/utils/validation'
 
@@ -258,28 +258,7 @@ export const accessTokenValidator = validate(
         custom: {
           options: async (value, { req }) => {
             const accessToken = value?.split(' ')[1]
-            if (!accessToken) {
-              throw new ErrorWithStatus({
-                message: USERS_MESSAGES.ACCESS_TOKEN_IS_REQUIRED,
-                status: HTTP_STATUS.UNAUTHORIZED
-              })
-            }
-            try {
-              const decodedAuthorization = await verifyToken({
-                token: accessToken,
-                secretOrPublicKey: ENV_CONFIG.JWT_SECRET_ACCESS_TOKEN
-              })
-              ;(req as Request).decodedAuthorization = decodedAuthorization
-              return true
-            } catch (error) {
-              if (error instanceof JsonWebTokenError) {
-                throw new ErrorWithStatus({
-                  status: HTTP_STATUS.UNAUTHORIZED,
-                  message: capitalize(error.message)
-                })
-              }
-              throw error
-            }
+            return await verifyAccessToken(accessToken, req as Request)
           }
         }
       }

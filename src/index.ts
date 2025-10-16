@@ -5,6 +5,7 @@ import { Server } from 'socket.io'
 
 import { ENV_CONFIG } from '~/constants/config'
 import { defaultErrorHandler } from '~/middlewares/error.middlewares'
+import { TokenPayload } from '~/models/requests/users.requests'
 import addressesRouter from '~/routes/addresses.routes'
 import blogsRouter from '~/routes/blogs.routes'
 import cartItemsRouter from '~/routes/cartItems.routes'
@@ -19,6 +20,7 @@ import staticRouter from '~/routes/static.routes'
 import usersRouter from '~/routes/users.routes'
 import databaseService from '~/services/database.services'
 import { initFolders } from '~/utils/file'
+import { verifyAccessToken } from '~/utils/helpers'
 
 databaseService.connect().then(() => {
   databaseService.indexProductCategories()
@@ -61,20 +63,35 @@ const users: {
   }
 } = {}
 
+io.use(async (socket, next) => {
+  const { Authorization } = socket.handshake.auth
+  const accessToken = (Authorization as string)?.split('Bearer ')[1]
+  try {
+    const decodedAuthorization = await verifyAccessToken(accessToken)
+    socket.handshake.auth.decodedAuthorization = decodedAuthorization
+    next()
+  } catch (error) {
+    next({
+      name: 'Unauthorized',
+      message: 'Không nhận được access token.',
+      data: error
+    })
+  }
+})
+
 io.on('connection', (socket) => {
   console.log(`Người dùng ${socket.id} đã kết nối.`)
-  const { userId } = socket.handshake.auth
-  if (userId) {
-    users[userId] = {
-      socketId: socket.id
-    }
+  const { decodedAuthorization } = socket.handshake.auth
+  const { userId } = decodedAuthorization as TokenPayload
+  users[userId] = {
+    socketId: socket.id
   }
   console.log(users)
 
-  socket.on('sendNotification', (payload) => {
+  socket.on('send_notification', (payload) => {
     const receiverSocketId = users[payload.to]?.socketId
     if (!receiverSocketId) return
-    socket.to(receiverSocketId).emit('receiveNotification', {
+    socket.to(receiverSocketId).emit('receive_notification', {
       message: payload.message,
       from: userId
     })
