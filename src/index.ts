@@ -1,5 +1,7 @@
 import cors, { CorsOptions } from 'cors'
 import express from 'express'
+import { createServer } from 'http'
+import { Server } from 'socket.io'
 
 import { ENV_CONFIG } from '~/constants/config'
 import { defaultErrorHandler } from '~/middlewares/error.middlewares'
@@ -26,7 +28,9 @@ databaseService.connect().then(() => {
 initFolders()
 
 const app = express()
+const httpServer = createServer(app)
 const port = ENV_CONFIG.PORT || 4000
+
 const corsOptions: CorsOptions = {
   origin: '*'
 }
@@ -47,6 +51,17 @@ app.use('/blogs', blogsRouter)
 app.use('/metadata', metadataRouter)
 app.use(defaultErrorHandler as any)
 
-app.listen(port, () => {
+const io = new Server(httpServer, {
+  cors: corsOptions
+})
+
+io.on('connection', (socket) => {
+  console.log(`Người dùng ${socket.id} đã kết nối.`)
+  socket.on('disconnect', () => {
+    console.log(`Người dùng ${socket.id} đã ngắt kết nối.`)
+  })
+})
+
+httpServer.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
