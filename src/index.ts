@@ -8,11 +8,13 @@ import { ENV_CONFIG } from '~/constants/config'
 import { defaultErrorHandler } from '~/middlewares/error.middlewares'
 import Notification from '~/models/databases/Notification'
 import { TokenPayload } from '~/models/requests/users.requests'
+import { NotificationPayloadData } from '~/models/requests/utils.requests'
 import addressesRouter from '~/routes/addresses.routes'
 import blogsRouter from '~/routes/blogs.routes'
 import cartItemsRouter from '~/routes/cartItems.routes'
 import mediasRouter from '~/routes/medias.routes'
 import metadataRouter from '~/routes/metadata.routes'
+import notificationsRouter from '~/routes/notifications.routes'
 import ordersRouter from '~/routes/orders.routes'
 import productCategoriesRouter from '~/routes/productCategories.routes'
 import productsRouter from '~/routes/products.routes'
@@ -53,6 +55,7 @@ app.use('/orders', ordersRouter)
 app.use('/reviews', reviewsRouter)
 app.use('/blogs', blogsRouter)
 app.use('/metadata', metadataRouter)
+app.use('/notifications', notificationsRouter)
 app.use(defaultErrorHandler as any)
 
 const io = new Server(httpServer, {
@@ -90,21 +93,19 @@ io.on('connection', (socket) => {
   }
   console.log(users)
 
-  socket.on(
-    'send_notification',
-    async (payload: { to: string; data: { userId: string; content: string; url: string; isRead?: boolean } }) => {
-      const receiverSocketId = users[payload.to]?.socketId
-      await databaseService.notifications.insertOne(
-        new Notification({ ...payload.data, userId: new ObjectId(payload.data.userId) })
-      )
-      if (receiverSocketId) {
-        socket.to(receiverSocketId).emit('receive_notification', {
-          data: payload.data,
-          from: userId
-        })
-      }
+  socket.on('send_notification', async (payload: { to: string; data: NotificationPayloadData }) => {
+    const receiverSocketId = users[payload.to]?.socketId
+    const { insertedId } = await databaseService.notifications.insertOne(
+      new Notification({ ...payload.data, userId: new ObjectId(payload.data.userId) })
+    )
+    const notification = await databaseService.notifications.findOne({ _id: insertedId })
+    if (receiverSocketId) {
+      socket.to(receiverSocketId).emit('receive_notification', {
+        data: notification,
+        from: userId
+      })
     }
-  )
+  })
 
   socket.on('disconnect', () => {
     console.log(`Người dùng ${socket.id} đã ngắt kết nối.`)
