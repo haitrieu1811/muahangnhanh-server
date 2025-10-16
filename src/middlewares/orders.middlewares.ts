@@ -195,7 +195,10 @@ export const orderIdValidator = validate(
 )
 
 export const orderAuthorValidator = async (req: Request, res: Response, next: NextFunction) => {
-  const { userId } = req.decodedAuthorization as TokenPayload
+  const { userId, userRole } = req.decodedAuthorization as TokenPayload
+  if (userRole === UserRole.Admin) {
+    return next()
+  }
   if (req.order?.userId.toString() !== userId) {
     next(
       new ErrorWithStatus({

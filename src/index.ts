@@ -32,7 +32,7 @@ const httpServer = createServer(app)
 const port = ENV_CONFIG.PORT || 4000
 
 const corsOptions: CorsOptions = {
-  origin: '*'
+  origin: ENV_CONFIG.CLIENT_HOST
 }
 
 app.use(cors(corsOptions))
@@ -55,10 +55,33 @@ const io = new Server(httpServer, {
   cors: corsOptions
 })
 
+const users: {
+  [key: string]: {
+    socketId: string
+  }
+} = {}
+
 io.on('connection', (socket) => {
   console.log(`Người dùng ${socket.id} đã kết nối.`)
+  const { userId } = socket.handshake.auth
+  users[userId] = {
+    socketId: socket.id
+  }
+  console.log(users)
+
+  socket.on('sendNotification', (payload) => {
+    const receiverSocketId = users[payload.to]?.socketId
+    if (!receiverSocketId) return
+    socket.to(receiverSocketId).emit('receiveNotification', {
+      content: payload.content,
+      from: userId
+    })
+  })
+
   socket.on('disconnect', () => {
     console.log(`Người dùng ${socket.id} đã ngắt kết nối.`)
+    delete users[userId]
+    console.log(users)
   })
 })
 
