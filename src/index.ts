@@ -1,10 +1,12 @@
 import cors, { CorsOptions } from 'cors'
 import express from 'express'
 import { createServer } from 'http'
+import { ObjectId } from 'mongodb'
 import { Server } from 'socket.io'
 
 import { ENV_CONFIG } from '~/constants/config'
 import { defaultErrorHandler } from '~/middlewares/error.middlewares'
+import Notification from '~/models/databases/Notification'
 import { TokenPayload } from '~/models/requests/users.requests'
 import addressesRouter from '~/routes/addresses.routes'
 import blogsRouter from '~/routes/blogs.routes'
@@ -88,14 +90,21 @@ io.on('connection', (socket) => {
   }
   console.log(users)
 
-  socket.on('send_notification', (payload) => {
-    const receiverSocketId = users[payload.to]?.socketId
-    if (!receiverSocketId) return
-    socket.to(receiverSocketId).emit('receive_notification', {
-      message: payload.message,
-      from: userId
-    })
-  })
+  socket.on(
+    'send_notification',
+    async (payload: { to: string; data: { userId: string; content: string; url: string; isRead?: boolean } }) => {
+      const receiverSocketId = users[payload.to]?.socketId
+      await databaseService.notifications.insertOne(
+        new Notification({ ...payload.data, userId: new ObjectId(payload.data.userId) })
+      )
+      if (receiverSocketId) {
+        socket.to(receiverSocketId).emit('receive_notification', {
+          data: payload.data,
+          from: userId
+        })
+      }
+    }
+  )
 
   socket.on('disconnect', () => {
     console.log(`Người dùng ${socket.id} đã ngắt kết nối.`)
