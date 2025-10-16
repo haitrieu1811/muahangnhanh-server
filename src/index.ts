@@ -64,8 +64,10 @@ const users: {
 io.on('connection', (socket) => {
   console.log(`Người dùng ${socket.id} đã kết nối.`)
   const { userId } = socket.handshake.auth
-  users[userId] = {
-    socketId: socket.id
+  if (userId) {
+    users[userId] = {
+      socketId: socket.id
+    }
   }
   console.log(users)
 
@@ -73,7 +75,7 @@ io.on('connection', (socket) => {
     const receiverSocketId = users[payload.to]?.socketId
     if (!receiverSocketId) return
     socket.to(receiverSocketId).emit('receiveNotification', {
-      content: payload.content,
+      message: payload.message,
       from: userId
     })
   })

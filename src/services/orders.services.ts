@@ -271,7 +271,7 @@ class OrdersService {
   }
 
   async updateOrder({ orderId, body }: { orderId: ObjectId; body: UpdateOrderReqBody }) {
-    return await databaseService.orders.updateOne(
+    const order = await databaseService.orders.findOneAndUpdate(
       {
         _id: orderId
       },
@@ -282,8 +282,14 @@ class OrdersService {
         $currentDate: {
           updatedAt: true
         }
+      },
+      {
+        returnDocument: 'after'
       }
     )
+    return {
+      order
+    }
   }
 
   async createOrderEvent(body: { orderId: ObjectId; content: string }) {
