@@ -156,6 +156,9 @@ class OrdersService {
       {
         $group: {
           _id: '$_id',
+          userId: {
+            $first: '$userId'
+          },
           address: {
             $first: '$address'
           },
@@ -293,7 +296,13 @@ class OrdersService {
   }
 
   async createOrderEvent(body: { orderId: ObjectId; content: string }) {
-    return await databaseService.orderEvents.insertOne(new OrderEvent(body))
+    const { insertedId } = await databaseService.orderEvents.insertOne(new OrderEvent(body))
+    const orderEvent = await databaseService.orderEvents.findOne({
+      _id: insertedId
+    })
+    return {
+      orderEvent
+    }
   }
 
   async getOrderEvents(orderId: ObjectId) {
@@ -301,7 +310,6 @@ class OrdersService {
     const [orderEvents, totalOrderEvents] = await Promise.all([
       databaseService.orderEvents
         .find(match)
-        .project({ orderId: 0 })
         .sort({
           createdAt: -1
         })

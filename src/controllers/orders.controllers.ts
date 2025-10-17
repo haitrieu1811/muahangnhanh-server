@@ -109,12 +109,13 @@ export const createOrderEventController = async (
   >,
   res: Response
 ) => {
-  await ordersService.createOrderEvent({
+  const data = await ordersService.createOrderEvent({
     orderId: new ObjectId(req.params.orderId),
     content: req.body.content
   })
   res.json({
-    message: ORDER_MESSAGES.CREATE_ORDER_EVENT_SUCCESS
+    message: ORDER_MESSAGES.CREATE_ORDER_EVENT_SUCCESS,
+    data
   })
 }
 

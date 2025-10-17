@@ -38,3 +38,14 @@ export const markAsReadNotificationController = async (req: Request<Notification
     data
   })
 }
+
+export const markAsReadAllNotificationsController = async (req: Request<NotificationIdReqParams>, res: Response) => {
+  const { userId } = req.decodedAuthorization as TokenPayload
+  const data = await notificationsService.markAsRead({
+    userId: new ObjectId(userId)
+  })
+  res.json({
+    message: 'Đánh dấu đã đọc tất cả thông báo thành công.',
+    data
+  })
+}
