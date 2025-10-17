@@ -1,11 +1,20 @@
 import { Router } from 'express'
 
-import { getMyNotificationsController } from '~/controllers/notifications.controllers'
+import { getMyNotificationsController, markAsReadNotificationController } from '~/controllers/notifications.controllers'
+import { notificationAuthorValidator, notificationIdValidator } from '~/middlewares/notifications.middlewares'
 import { accessTokenValidator } from '~/middlewares/users.middlewares'
 import { paginationValidator } from '~/middlewares/utils.middlewares'
 
 const notificationsRouter = Router()
 
 notificationsRouter.get('/me', accessTokenValidator, paginationValidator, getMyNotificationsController)
+
+notificationsRouter.put(
+  '/:notificationId/mark-as-read',
+  accessTokenValidator,
+  notificationIdValidator,
+  notificationAuthorValidator,
+  markAsReadNotificationController
+)
 
 export default notificationsRouter

@@ -8,7 +8,7 @@ import { ObjectId, WithId } from 'mongodb'
 import { ENV_CONFIG } from '~/constants/config'
 import { UserRole, UserStatus } from '~/constants/enum'
 import HTTP_STATUS from '~/constants/httpStatus'
-import { USERS_MESSAGES, UTILS_MESSAGES } from '~/constants/message'
+import { USERS_MESSAGES } from '~/constants/message'
 import User from '~/models/databases/User'
 import { ErrorWithStatus } from '~/models/Error'
 import { TokenPayload, VerifyEmailTokenReqBody } from '~/models/requests/users.requests'
@@ -425,7 +425,7 @@ export const isAdminValidator = (req: Request, res: Response, next: NextFunction
   if (userRole !== UserRole.Admin) {
     next(
       new ErrorWithStatus({
-        message: UTILS_MESSAGES.PERMISSION_DENIED,
+        message: 'Yêu cầu tài khoản admin để truy cập vào API này.',
         status: HTTP_STATUS.FORBIDDEN
       })
     )

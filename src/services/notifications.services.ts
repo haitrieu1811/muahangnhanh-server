@@ -1,10 +1,7 @@
-import { PaginationReqQuery } from '~/models/requests/utils.requests'
+import { ObjectId } from 'mongodb'
+import { GetNotificationsReqQuery } from '~/models/requests/notifications.requests'
 import databaseService from '~/services/database.services'
 import { configurePagination } from '~/utils/helpers'
-
-export type GetNotificationsReqQuery = PaginationReqQuery & {
-  isRead?: string
-}
 
 class NotificationsService {
   async findMany({ match = {}, query }: { match?: object; query: GetNotificationsReqQuery }) {
@@ -31,6 +28,30 @@ class NotificationsService {
       limit,
       totalRows: totalNotifications,
       totalPages: Math.ceil(totalNotifications / limit)
+    }
+  }
+
+  async markAsRead({ userId, notificationId }: { userId: ObjectId; notificationId?: ObjectId }) {
+    /**
+     * Nếu có truyền `notificationId` thì đánh dấu một thông báo đã đọc
+     * Nếu không truyền thì đánh dấu tất cả thông báo đã đọc
+     */
+    const match = !notificationId
+      ? {
+          userId
+        }
+      : {
+          _id: notificationId
+        }
+
+    const { modifiedCount } = await databaseService.notifications.updateMany(match, {
+      $set: {
+        isRead: true
+      }
+    })
+
+    return {
+      modifiedCount
     }
   }
 }

@@ -4,13 +4,13 @@ import { ObjectId } from 'mongodb'
 
 import { BlogStatus } from '~/constants/enum'
 import HTTP_STATUS from '~/constants/httpStatus'
-import { BLOGS_MESSAGE, UTILS_MESSAGES } from '~/constants/message'
+import { BLOGS_MESSAGE } from '~/constants/message'
 import { imageIdSchema } from '~/middlewares/utils.middlewares'
 import Blog from '~/models/databases/Blog'
 import { ErrorWithStatus } from '~/models/Error'
 import { TokenPayload } from '~/models/requests/users.requests'
 import databaseService from '~/services/database.services'
-import { numberEnumToArray } from '~/utils/helpers'
+import { numberEnumToArray, verifyMongoDocumentAuthor, verifyMongoDocumentId } from '~/utils/helpers'
 import { validate } from '~/utils/validation'
 
 const statuses = numberEnumToArray(BlogStatus)
@@ -64,28 +64,14 @@ export const blogIdValidator = validate(
         trim: true,
         custom: {
           options: async (value, { req }) => {
-            if (!value) {
-              throw new ErrorWithStatus({
-                message: BLOGS_MESSAGE.BLOG_ID_IS_REQUIRED,
-                status: HTTP_STATUS.BAD_REQUEST
-              })
-            }
-            if (!ObjectId.isValid(value)) {
-              throw new ErrorWithStatus({
-                message: BLOGS_MESSAGE.BLOG_ID_IS_INVALID,
-                status: HTTP_STATUS.BAD_REQUEST
-              })
-            }
-            const blog = await databaseService.blogs.findOne({
-              _id: new ObjectId(value)
+            const result = await verifyMongoDocumentId<Blog>({
+              documentId: value,
+              collection: databaseService.blogs,
+              emptyErrorMessage: BLOGS_MESSAGE.BLOG_IDS_IS_REQUIRED,
+              invalidErrorMessage: BLOGS_MESSAGE.BLOG_IDS_IS_INVALID,
+              notFoundErrorMessage: BLOGS_MESSAGE.BLOG_NOT_FOUND
             })
-            if (!blog) {
-              throw new ErrorWithStatus({
-                message: BLOGS_MESSAGE.BLOG_NOT_FOUND,
-                status: HTTP_STATUS.NOT_FOUND
-              })
-            }
-            ;(req as Request).blog = blog
+            ;(req as Request).blog = result
             return true
           }
         }
@@ -96,17 +82,18 @@ export const blogIdValidator = validate(
 )
 
 export const blogAuthorValidator = async (req: Request, res: Response, next: NextFunction) => {
-  const { userId } = req.decodedAuthorization as TokenPayload
-  const blog = req.blog as Blog
-  if (blog.userId.toString() !== userId) {
-    next(
-      new ErrorWithStatus({
-        message: UTILS_MESSAGES.PERMISSION_DENIED,
-        status: HTTP_STATUS.FORBIDDEN
-      })
-    )
+  try {
+    const { userId } = req.decodedAuthorization as TokenPayload
+    const blog = req.blog as Blog
+    verifyMongoDocumentAuthor({
+      userId,
+      documentUserId: blog.userId.toString(),
+      errorMessage: 'Bạn không phải là người tạo blog này.'
+    })
+    next()
+  } catch (error) {
+    next(error)
   }
-  next()
 }
 
 export const deleteBlogsValidator = validate(

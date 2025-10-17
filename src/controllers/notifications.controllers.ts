@@ -1,9 +1,10 @@
 import { Request, Response } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
 import { ObjectId } from 'mongodb'
+import { GetNotificationsReqQuery, NotificationIdReqParams } from '~/models/requests/notifications.requests'
 
 import { TokenPayload } from '~/models/requests/users.requests'
-import notificationsService, { GetNotificationsReqQuery } from '~/services/notifications.services'
+import notificationsService from '~/services/notifications.services'
 
 export const getMyNotificationsController = async (
   req: Request<ParamsDictionary, any, any, GetNotificationsReqQuery>,
@@ -23,5 +24,17 @@ export const getMyNotificationsController = async (
       notifications,
       pagination
     }
+  })
+}
+
+export const markAsReadNotificationController = async (req: Request<NotificationIdReqParams>, res: Response) => {
+  const { userId } = req.decodedAuthorization as TokenPayload
+  const data = await notificationsService.markAsRead({
+    userId: new ObjectId(userId),
+    notificationId: new ObjectId(req.params.notificationId)
+  })
+  res.json({
+    message: 'Đánh dấu đã đọc thông báo thành công.',
+    data
   })
 }
