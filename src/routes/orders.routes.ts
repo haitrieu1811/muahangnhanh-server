@@ -58,7 +58,7 @@ ordersRouter.post(
   createOrderEventController
 )
 
-ordersRouter.get('/:orderId/events', accessTokenValidator, isAdminValidator, orderIdValidator, getOrderEventsController)
+ordersRouter.get('/:orderId/events', accessTokenValidator, orderIdValidator, getOrderEventsController)
 
 ordersRouter.delete(
   '/events/:orderEventId',

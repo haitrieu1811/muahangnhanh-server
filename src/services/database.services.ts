@@ -6,6 +6,7 @@ import Blog from '~/models/databases/Blog'
 import CartItem from '~/models/databases/CartItem'
 import Media from '~/models/databases/Media'
 import Metadata from '~/models/databases/Metadata'
+import Notification from '~/models/databases/Notification'
 import Order from '~/models/databases/Order'
 import OrderEvent from '~/models/databases/OrderEvent'
 import Product, { ProductVariant } from '~/models/databases/Product'
@@ -107,6 +108,10 @@ class DatabaseService {
 
   get metadata(): Collection<Metadata> {
     return this.db.collection(ENV_CONFIG.DB_METADATA_COLLECTION)
+  }
+
+  get notifications(): Collection<Notification> {
+    return this.db.collection(ENV_CONFIG.DB_NOTIFICATIONS_COLLECTION)
   }
 }
 

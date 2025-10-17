@@ -12,3 +12,5 @@ export type ServeImageRequestParams = ParamsDictionary & {
 export type ImageIdReqParams = ParamsDictionary & {
   imageId: string
 }
+
+export type NotificationPayloadData = { userId: string; content: string; url: string; isRead?: boolean }
